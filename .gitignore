@@ -5,8 +5,13 @@
 /vendor
 .env
 .env.backup
+/public/dist
+/public/build
+/public/mix-manifest.json
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+phpunit.dusk.xml
+*.code-workspace
