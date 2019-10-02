@@ -15,8 +15,20 @@ class CreateUsersStatusTable extends Migration
     {
         Schema::create('users_status', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->timestamps();
+            $table->string('description');
+            
         });
+
+         DB::table('users_status')->insert(
+            array(
+            'description' => 'ACTIVE'
+            )
+        );
+         DB::table('users_status')->insert(
+            array(
+            'description' => 'INACTIVE'
+             )
+        );
     }
 
     /**

@@ -15,7 +15,18 @@ class CreatePointsRedemptionTable extends Migration
     {
         Schema::create('points_redemption', function (Blueprint $table) {
             $table->bigIncrements('id');
+            
+            $table->unsignedBigInteger('product_id')->references('id')->on('products');   
+            $table->unsignedBigInteger('user_id')->references('id')->on('users');  
+            $table->integer('poits_redeemed');           
+            $table->string('code')->nullable();
+            $table->boolean('is_code_confirmed')->nullable();
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

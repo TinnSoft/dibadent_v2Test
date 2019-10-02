@@ -15,7 +15,13 @@ class CreatePointsPromotionTable extends Migration
     {
         Schema::create('points_promotion', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->datetime('enabled_from');
+            $table->datetime('enabled_to');
+            $table->integer('point_multiplied_by');
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

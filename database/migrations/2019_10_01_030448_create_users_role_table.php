@@ -17,6 +17,23 @@ class CreateUsersRoleTable extends Migration
             $table->bigIncrements('id');
             $table->string('role');
         });
+
+        
+         DB::table('users_role')->insert(
+            array(
+            'role' => 'ADMIN'
+            )
+        );
+         DB::table('users_role')->insert(
+            array(
+            'role' => 'RADIOLOGO'
+            )
+        );
+         DB::table('users_role')->insert(
+            array(
+            'role' => 'DOCTOR'
+            )
+        );
     }
 
     /**

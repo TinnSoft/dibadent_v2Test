@@ -15,7 +15,14 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('procedure_id')->references('id')->on('procedures');    
+            $table->string('file_directory');  
+            $table->string('file_name');         
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('procedure_id')->references('id')->on('procedures');
         });
     }
 

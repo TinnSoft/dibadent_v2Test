@@ -32,7 +32,7 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->foreign('status_id')->references('id')->on('users_status');
             $table->foreign('role_id')->references('id')->on('users_role');
-           // $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->foreign('doctor_id')->references('id')->on('doctors');
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePatientsDoctorsTable extends Migration
+class CreateProceduresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,19 @@ class CreatePatientsDoctorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('patients_doctors', function (Blueprint $table) {
+        Schema::create('procedures', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('doctor_id')->references('id')->on('doctors');             
+            $table->unsignedBigInteger('product_id')->references('id')->on('products');             
             $table->unsignedBigInteger('patient_id')->references('id')->on('patients');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->unsignedBigInteger('doctor_id')->references('id')->on('doctors');
+            $table->string('description');           
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
-            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('patient_id')->references('id')->on('patients');
+            $table->foreign('doctor_id')->references('id')->on('doctors');
         });
     }
 
@@ -33,6 +36,6 @@ class CreatePatientsDoctorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('patients_doctors');
+        Schema::dropIfExists('procedures');
     }
 }

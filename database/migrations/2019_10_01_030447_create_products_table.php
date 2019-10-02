@@ -17,8 +17,13 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->string('description');
             $table->integer('required_points')->nullable()->unsigned();
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
+
+       
     }
 
     /**
