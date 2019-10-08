@@ -18,11 +18,11 @@ if (mix.inProduction()) {
   extract([
     'vue',
     'axios',
+    'vform',
     'vuex',
     'jquery',
     'vue-i18n',
     'vue-meta',
-    'js-cookie',
     'bootstrap',
     'vue-router',
     'vuex-router-sync',
@@ -42,15 +42,12 @@ mix.webpackConfig({
       '~': path.join(__dirname, './resources/js'),
       'Quasar': path.join(__dirname, './node_modules/quasar/dist/quasar.umd.min.js'),
       'iePolyfill': path.join(__dirname, './node_modules/quasar/dist/quasar.ie.polyfills.umd.min.js'),
-      //'i18nLang': path.join(__dirname, './node_modules/quasar/dist/lang/es.umd.min.js'),
+      'i18nLang': path.join(__dirname, './node_modules/quasar/dist/lang/es.umd.min.js'),
       'QuasarCss': path.join(__dirname, './node_modules/quasar/dist/quasar.min.css')
     }
   },
   output: {
-    chunkFilename: 'dist/js/[name].[chunkhash].js',
-   //chunkFilename: 'js/[name].js',
-   //publicPath: '/'
-   // publicPath: mix.config.hmr ? '//localhost:8080' : '/'
+   chunkFilename: 'dist/js/[name].[chunkhash].js',
    path: mix.config.hmr ? '/' : path.resolve(__dirname, './public/build')
   }
 })

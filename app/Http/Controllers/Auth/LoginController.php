@@ -1,9 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+use Carbon\Carbon;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Auth\SessionGuard;
+
+use App\Events\UserLoggedIn;
+//use App\Events\RecordActivity;
 
 class LoginController extends Controller
 {
@@ -25,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    //protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -37,25 +43,35 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function sendLoginResponse(Request $request)
-    {
+    protected function attemptLogin(Request $request)
+    {   
+        $token = $this->guard()->attempt($this->credentials($request));  
         
-        $this->clearLoginAttempts($request);
+        if ($token) {
+            $this->guard()->setToken($token);
+            return true;
+        }
+        return false;
+    }
 
+    protected function sendLoginResponse(Request $request)
+    {        
+        $this->clearLoginAttempts($request);
+       
         $token = (string) $this->guard()->getToken();
         $expiration = $this->guard()->getPayload()->get('exp');
 
-        
         event(new UserLoggedIn());
+        //abort(403, $token );
         
-        event(new RecordActivity('LogIn',$this->guard()->user()->name.' ha iniciado sesion',
+       /* event(new RecordActivity('LogIn',$this->guard()->user()->name.' ha iniciado sesion',
         'User','/profile/'.$this->guard()->user()->id.'/edit'));
-
+        */
 
         return [
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $expiration - time(),
+            'expires_in' => $expiration,
         ];
     }
     /**
@@ -74,6 +90,5 @@ class LoginController extends Controller
             return redirect('login');
         }       
        
-       //return redirect('/');
     }
 }

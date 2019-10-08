@@ -26,12 +26,7 @@
                     class="full-width glossy">
                     Ingresar
                 </q-btn>
-                <q-separator spaced ></q-separator>
-                <small> Aún no tienes una cuenta?
-                    <router-link :to="{ name: 'register' }" active-class="active">
-                      <a>Crea una ya mismo</a>
-                    </router-link>
-                </small>
+                <q-separator spaced ></q-separator>               
                 <br>
                 <small>
                     <router-link :to="{ name: 'password.request' }">Olvidaste la contraseña?</router-link>

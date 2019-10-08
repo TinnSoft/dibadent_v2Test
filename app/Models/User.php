@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +12,7 @@ class User extends Authenticatable implements JWTSubject
     use  Notifiable;
     //HasApiTokens
     
-    protected $table = 'users';
+    
     protected $dates = ['deleted_at'];
     /**
      * The attributes that are mass assignable.
@@ -20,9 +20,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','account_id','last_login','phone','role_id',
-        'last_name','remember_token','transaction_token','status_id','modified_by',
-        'created_by','public_id','is_admin'
+        'name', 'email', 'password','last_login','role_id',
+        'last_name','remember_token','status_id','modified_by',
+        'created_by'
     ];
 
     /**
@@ -31,9 +31,8 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','transaction_token',
-        'created_at','updated_at','deleted_at','modified_by','created_by',
-        'oauth_user_id','oauth_provider_id'
+        'password', 'remember_token',
+        'created_at','updated_at','deleted_at','modified_by','created_by'
     ];
 
     public function rules()
