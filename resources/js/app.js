@@ -6,16 +6,16 @@ import Quasar from 'Quasar'
 import iePolyfill from 'iePolyfill'
 require(`QuasarCss`)
 
-//console.log(Quasar)
+
 moment.locale("es");
 
 import store from '~/store'
 import router from '~/router'
 //import i18n from '~/plugins/i18n'
-import App from '~/components/App'
+//import App from '~/components/App'
 
-import '~/plugins'
-import '~/components'
+//import '~/plugins'
+//import '~/components'
 
 Vue.config.productionTip = false
 /* eslint-disable no-new */
@@ -29,6 +29,6 @@ new Vue({
   el: '#q-app',
  // i18n,
   store,
-  router,
-  ...App  
+  //router,
+ // ...App  
 })

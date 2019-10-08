@@ -25,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -35,5 +35,45 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function sendLoginResponse(Request $request)
+    {
+        
+        $this->clearLoginAttempts($request);
+
+        $token = (string) $this->guard()->getToken();
+        $expiration = $this->guard()->getPayload()->get('exp');
+
+        
+        event(new UserLoggedIn());
+        
+        event(new RecordActivity('LogIn',$this->guard()->user()->name.' ha iniciado sesion',
+        'User','/profile/'.$this->guard()->user()->id.'/edit'));
+
+
+        return [
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $expiration - time(),
+        ];
+    }
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        try{
+        $this->guard()->logout();
+        }catch(\Exception $e){
+            Session::flush();
+            Session::regenerate();
+            return redirect('login');
+        }       
+       
+       //return redirect('/');
     }
 }
