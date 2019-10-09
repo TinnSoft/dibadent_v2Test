@@ -18,7 +18,7 @@ export default {
   name: 'MainLayout',
   data: () => ({
     title: window.config.appName,
-    subtitle: "Sistema de facturación en la nube",
+    subtitle: "Sistema de gestion de radiografías en la nube",
     backgroundcolor: "bg-primary glossy",
     items: [
       {
@@ -30,50 +30,9 @@ export default {
       },
       {
         icon: "assessment",
-        title: "MIS VENTAS",
-        path: "/2",
-        items: [
-          { title: "Factura de venta", path: "/invoice" },
-          { title: "Pagos recibidos", path: "/payment-in" },
-          { title: "Notas crédito", path: "/credit-note" },
-          { title: "Cotizaciones", path: "/estimate" },
-          { title: "Remisiones", path: "/remision" }
-        ]
-      },
-      {
-        icon: "local_atm",
-        title: "MIS COMPRAS",
-        path: "/3",
-        items: [
-          { title: "Pagos", path: "/payment-out" },
-          { title: "Factura proveedores", path: "/bill" },
-          { title: "Notas débito", path: "/debit-note" },
-          { title: "Ordenes de compra", path: "/purchase-order" }
-        ]
-      },
-      {
-        icon: "people",
-        title: "CONTACTOS",
-        path: "/contact",
-        type: "alone"
-      },
-      {
-        icon: "local_mall",
-        title: "INVENTARIO",
-        path: "/inventory",
-        type: "alone"
-      },
-      {
-        icon: "business",
-        title: "BANCOS",
-        path: "/bank",
-        type: "alone"
-      },
-      {
-        icon: "library_books",
-        title: "CATEGORIAS",
-        path: "/category",
-        type: "alone"
+        title: "PUNTOS",
+        type: "alone",
+        path: "/2",      
       },
       {
         icon: "build",

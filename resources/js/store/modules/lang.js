@@ -1,11 +1,12 @@
-//import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
+//import { Cookies } from 'quasar'
 import * as types from '../mutation-types'
 
 const { locale, locales } = window.config
 
 // state
 export const state = {
-  //locale: Cookies.get('locale') || locale,
+  locale: Cookies.get('locale') || locale,
   locale: locale,
   locales: locales
 }
@@ -28,6 +29,6 @@ export const actions = {
   setLocale ({ commit }, { locale }) {
     commit(types.SET_LOCALE, { locale })
 
-   // Cookies.set('locale', locale, { expires: 365 })
+   Cookies.set('locale', locale, { expires: 365000000000 })
   }
 }

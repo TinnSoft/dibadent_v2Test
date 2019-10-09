@@ -46,7 +46,7 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {   
         $token = $this->guard()->attempt($this->credentials($request));  
-        
+       // abort(403, $token );
         if ($token) {
             $this->guard()->setToken($token);
             return true;
@@ -62,7 +62,7 @@ class LoginController extends Controller
         $expiration = $this->guard()->getPayload()->get('exp');
 
         event(new UserLoggedIn());
-        //abort(403, $token );
+  
         
        /* event(new RecordActivity('LogIn',$this->guard()->user()->name.' ha iniciado sesion',
         'User','/profile/'.$this->guard()->user()->id.'/edit'));

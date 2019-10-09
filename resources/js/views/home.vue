@@ -173,35 +173,6 @@ export default {
         "Sabado",
         "Domingo"
       ],
-      lineOptions: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                callback: function(value, index, values) {
-                  return value.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD"
-                  });
-                }
-              }
-            }
-          ]
-        },
-        tooltips: {
-          enabled: true,
-          callbacks: {
-            label: function(tooltipItems, data) {
-              return tooltipItems.yLabel.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD"
-              });
-            }
-          }
-        }
-      }
     };
   },
   metaInfo() {
@@ -324,7 +295,7 @@ export default {
     },
     fetchData() {
       let vm = this;
-
+     
       vm.isProcessing = true;
       axios
         .get(`/api/${vm.path}`)

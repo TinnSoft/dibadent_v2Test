@@ -1,7 +1,7 @@
 import axios from "axios";
 import store from "~/store";
 import router from "~/router";
-import { Dialog } from 'quasar';
+import { Dialog } from "quasar";
 import i18n from "~/plugins/i18n";
 
 // Request interceptor
@@ -16,8 +16,6 @@ axios.interceptors.request.use(request => {
         request.headers.common["Accept-Language"] = locale;
     }
 
-    // request.headers['X-Socket-Id'] = Echo.socketId()
-
     return request;
 });
 
@@ -26,36 +24,39 @@ axios.interceptors.response.use(
     response => response,
     error => {
         const { status } = error.response;
-        try {
-          console.log("plugins -> axios222");
+        console.log("plugins -> axios222",  error.response);
         
+        // try {
+        //     console.log("plugins -> axios222");
 
-            Dialog.create({
-                title: "Confirm",
-                message: "Would you like to turn on the wifi?",
-                ok: {
-                    push: true
-                },
-                cancel: {
-                    push: true,
-                    color: "negative"
-                },
-                persistent: false
-            })
-                .onOk(() => {
-                    // console.log('>>>> OK')
-                })
-                .onCancel(() => {
-                    // console.log('>>>> Cancel')
-                })
-                .onDismiss(() => {
-                    // console.log('I am triggered on both OK and Cancel')
-                });
-        } catch (e) {console.log("plugins -> axios2 ", e);}
-
-        
+            
+        //     Dialog.create({
+        //         title: "Confirm",
+        //         message: "Would you like to turn on the wifi?",
+        //         ok: {
+        //             push: true
+        //         },
+        //         cancel: {
+        //             push: true,
+        //             color: "negative"
+        //         },
+        //         persistent: false
+        //     })
+        //         .onOk(() => {
+        //             // console.log('>>>> OK')
+        //         })
+        //         .onCancel(() => {
+        //             // console.log('>>>> Cancel')
+        //         })
+        //         .onDismiss(() => {
+        //             // console.log('I am triggered on both OK and Cancel')
+        //         });
+        // } catch (e) {
+        //     console.log("plugins -> axios2 ", e);
+        // }
 
         if (status >= 500) {
+            console.log("plugins -> axios->status >500");
             // swal.fire({
             //   type: 'error',
             //   title: i18n.t('error_alert_title'),
@@ -67,6 +68,7 @@ axios.interceptors.response.use(
         }
 
         if (status === 401 && store.getters["auth/check"]) {
+            console.log("plugins -> axios->status >401");
             // swal.fire({
             //   type: 'warning',
             //   title: i18n.t('token_expired_alert_title'),
