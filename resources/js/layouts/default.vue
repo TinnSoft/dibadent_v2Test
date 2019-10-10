@@ -29,21 +29,21 @@ export default {
         active: true
       },
       {
-        icon: "assessment",
+        icon: "star",
         title: "PUNTOS",
         type: "alone",
-        path: "/2",      
+        path: "/points",      
       },
       {
-        icon: "build",
-        title: "CONFIGURACIÓN",
-        path: "/settings",
+        icon: "insert_chart",
+        title: "REPORTES",
+        path: "/reports",
         type: "alone"
       },
       {
-        icon: "pie_chart",
-        title: "REPORTES",
-        path: "/config6",
+        icon: "build",
+        title: "ADMINISTRACIÓN",
+        path: "/settings",
         type: "alone"
       }
     ]

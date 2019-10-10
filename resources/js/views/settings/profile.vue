@@ -1,12 +1,14 @@
 <template>
-     <q-page padding>
-        <q-input v-model="form.name" float-label="*Nombre" />
-        <q-input v-model="form.last_name" float-label="Apellido" />
-        <q-input v-model="form.email" float-label="*Email" />
+     <div class="q-pa-md">
+    <div class="q-gutter-y-md column" style="max-width: 500px">
+        <q-input filled v-model="form.name" label="*Nombre" dense/>
+        <q-input filled v-model="form.last_name" label="Apellido" dense/>
+        <q-input filled v-model="form.email" label="*Email" dense/>
         <br>
-        <q-btn  icon="save" label="GUARDAR" color="green" @click="update">
+        <q-btn  icon="save" glossy  label="GUARDAR" color="secondary" @click="update">
         </q-btn>
-     </q-page>
+    </div>
+     </div>
 </template>
 
 <script>

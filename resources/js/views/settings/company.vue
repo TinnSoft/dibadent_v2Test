@@ -1,6 +1,5 @@
 <template>
     <q-page padding>
-
         <q-list>
             <q-expansion-item label="<strong>Información básica</strong>" icon="location_city" sublabel="Información importante para poder generar las facturas a clientes según normatividad DIAN" opened>
                 <div>
@@ -93,7 +92,8 @@ export default {
   methods: {
     fetchData() {
       let vm = this;
-      vm.isProcessing = true;
+      vm.isProcessing = false;
+      /*vm.isProcessing = true;
       axios
         .get(`/api/${vm.path}`)
         .then(function(response) {
@@ -105,7 +105,7 @@ export default {
         })
         .catch(function(error) {
           vm.isProcessing = false;
-        });
+        });*/
     },
     update() {
       let vm = this;

@@ -6,6 +6,10 @@ const PasswordEmail = () =>
 //const PasswordReset = () => import('~/views/auth/password/reset').then(m => m.default || m)
 const NotFound = () => import("~/views/errors/404").then(m => m.default || m);
 
+const SettingsIndex = () =>  import ('~/views/settings/index').then(m => m.default || m)
+const SettingsProfile = () =>  import ('~/views/settings/profile').then(m => m.default || m)
+const SettingsCompany = () =>  import ('~/views/settings/company').then(m => m.default || m)
+
 export default [
     { path: "/", name: "home", component: Home },
     { path: "/login", name: "login", component: Login },
@@ -14,5 +18,14 @@ export default [
         name: "password.request",
         component: PasswordEmail
     },
+    {
+        path: '/settings',   
+        component: SettingsIndex,
+        children: [
+          { path: '', redirect: { name: 'settings.company' }},
+          { path: 'profile', name: 'settings.profile', component:SettingsProfile},
+          { path: 'company', name: 'settings.company', component:SettingsCompany },
+        ]
+      },
     { path: "*", component: NotFound }
 ];
