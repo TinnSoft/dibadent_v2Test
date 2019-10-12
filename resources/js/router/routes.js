@@ -9,6 +9,7 @@ const NotFound = () => import("~/views/errors/404").then(m => m.default || m);
 const SettingsIndex = () =>  import ('~/views/settings/index').then(m => m.default || m)
 const SettingsProfile = () =>  import ('~/views/settings/profile').then(m => m.default || m)
 const SettingsCompany = () =>  import ('~/views/settings/company').then(m => m.default || m)
+const SettingsDoctor = () =>  import ('~/views/settings/doctor').then(m => m.default || m)
 
 export default [
     { path: "/", name: "home", component: Home },
@@ -24,7 +25,8 @@ export default [
         children: [
           { path: '', redirect: { name: 'settings.company' }},
           { path: 'profile', name: 'settings.profile', component:SettingsProfile},
-          { path: 'company', name: 'settings.company', component:SettingsCompany },
+          { path: 'doctor', name: 'settings.doctor', component:SettingsProfile},
+          { path: 'company', name: 'settings.company', component:SettingsDoctor },
         ]
       },
     { path: "*", component: NotFound }

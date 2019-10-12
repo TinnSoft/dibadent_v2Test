@@ -15,6 +15,7 @@ class CreatePatientsTable extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->references('id')->on('users');  
             $table->string('name');
             $table->string('last_name')->nullable();
             $table->string('email');
@@ -25,6 +26,7 @@ class CreatePatientsTable extends Migration
             $table->string('phone2')->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });

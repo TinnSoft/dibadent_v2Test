@@ -23,6 +23,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::resource('doctor', 'DoctorController');
+    Route::get('getDoctorlist','DoctorController@InventoryIndex');
+    //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
+
 });
 
 Route::group(['middleware' => 'guest:api'], function () {    

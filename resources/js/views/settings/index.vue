@@ -21,11 +21,11 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Mi Empresa</q-item-label>
+                <q-item-label class="text-black" lines="1">Mi Empresa</q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chevron_right" color="green" />
+                <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
             <q-item clickable :active="link === 'profile'" @click="link = 'profile'" active-class="my-menu-link" v-ripple to="/settings/profile">
@@ -34,11 +34,11 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Mi Perfil</q-item-label>
+                <q-item-label class="text-black" lines="1">Mi Perfil</q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chevron_right" color="green" />
+                <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
             <q-item clickable :active="link === 'doctor'" @click="link = 'doctor'" active-class="my-menu-link" v-ripple to="/settings/doctor">
@@ -47,11 +47,11 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Medicos</q-item-label>
+                <q-item-label class="text-black" lines="1">Medicos</q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chevron_right" color="green" />
+                <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
             <q-item clickable :active="link === 'radiology'" @click="link = 'radiology'" active-class="my-menu-link" v-ripple to="/settings/radiology">
@@ -60,11 +60,11 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Permisos de radiologo</q-item-label>
+                <q-item-label  class="text-black" lines="1">Permisos de radiologo</q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chevron_right" color="green" />
+                <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
             <q-item clickable :active="link === 'patient'" @click="link = 'patient'" active-class="my-menu-link" v-ripple to="/settings/2">
@@ -73,11 +73,11 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">Pacientes</q-item-label>
+                <q-item-label class="text-black" lines="1">Pacientes</q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chevron_right" color="green" />
+                <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
           </q-list>

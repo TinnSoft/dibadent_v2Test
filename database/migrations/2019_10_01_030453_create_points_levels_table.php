@@ -15,6 +15,9 @@ class CreatePointsLevelsTable extends Migration
     {
         Schema::create('points_levels', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('level_name');
+            $table->string('required_points')->nullable();   
+            $table->dateTime('limit_date')->nullable();   
             $table->timestamps();
             $table->softDeletes();
         });
