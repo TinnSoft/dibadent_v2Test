@@ -10,7 +10,7 @@ class Images extends Model
     
     protected $table = 'images';
     
-    protected $fillable=['procedure_id','file_directory','file_name','created_by','modified_by','created_at','updated_at','deleted_at'];
+    protected $fillable=['procedure_id','title','file_name','other_details','created_by','modified_by','created_at','updated_at','deleted_at'];
 
 
     /**
@@ -32,8 +32,9 @@ class Images extends Model
     {
         return [
 			'procedure_id'=>null,
-            'file_directory'=>null,
-            'file_name'=>null
+            'title'=>null,
+            'file_name'=>null,
+            'other_details'=>null
         ];
     }
 }

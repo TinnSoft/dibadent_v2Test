@@ -6,7 +6,7 @@
         <q-input filled v-model="form.email" label="*Email" dense/>
         <q-input filled v-model="form.last_name" label="Fecha de nacimiento" dense/>
       <q-input filled v-model="form.last_name" label="Periodo de trabajo" dense/>-->
-
+<!--
       <q-table
         ref="mainTable"
         :data="table"
@@ -54,6 +54,7 @@
           <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
         </q-td>
       </q-table>
+      -->
     </div>
   </div>
 </template>
@@ -73,6 +74,7 @@ export default {
   created() {
     try {
       let vm = this;
+      console.log('info de usuario: ',store.getters["auth/user"])
       vm.$set(vm.$data.form, "id", store.getters["auth/user"].id);
       vm.$set(vm.$data.form, "name", store.getters["auth/user"].name);
       vm.$set(vm.$data.form, "email", store.getters["auth/user"].email);
@@ -97,7 +99,7 @@ export default {
     fetchData() {
       let vm = this;
       vm.loading = true;
-
+      console.log('path: ',vm.path)
       axios
         .get(`/api/${vm.path}`)
         .then(function(response) {

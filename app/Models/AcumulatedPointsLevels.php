@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Doctors extends Model
+class AcumulatedPointsLevels extends Model
 {   
     protected $dates = ['deleted_at','created_at','updated_at'];
     
-    protected $table = 'doctors';
+    protected $table = 'acumulated_points_levels';
     
-    protected $fillable=['points_level_id','name','last_name','email','birthday','home_address','acumulated_points',
-    'phone1','phone2','created_by','modified_by','created_at','updated_at','deleted_at'];
+    protected $fillable=['points_level_id','user_id','acumulated_points',
+    'created_by','modified_by','created_at','updated_at','deleted_at'];
 
 
     /**
@@ -25,23 +25,22 @@ class Doctors extends Model
     ];
 
 
-     public function points_level()
+    public function points_level()
     {
         return $this->hasOne(PointsLevels::class, 'id', 'points_level_id')->select(array('id', 'level_name','required_points','limit_date'));
+    }
+
+    public function user()
+    {
+        return $this->hasOne(Users::class, 'id', 'user_id')->select(array('id', 'name','email'));
     }
     
     public static function initialize()
     {
         return [
 			'points_level_id'=>null,
-			'name'=>null,
-			'last_name'=>null,
-			'email' => null, 
-            'birthday' => null,
-            'home_address'=>null,
-            'acumulated_points'=>0,
-            'phone1'=>null,
-            'phone2'=>null
+			'user_id'=>null,			
+            'acumulated_points'=>null
         ];
     }
 

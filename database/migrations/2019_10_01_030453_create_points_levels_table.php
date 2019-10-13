@@ -18,8 +18,11 @@ class CreatePointsLevelsTable extends Migration
             $table->string('level_name');
             $table->string('required_points')->nullable();   
             $table->dateTime('limit_date')->nullable();   
+            $table->integer('created_by')->nullable();
+            $table->integer('modified_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+            
         });
     }
 

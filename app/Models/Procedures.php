@@ -10,7 +10,7 @@ class Procedures extends Model
     
     protected $table = 'procedures';
     
-    protected $fillable=['product_id','patient_id','doctor_id','description',
+    protected $fillable=['product_id','patient_id','doctor_id','radiologist_id','description','comments','procedure_date',
     'created_by','modified_by','created_at','updated_at','deleted_at'];
 
 
@@ -31,12 +31,17 @@ class Procedures extends Model
 
     public function patient()
     {
-        return $this->hasOne(Patients::class, 'id', 'patient_id')->select(array('id', 'name','last_name','email'));
+        return $this->hasOne(Users::class, 'id', 'patient_id')->select(array('id', 'name','last_name','email'));
     }
 
     public function doctor()
     {
-        return $this->hasOne(Doctors::class, 'id', 'doctor_id')->select(array('id', 'name','last_name','email'));
+        return $this->hasOne(Users::class, 'id', 'doctor_id')->select(array('id', 'name','last_name','email'));
+    }
+
+    public function radiologist()
+    {
+        return $this->hasOne(Users::class, 'id', 'radiologist_id')->select(array('id', 'name','last_name','email'));
     }
     
     
@@ -45,8 +50,11 @@ class Procedures extends Model
         return [
 			'product_id'=>null,
 			'patient_id'=>null,
-			'doctor_id'=>null,
-			'description' => null
+            'doctor_id'=>null,
+            'radiologist_id'=>null,
+            'description' => null,
+            'comments' => null,
+            'procedure_date' => null
         ];
     }
 }

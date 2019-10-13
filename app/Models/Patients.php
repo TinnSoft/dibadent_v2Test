@@ -10,7 +10,8 @@ class Patients extends Model
     
     protected $table = 'patients';
     
-    protected $fillable=['name','last_name','email','birthday','home_address','phone1','phone2','created_by','modified_by','created_at','updated_at','deleted_at'];
+    protected $fillable=['user_id','gender_id','name','last_name','email','birthday','home_address','phone','comments',
+    'created_by','modified_by','created_at','updated_at','deleted_at'];
 
 
     /**
@@ -25,13 +26,15 @@ class Patients extends Model
     public static function initialize()
     {
         return [
-			'name'=>null,
+            'user_id'=>null,
+            'gender_id'=>null,
+            'name'=>null,
             'last_name'=>null,
             'email'=>null,
             'birthday'=>null,
             'home_address'=>null,
-            'phone1'=>null,
-            'phone2'=>null
+            'phone'=>null,
+            'comments'=>null
         ];
     }
 }

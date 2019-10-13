@@ -15,7 +15,14 @@
       >
         <q-scroll-area class="fit">
           <q-list padding class="text-primary">
-            <q-item clickable :active="link === 'company'" @click="link = 'company'" active-class="my-menu-link" v-ripple to="/settings/company">
+            <q-item
+              clickable
+              :active="link === 'company'"
+              @click="link = 'company'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/company"
+            >
               <q-item-section avatar top>
                 <q-avatar icon="domain" color="primary" text-color="white" />
               </q-item-section>
@@ -28,7 +35,14 @@
                 <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
-            <q-item clickable :active="link === 'profile'" @click="link = 'profile'" active-class="my-menu-link" v-ripple to="/settings/profile">
+            <q-item
+              clickable
+              :active="link === 'profile'"
+              @click="link = 'profile'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/profile"
+            >
               <q-item-section avatar top>
                 <q-avatar icon="person_outline" color="primary" text-color="white" />
               </q-item-section>
@@ -41,7 +55,14 @@
                 <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
-            <q-item clickable :active="link === 'doctor'" @click="link = 'doctor'" active-class="my-menu-link" v-ripple to="/settings/doctor">
+            <q-item
+              clickable
+              :active="link === 'doctor'"
+              @click="link = 'doctor'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/doctor"
+            >
               <q-item-section avatar top>
                 <q-avatar icon="enhanced_encryption" color="primary" text-color="white" />
               </q-item-section>
@@ -54,20 +75,34 @@
                 <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
-            <q-item clickable :active="link === 'radiology'" @click="link = 'radiology'" active-class="my-menu-link" v-ripple to="/settings/radiology">
+            <q-item
+              clickable
+              :active="link === 'radiology'"
+              @click="link = 'radiology'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/radiology"
+            >
               <q-item-section avatar top>
                 <q-avatar icon="camera_roll" color="primary" text-color="white" />
               </q-item-section>
 
               <q-item-section>
-                <q-item-label  class="text-black" lines="1">Permisos de radiologo</q-item-label>
+                <q-item-label class="text-black" lines="1">Radiologos</q-item-label>
               </q-item-section>
 
               <q-item-section side>
                 <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
-            <q-item clickable :active="link === 'patient'" @click="link = 'patient'" active-class="my-menu-link" v-ripple to="/settings/2">
+            <q-item
+              clickable
+              :active="link === 'patient'"
+              @click="link = 'patient'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/2"
+            >
               <q-item-section avatar top>
                 <q-avatar icon="accessible" color="primary" text-color="white" />
               </q-item-section>

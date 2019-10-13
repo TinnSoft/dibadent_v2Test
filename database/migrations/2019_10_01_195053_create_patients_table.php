@@ -16,17 +16,18 @@ class CreatePatientsTable extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->references('id')->on('users');  
+            $table->unsignedBigInteger('gender_id')->references('id')->on('genders');  
             $table->string('name');
             $table->string('last_name')->nullable();
             $table->string('email');
             $table->dateTime('birthday')->nullable();
             $table->string('home_address')->nullable();
-            $table->integer('acumulated_points')->nullable();
-            $table->string('phone1')->nullable();
-            $table->string('phone2')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('comments')->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('gender_id')->references('id')->on('genders');
             $table->timestamps();
             $table->softDeletes();
         });

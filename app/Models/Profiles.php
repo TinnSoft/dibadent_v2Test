@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UsersRole extends Model
+class Profiles extends Model
 {
-    protected $table = 'users_role';
+    protected $table = 'profiles';
     
-    protected $fillable=['role'];
+    protected $fillable=['description'];
 
     public static function initialize()
-    {patient_id
+    {
         return [
-			'role'=>null
+			'description'=>null
         ];
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePatientsTable extends Migration
+class CreateProfilePhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreatePatientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('patients', function (Blueprint $table) {
+        Schema::create('profile_photos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id')->references('id')->on('users');  
-            $table->string('name');
-            $table->string('last_name')->nullable();
-            $table->string('email');
-            $table->string('phone1')->nullable();
+            $table->unsignedBigInteger('user_id') ->references('id')->on('users');
+            $table->string('title');            
+            $table->string('file_name');
+            $table->string('other_details');     
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->timestamps();
             $table->softDeletes();
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -35,6 +34,6 @@ class CreatePatientsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('patients');
+        Schema::dropIfExists('profile_photos');
     }
 }

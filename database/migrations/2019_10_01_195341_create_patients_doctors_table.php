@@ -15,13 +15,13 @@ class CreatePatientsDoctorsTable extends Migration
     {
         Schema::create('patients_doctors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('doctor_id')->references('id')->on('doctors');             
-            $table->unsignedBigInteger('patient_id')->references('id')->on('patients');
-            $table->timestamps();
-            $table->softDeletes();
+            $table->unsignedBigInteger('doctor_id')->references('id')->on('users');             
+            $table->unsignedBigInteger('patient_id')->references('id')->on('patients');            
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
-            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('doctor_id')->references('id')->on('users');
             $table->foreign('patient_id')->references('id')->on('patients');
         });
     }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDoctorsTable extends Migration
+class CreateAcumulatedPointsLevelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,13 @@ class CreateDoctorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        Schema::create('acumulated_points_levels', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('points_level_id')->references('id')->on('points_levels');
-            $table->unsignedBigInteger('user_id')->references('id')->on('users');  
-            $table->string('name');
-            $table->string('last_name')->nullable();
-            $table->string('email');
-            $table->dateTime('birthday')->nullable();
-            $table->string('home_address')->nullable();
+            $table->unsignedBigInteger('user_id')->references('id')->on('users');             
             $table->integer('acumulated_points')->nullable();
-            $table->string('phone1')->nullable();
-            $table->string('phone2')->nullable();
-            $table->bigInteger('created_by')->nullable();
-            $table->bigInteger('modified_by')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('modified_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('points_level_id')->references('id')->on('points_levels');
@@ -41,6 +34,6 @@ class CreateDoctorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('acumulated_points_levels');
     }
 }

@@ -15,22 +15,23 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('status_id') ->references('id')->on('users_status');
-            $table->unsignedBigInteger('role_id') ->references('id')->on('users_role');
-           // $table->unsignedBigInteger('doctor_id') ->references('id')->on('doctors')->nullable();
+            $table->unsignedBigInteger('profile_id') ->references('id')->on('profiles');
+            $table->string('name');
+            $table->string('last_name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('profile_image')->nullable();            
+            $table->dateTime('birthday')->nullable();
+            $table->string('home_address')->nullable();
+            $table->string('phone')->nullable();
+            $table->boolean('isActive')->default($value=true);          
             $table->rememberToken()->nullable();    
             $table->dateTime('last_login')->nullable();       
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('status_id')->references('id')->on('users_status');
-            $table->foreign('role_id')->references('id')->on('users_role');
-            $table->foreign('doctor_id')->references('id')->on('doctors');
+            $table->foreign('profile_id')->references('id')->on('profiles');
         });
     }
 

@@ -25,8 +25,8 @@ export default [
         children: [
           { path: '', redirect: { name: 'settings.company' }},
           { path: 'profile', name: 'settings.profile', component:SettingsProfile},
-          { path: 'doctor', name: 'settings.doctor', component:SettingsProfile},
-          { path: 'company', name: 'settings.company', component:SettingsDoctor },
+          { path: 'doctor', name: 'settings.doctor', component:SettingsDoctor},
+          { path: 'company', name: 'settings.company', component:SettingsCompany },
         ]
       },
     { path: "*", component: NotFound }

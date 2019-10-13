@@ -7,7 +7,7 @@ use App\Events\SettingsChanged;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Models\Account;
-use App\Models\User;
+use App\Models\Users;
 use Auth;
 use Carbon\Carbon;
 
@@ -37,7 +37,7 @@ class HandleUserLoggedIn
 
     public static function updateLoginInfo()
     {
-        $userdata = User::where('id',  Auth::user()->id)  
+        $userdata = Users::where('id',  Auth::user()->id)  
                     ->find(1);
         if($userdata)
         {

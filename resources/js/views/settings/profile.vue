@@ -1,14 +1,34 @@
 <template>
-     <div class="q-pa-md">
+  <div class="q-pa-md">
     <div class="q-gutter-y-md column" style="max-width: 500px">
-        <q-input filled v-model="form.name" label="*Nombre" dense/>
-        <q-input filled v-model="form.last_name" label="Apellido" dense/>
-        <q-input filled v-model="form.email" label="*Email" dense/>
-        <br>
-        <q-btn  icon="save" glossy  label="GUARDAR" color="secondary" @click="update">
-        </q-btn>
+      <q-input clearable filled v-model="form.name" label="*Nombre" dense />
+      <q-input clearable filled v-model="form.last_name" label="Apellido" dense />
+      <q-input clearable filled v-model="form.email" type="email" label="*Email" dense />
+      <q-input clearable filled v-model="form.home_address" label="Dirección de residencia" dense />
+      <q-input clearable filled v-model="form.phone" type="tel" label="Telefono" dense />
+
+      <q-input
+        clearable
+        filled
+        v-model="form.birthday"
+        mask="date"
+        :rules="['date']"
+        label="Fecha de Cumpleaños"
+        dense
+      >
+        <template v-slot:append>
+          <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+              <q-date v-model="form.birthday" @input="() => $refs.qDateProxy.hide()" />
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+
+      <br />
+      <q-btn icon="save" glossy label="GUARDAR" color="primary" @click="update"></q-btn>
     </div>
-     </div>
+  </div>
 </template>
 
 <script>
@@ -17,18 +37,14 @@ import kNotify from "../../components/messages/Notify.js";
 
 export default {
   created() {
-    try {
-      let vm = this;
-      vm.$set(vm.$data.form, "id", store.getters["auth/user"].id);
-      vm.$set(vm.$data.form, "name", store.getters["auth/user"].name);
-      vm.$set(vm.$data.form, "email", store.getters["auth/user"].email);
-      vm.$set(vm.$data.form, "last_name", store.getters["auth/user"].last_name);
-    } catch (e) {}
+    this.fetchData();
   },
   data() {
     return {
+      isPwd: true,
       form: {},
-      path: "/api/profile/"
+      path: "users/getCompanyValues/",
+      pathToUpdate: "/api/users/"
     };
   },
   computed: {
@@ -40,10 +56,23 @@ export default {
     }
   },
   methods: {
+    fetchData() {
+      let vm = this;
+      vm.isProcessing = true;
+      axios
+        .get(`/api/${vm.path}`)
+        .then(function(response) {
+          vm.$set(vm, "form", response.data.form);
+          vm.isProcessing = false;
+        })
+        .catch(function(error) {
+          vm.isProcessing = false;
+        });
+    },
     update() {
       let vm = this;
       axios
-        .put(vm.path + vm.form.id, vm.form)
+        .put(vm.pathToUpdate + vm.form.id, vm.form)
         .then(function(response) {
           if (response.data.updated) {
             kNotify(

@@ -18,7 +18,7 @@ class CreatePointsRedemptionTable extends Migration
             
             $table->unsignedBigInteger('product_id')->references('id')->on('products');   
             $table->unsignedBigInteger('user_id')->references('id')->on('users');  
-            $table->integer('poits_redeemed');           
+            $table->integer('points_redeemed');           
             $table->string('code')->nullable();
             $table->boolean('is_code_confirmed')->nullable();
             $table->bigInteger('created_by')->nullable();
