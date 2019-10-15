@@ -1,96 +1,145 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-sm">
-    
-          <q-dialog v-model="openInventoryForm" @hide="handleHide">
-            <q-card style="width: 700px; max-width: 90vw;">
-              <q-bar class="bg-blue text-white">
-                <q-icon name="mail" ></q-icon>
-                <div>{{toolbarLabel}}  </div>
-      
-                <q-space ></q-space>
+      <q-dialog v-model="openInventoryForm" @hide="handleHide">
+        <q-card style="width: 700px; max-width: 90vw;">
+          <q-bar class="bg-blue text-white">
+            <q-icon name="mail"></q-icon>
+            <div>{{toolbarLabel}}</div>
 
-                <q-btn dense flat icon="close" v-close-popup>
-                  <q-tooltip>Cerrar</q-tooltip>
-                </q-btn>
-              </q-bar>
+            <q-space></q-space>
 
-              <q-card-section>                 
-                  <div class="doc-container">
-                    <div class="row">                
-                        <div class="col-12 col-md-6">
-                            <div class="q-gutter-sm">
-                              <q-input filled hide-bottom-space dense clearable :error="checkIfFieldHasError(errors,'name')" 
-                                  v-model="form.name" label="*Nombre" />
+            <q-btn dense flat icon="close" v-close-popup>
+              <q-tooltip>Cerrar</q-tooltip>
+            </q-btn>
+          </q-bar>
 
-                              <q-input filled hide-bottom-space dense clearable v-model="form.reference" label="Referencia" />
+          <q-card-section>
+            <div class="doc-container">
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <div class="q-gutter-sm">
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      clearable
+                      :error="checkIfFieldHasError(errors,'name')"
+                      v-model="form.name"
+                      label="*Nombre"
+                    />
 
-                              <q-input filled clearable dense autogrow v-model="form.description" label="Descripción" />
-                              
-                              <q-input filled hide-bottom-space dense :error="checkIfFieldHasError(errors,'sale_price')" clearable type="number"  
-                                  prefix="$" v-model="form.sale_price" label="*Precio de venta" />
-                            
-                              <q-select options-dense filled hide-bottom-space dense filter clearable :options="base.listPrice" v-model="form.list_price_id" label="Lista de Precios" />                    
-                                              
-                              <q-select options-dense filled hide-bottom-space dense :error="checkIfFieldHasError(errors,'tax_id')" filter 
-                                clearable :options="base.taxes" v-model="form.tax_id" label="*Impuesto" />                    
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-1">
-                        </div>
-                        <div class="col-12 col-md-5">
-                            <div class="q-gutter-sm">                                  
-                                  <q-checkbox v-model="form.inv_inStock" label="Ítem inventariable?">
-                                    <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-                                      <q-icon name="help_outline" />
-                                      <strong>Marque esta opción</strong><div>si desea que la herramienta lleve el inventario de manera automática para este ítem</div>
-                                    </q-tooltip>
-                                  </q-checkbox>
-                                  
-                                <template v-if="form.inv_inStock===true">                                                                   
-                                  <q-select filled hide-bottom-space options-dense dense :error="checkIfFieldHasError(errors,'inv_type_id')" 
-                                      filter 
-                                      clearable :options="base.measureUnit" v-model="form.inv_type_id" label="*Unidad de Medida">                                     
-                                  </q-select>    
-                                  <q-input filled hide-bottom-space dense :error="checkIfFieldHasError(errors,'inv_quantity_initial')" clearable type="number"  
-                                      v-model="form.inv_quantity_initial" abel="*Cantidad Inicial" />    
-                                  <q-input filled hide-bottom-space dense :error="checkIfFieldHasError(errors,'inv_unit_cost')" clearable type="number" prefix="$"
-                                      v-model="form.inv_unit_cost" label="*Precio de Compra" /> 
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                  </div>                            
-              </q-card-section>              
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      clearable
+                      v-model="form.last_name"
+                      label="Apellido"
+                    />
 
-              <q-card-section>
-                  <kBlockQuote textToShow="<strong>No te olvides de seleccionar la categoría</strong> a la cual pertenece el ítem que estás creando.
-                          Esto ayudará a que la herramienta te genere los reportes de una manera más precisa."
-                      customClass="doc-note doc-note--tip">
-                  </kBlockQuote>
-                  <treetable :route="pathCatehory" @click="handleClick" :selectedIDRow="form.category_id"/> 
-              </q-card-section>
-              <q-card-actions align="right" class="text-primary"> 
-                  <q-btn rpunded :loading="loading" color="primary" @click.native="submit()" icon="save" label="Guardar">
-                      <span slot="loading"><q-spinner-hourglass class="on-left" />
-                      </span>                    
-                  </q-btn>
-                </q-card-actions>     
-            </q-card>
-          </q-dialog>            
-      </div>
+                    <q-input
+                      clearable
+                      hide-bottom-space
+                      filled
+                      v-model="form.birthday"
+                      mask="date"
+                      :rules="['date']"
+                      label="Fecha de Cumpleaños"
+                      dense
+                    >
+                      <template v-slot:append>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy
+                            ref="qDateProxy"
+                            transition-show="scale"
+                            transition-hide="scale"
+                          >
+                            <q-date v-model="form.birthday" @input="() => $refs.qDateProxy.hide()" />
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      :error="checkIfFieldHasError(errors,'email')"
+                      clearable
+                      type="email"
+                      v-model="form.email"
+                      label="*Email"
+                    />
+
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      clearable
+                      v-model="form.home_address"
+                      label="Dirección"
+                    />
+
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      clearable
+                      v-model="form.phone"
+                      label="Telefono"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-card-section v-if="kindOfProcess=='create'">
+            <kBlockQuote
+              textToShow="<strong>La Contraseña</strong> se enviará automáticamente al correo 
+                         ingresado en este formulario"
+              customClass="doc-note doc-note--tip"
+            ></kBlockQuote>
+          </q-card-section>
+          <q-card-section v-if="kindOfProcess=='edit'">
+            <q-banner inline-actions class="bg-grey-3">
+              <template v-slot:avatar>
+                <q-icon name="email" color="primary" />
+              </template>
+              Enviar correo reseteando contraseña.
+              <template v-slot:action>
+                <q-btn flat color="primary" label="Enviar" />
+              </template>
+            </q-banner>
+          </q-card-section>
+          <q-card-actions align="right" class="text-primary">
+            <q-btn
+              rpunded
+              :loading="loading"
+              color="primary"
+              @click.native="submit()"
+              icon="save"
+              label="Guardar"
+            >
+              <span slot="loading">
+                <q-spinner-hourglass class="on-left" />
+              </span>
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+    </div>
   </div>
 </template>
 
 <script>
-
-import treetable from "../../../components/treeTable/TreeTable.vue";
 import kNotify from "../../../components/messages/Notify.js";
 
 export default {
   data() {
     return {
-      openInventoryForm:false,
+      openInventoryForm: false,
       spinnerText: "Cargando...",
       errors: null,
       themeColor: "secondary",
@@ -99,80 +148,15 @@ export default {
       loading: false,
       kindOfProcess: "create",
       error: false,
-      toolbarLabel: "NUEVO ÍTEM",
-      model: "inventory",
-      form: { inv_inStock: false },
-      base: {
-        measureUnit: [
-          {
-            label: "",
-            value: ""
-          }
-        ],
-        taxes: [
-          {
-            label: "",
-            value: ""
-          }
-        ],
-        listPrice: [
-          {
-            label: "",
-            value: ""
-          }
-        ]
-      },
-      columns: [
-        {
-          label: "Nombre",
-          field: "name",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "Apellido",
-          field: "last_name",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "email",
-          field: "email",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "Telefono",
-          field: "phone",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "Celular",
-          field: "phone_mobile",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "Notificar?",
-          field: "notify",
-          sortable: true,
-          type: "string"
-        },
-        {
-          label: "Acciones",
-          field: "actions",
-          sortable: true,
-          type: "string"
-        }
-      ],
-      pathFetchData: "/api/inventory/create",
+      toolbarLabel: "NUEVO DOCTOR",
+      model: "users",
+      form: {},
+      base: {},
+      pathFetchData: "/api/users/create",
       pathCatehory: "getCategoryIncome"
     };
   },
-  components: {
-    treetable,
-  },
+  components: {},
   methods: {
     handleClick(row) {
       this.form.category_id = row.id;
@@ -196,16 +180,7 @@ export default {
       axios
         .get(vm.pathFetchData)
         .then(function(response) {
-          // console.log(response.data.form);
           vm.$set(vm.$data, "form", response.data.form);
-          vm.$set(vm.$data.base, "taxes", response.data.base.taxes);
-          vm.$set(vm.$data.base, "listPrice", response.data.base.listprice);
-          vm.$set(
-            vm.$data.base,
-            "measureUnit",
-            response.data.base.measure_unit
-          );
-         
           vm.loading = false;
         })
         .catch(function(error) {
@@ -220,17 +195,16 @@ export default {
       vm.isEditActive = false;
       vm.kindOfProcess = kindOfProcess;
       vm.category_id = null;
-
       if (kindOfProcess === "edit") {
         vm.pathFetchData = `/api/${vm.model}/${customerId}/${kindOfProcess}`;
-        vm.toolbarLabel = "EDITAR ÍTEM";
+        vm.toolbarLabel = "EDITAR DOCTOR";
       } else {
         vm.pathFetchData = `/api/${vm.model}/${kindOfProcess}`;
-        vm.toolbarLabel = "NUEVO ÍTEM";
+        vm.toolbarLabel = "NUEVO DOCTOR";
       }
 
       vm.fetchData();
-      vm.openInventoryForm=true;
+      vm.openInventoryForm = true;
     },
 
     submit() {
@@ -254,17 +228,17 @@ export default {
             kNotify(vm, "El registro se creó satisfactoriamente", "positive");
           }
           vm.loading = false;
-          vm.$refs.productModal.hide()
+          vm.open("create", 0);
         })
         .catch(function(error) {
-          
           vm.$set(vm.$data, "errors", error.response.data);
           vm.loading = false;
-          kNotify(
-            vm,
-            "Ooops! No fue posible guardar el registro actual, intente de nuevo.",
-            "negative"
-          );
+          let messageError =
+            "Ooops! No fue posible guardar el registro actual, intente de nuevo.";
+          if (error.response.data.emailAlreadyExists) {
+            messageError = error.response.data.emailAlreadyExists;
+          }
+          kNotify(vm, messageError, "negative");
         });
     },
 

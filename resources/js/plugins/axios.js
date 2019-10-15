@@ -24,7 +24,7 @@ axios.interceptors.response.use(
     response => response,
     error => {
         const { status } = error.response;
-        console.log("plugins -> axios222",  error.response);
+        //console.log("plugins -> axios222",  error.response);
         
         // try {
         //     console.log("plugins -> axios222");

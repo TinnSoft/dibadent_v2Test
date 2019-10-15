@@ -29,9 +29,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('users', 'UsersController');
     Route::get('getUserValues','UsersController@edit');
-
-    Route::resource('doctor', 'DoctorController');
-    Route::get('getDoctorlist','DoctorController@InventoryIndex');
+    Route::get('getDoctorlist','UsersController@getDoctors');
+    
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
 
 });

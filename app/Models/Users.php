@@ -56,5 +56,18 @@ class Users extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public static function initialize()
+    {
+        return [
+            'email'=>null,
+            'name'=>null,
+            'last_name'=>null,
+            'password'=>null,
+            'birthday'=>null,
+            'home_address'=>null,
+            'phone'=>null,
+        ];
+    }
    
 }

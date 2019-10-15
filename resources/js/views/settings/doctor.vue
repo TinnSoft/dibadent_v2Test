@@ -1,12 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-gutter-y-md column" style="max-width: 500px">
-      <!-- <q-input filled v-model="form.name" label="*Nombre" dense/>
-        <q-input filled v-model="form.last_name" label="Apellido" dense/>
-        <q-input filled v-model="form.email" label="*Email" dense/>
-        <q-input filled v-model="form.last_name" label="Fecha de nacimiento" dense/>
-      <q-input filled v-model="form.last_name" label="Periodo de trabajo" dense/>-->
-<!--
+    <div class="q-gutter-y-md column">
       <q-table
         ref="mainTable"
         :data="table"
@@ -14,7 +8,9 @@
         row-key="id"
         :loading="loading"
         :filter="filter"
+        :pagination.sync="pagination"
         dense
+        :visible-columns="visibleColumns"
       >
         <template v-slot:top="props">
           <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar">
@@ -54,7 +50,7 @@
           <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
         </q-td>
       </q-table>
-      -->
+      <doctorModal ref="_doctor" @hide="closeDoctorModal"></doctorModal>
     </div>
   </div>
 </template>
@@ -62,29 +58,32 @@
 <script>
 import store from "../../store";
 import kButton from "../../components/tables/cButton.vue";
-import DoctorModal from "./modals/mDoctor.vue";
+import doctorModal from "./modals/mDoctor.vue";
 import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
   components: {
     kButton,
-    DoctorModal
+    doctorModal
   },
   created() {
-    try {
-      let vm = this;
-      console.log('info de usuario: ',store.getters["auth/user"])
-      vm.$set(vm.$data.form, "id", store.getters["auth/user"].id);
-      vm.$set(vm.$data.form, "name", store.getters["auth/user"].name);
-      vm.$set(vm.$data.form, "email", store.getters["auth/user"].email);
-      vm.$set(vm.$data.form, "last_name", store.getters["auth/user"].last_name);
-    } catch (e) {}
+    this.columns = doctorColumns();
+    this.fetchData();
   },
   data() {
     return {
+      model: "users",
+      filter: "",
+      loading: false,
+      table: [],
+      columns: [],
+      pagination: {
+        rowsPerPage: 10
+      },      
+      visibleColumns:['name','last_name','email','home_address','phone','birthday','actions'],
       form: {},
-      path: "/api/profile/"
+      path: "getDoctorlist"
     };
   },
   computed: {
@@ -95,11 +94,23 @@ export default {
       return false;
     }
   },
-  methods: {
+  methods: {    
+     closeDoctorModal() {
+      this.fetchData();
+    },
+    show(cell) {
+      this.$router.push(`/${this.model}/${cell.row.public_id}`);
+    },
+    editDoctorModal(refs, cell) {
+      this.openDoctorModal(refs, "edit", cell.id);
+    },
+    openDoctorModal(refs, processType, itemId) {
+      refs._doctor.open(processType, itemId);
+    },
     fetchData() {
       let vm = this;
       vm.loading = true;
-      console.log('path: ',vm.path)
+
       axios
         .get(`/api/${vm.path}`)
         .then(function(response) {
@@ -124,7 +135,7 @@ export default {
         })
         .then(() => {
           axios
-            .delete("/api/inventory/" + val.row.id)
+            .delete("/api/users/" + val.row.id)
             .then(function(response) {
               if (response.data.deleted) {
                 kNotify(
@@ -151,4 +162,62 @@ export default {
     }
   }
 };
+
+function doctorColumns() {
+  return [
+    {
+      label: "ID",
+      field: "id",
+      name: "id",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Nombre",
+      field: "name",
+      name: "name",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Apellido",
+      field: "last_name",
+      name: "last_name",
+      sortable: true,
+      filter: true
+    },
+    {
+      label: "Email",
+      field: "email",
+      name: "email",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Dirección",
+      field: "home_address",
+      name: "home_address",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Telefono",
+      field: "phone",
+      name: "phone",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Acciones",
+      field: "actions",
+      name: "actions",
+      type: "string"
+    }
+  ];
+}
 </script>
