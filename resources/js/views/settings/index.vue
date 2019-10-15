@@ -4,7 +4,7 @@
       <q-btn flat round dense icon="menu" @click="layoutStore.left = !layoutStore.left" />
       <q-toolbar-title class="text-weight-bold text-blue">Configuración</q-toolbar-title>
     </q-toolbar>
-    <q-layout view="lhh LpR lff" container style="height: 500px" class="shadow-2 rounded-borders">
+    <q-layout view="lhh LpR lff" container style="height: 600px" class="shadow-2 rounded-borders">
       <q-drawer
         side="left"
         v-model="layoutStore.left"
