@@ -77,18 +77,18 @@
             </q-item>
             <q-item
               clickable
-              :active="link === 'radiology'"
-              @click="link = 'radiology'"
+              :active="link === 'radiologist'"
+              @click="link = 'radiologist'"
               active-class="my-menu-link"
               v-ripple
-              to="/settings/radiology"
+              to="/settings/radiologist"
             >
               <q-item-section avatar top>
                 <q-avatar icon="camera_roll" color="primary" text-color="white" />
               </q-item-section>
 
               <q-item-section>
-                <q-item-label class="text-black" lines="1">Radiologos</q-item-label>
+                <q-item-label class="text-black" lines="1">Radiólogos</q-item-label>
               </q-item-section>
 
               <q-item-section side>
@@ -101,7 +101,7 @@
               @click="link = 'patient'"
               active-class="my-menu-link"
               v-ripple
-              to="/settings/2"
+              to="/settings/patient"
             >
               <q-item-section avatar top>
                 <q-avatar icon="accessible" color="primary" text-color="white" />

@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {   
-
+    private $doctor_code=3;
+    private $radiologist_code=2;
 
     public function create()
     {
@@ -43,9 +44,10 @@ class UsersController extends Controller
         $data = DB::table('users')
         ->Join('profiles', 'users.profile_id', '=', 'profiles.id')        
         ->where([
-        ['profiles.description','DOCTOR']
+            ['profiles.id',$this->doctor_code]
         ])    
         ->where('isActive',1)    
+        ->whereNull('deleted_at')
         ->select('users.id',
         'users.name',
         'users.last_name',
@@ -65,7 +67,35 @@ class UsersController extends Controller
        ]);
     }
 
+    public function getRadiologist()
+    {   
 
+        $data = DB::table('users')
+        ->Join('profiles', 'users.profile_id', '=', 'profiles.id')        
+        ->where([
+        ['profiles.id',$this->radiologist_code]
+        ])    
+        ->where('isActive',1)    
+        ->whereNull('deleted_at')
+        ->select('users.id',
+        'users.name',
+        'users.last_name',
+        'users.email',
+        'users.password',
+        'users.birthday',
+        'users.home_address',
+        'users.phone',
+        'users.created_at'
+        )      
+        ->orderBy('users.id','desc')        
+        ->get()->toArray();
+
+       return response()
+       ->json([
+           'records' => $data
+       ]);
+    }
+    
     private static function getUserByID($id){
 
         return  Users::where('id',  $id)               
@@ -106,10 +136,13 @@ class UsersController extends Controller
             'email' => 'required'
             ]);        
         
-        $randomPassword = Str::random(6);
-          
-        $data = $request->all();  
-        $data['profile_id'] = 3;
+        $randomPassword = Str::random(6);      
+        
+        $data = $request->all();          
+        $_process = collect($data)->get('_process');     
+        
+        $data['profile_id']=  $_process=='DOCTOR' ? $this->doctor_code : $this->radiologist_code;
+       
         $data['created_by'] = Auth::user()->id;
         $data['password'] = bcrypt($randomPassword);
         
@@ -169,7 +202,13 @@ class UsersController extends Controller
     }
     
     public function destroy($id)
-    {
+    {   
+        $post = Users::find($id);
+        $post->delete();
 
+        return response()
+        ->json([
+            'deleted' => true
+        ]);
     }
 }

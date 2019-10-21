@@ -155,12 +155,11 @@ export default {
       loading: false,
       kindOfProcess: "create",
       error: false,
-      toolbarLabel: "NUEVO DOCTOR",
+      toolbarLabel: "NUEVO RADIOLOGO",
       model: "users",
       form: {},
       base: {},
       pathFetchData: "/api/users/create",
-      pathCatehory: "getCategoryIncome"
     };
   },
   components: {},
@@ -205,14 +204,14 @@ export default {
       vm.category_id = null;
       if (kindOfProcess === "edit") {
         vm.pathFetchData = `/api/${vm.model}/${customerId}/${kindOfProcess}`;
-        vm.toolbarLabel = "EDITAR DOCTOR";
+        vm.toolbarLabel = "EDITAR RADIOLOGO";
       } else if (kindOfProcess === "view") {
         vm.isReadOnly = true;
         vm.pathFetchData = `/api/${vm.model}/${customerId}/edit`;
-        vm.toolbarLabel = "INFORMACIÓN DEL DOCTOR";
+        vm.toolbarLabel = "INFORMACIÓN DEL RADIOLOGO";
       } else {
         vm.pathFetchData = `/api/${vm.model}/${kindOfProcess}`;
-        vm.toolbarLabel = "NUEVO DOCTOR";
+        vm.toolbarLabel = "NUEVO RADIOLOGO";
       }
 
       vm.fetchData();
@@ -220,7 +219,7 @@ export default {
     },
 
     submit() {
-       this.$set(this.$data.form, "_process", 'DOCTOR');
+       this.$set(this.$data.form, "_process", 'RADIOLOGIST');
       if (this.kindOfProcess === "edit") {
         this.spinnerText = "Actualizando...";
         this.update();

@@ -24,8 +24,8 @@
             dense
             color="primary"
             :disable="loading"
-            label="Nuevo Doctor"
-            @click="openDoctorModal($refs,'create')"
+            label="Nuevo Radiologo"
+            @click="openRadiologistModal($refs,'create')"
           />
           <q-btn
             flat
@@ -44,13 +44,13 @@
             color="grey"
             iconname="edit"
             tooltiplabel="Editar"
-            @click="editDoctorModal($refs, props.row)"
+            @click="editRadiologistModal($refs, props.row)"
           ></kButton>
           <kButton color="grey" iconname="remove_red_eye" tooltiplabel="Ver" @click="show($refs, props.row)"></kButton>
           <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
         </q-td>
       </q-table>
-      <doctorModal ref="_doctor" @hide="closeDoctorModal"></doctorModal>
+      <radiologistModal ref="_radiologist" @hide="closeRadiologistModal"></radiologistModal>
     </div>
   </div>
 </template>
@@ -58,17 +58,17 @@
 <script>
 import store from "../../store";
 import kButton from "../../components/tables/cButton.vue";
-import doctorModal from "./modals/mDoctor.vue";
+import radiologistModal from "./modals/mRadiologist.vue";
 import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
   components: {
     kButton,
-    doctorModal
+    radiologistModal
   },
   created() {
-    this.columns = doctorColumns();
+    this.columns = radiologistColumns();
     this.fetchData();
   },
   data() {
@@ -83,7 +83,7 @@ export default {
       },      
       visibleColumns:['name','last_name','email','home_address','phone','birthday','actions'],
       form: {},
-      path: "getDoctorlist"
+      path: "getRadiologistlist"
     };
   },
   computed: {
@@ -95,18 +95,18 @@ export default {
     }
   },
   methods: {    
-     closeDoctorModal() {
+     closeRadiologistModal() {
       this.fetchData();
     },
     show(refs, cell) {
       //this.$router.push(`/${this.model}/${cell.row.public_id}`);
-      this.openDoctorModal(refs, "view", cell.id);
+      this.openRadiologistModal(refs, "view", cell.id);
     },
-    editDoctorModal(refs, cell) {
-      this.openDoctorModal(refs, "edit", cell.id);
+    editRadiologistModal(refs, cell) {
+      this.openRadiologistModal(refs, "edit", cell.id);
     },
-    openDoctorModal(refs, processType, itemId) {
-      refs._doctor.open(processType, itemId);
+    openRadiologistModal(refs, processType, itemId) {
+      refs._radiologist.open(processType, itemId);
     },
     fetchData() {
       let vm = this;
@@ -155,7 +155,7 @@ export default {
   }
 };
 
-function doctorColumns() {
+function radiologistColumns() {
   return [
     {
       label: "ID",

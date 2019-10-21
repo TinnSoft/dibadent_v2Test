@@ -1,11 +1,16 @@
 <template>
-  <q-card>
-    <q-chip dense :color="backgroundColor" text-color="white" icon="star">Total {{title}}</q-chip>
+  <q-card flat>
+    <!-- <q-chip dense  :color="backgroundColor" text-color="white" icon="star">Total {{title}}</q-chip>
     <q-card>
       <q-card-section>
         <div class="text-h6">{{kValue}}</div>
       </q-card-section>
     </q-card>
+    </q-card>-->
+    <q-card-section class="bg-blue-grey-6 text-white">
+      <div class="text-h6">{{kValue}}</div>
+      <div class="text-subtitle2">Total {{title}}</div>
+    </q-card-section>
   </q-card>
 </template>
 

@@ -26,22 +26,22 @@
     <div class="q-pa-md">  
       <div class="row">
         <div class="col">
-           <kCard class="my-card" title="INGRESOS" background-color="primary" icon-name="" :total="income_value" subtitle="Total entradas" />
+           <kCard class="my-card" title="Radiografías Generadas Último mes" background-color="primary" icon-name="" :total="income_value" subtitle="Total entradas" />
              
         </div>
         <div class="col">
-           <kCard class="my-card" title="EGRESOS" background-color="orange" icon-name="" :total="outcome_value" subtitle="Total gastos" />              
+           <kCard class="my-card" title="Radiografías Generadas Último año" background-color="orange" icon-name="" :total="outcome_value" subtitle="Total gastos" />              
             
         </div>
       </div>  
       <br>
       <div class="row">
-        <div class="col">
-           <q-card class="my-card">
+        <div class="col">  
+            <q-card class="my-card">             
               <q-card-section>
                 <q-toolbar class="text-primary">                 
                   <q-toolbar-title>
-                    INGRESOS/EGRESOS
+                    RADIOGRAFÍAS
                   </q-toolbar-title>
                   <!--<q-btn flat round dense icon="date_range" ></q-btn>    -->
                     <q-btn-dropdown split outline dense
@@ -72,7 +72,11 @@
                       </q-list>
                     </q-btn-dropdown>
                 </q-toolbar>              
-              </q-card-section>
+              </q-card-section>    
+            </q-card>          
+        </div>
+        <div class="col">
+           <q-card class="my-card">            
 
               <q-card-section>
                 <q-tabs
@@ -84,38 +88,21 @@
                   align="justify"
                   narrow-indicator
                 >
-                  <q-tab name="causado" label="causado" >
-                  </q-tab>
-                  <q-tab name="pagado" label="pagado" ></q-tab>
+                  <q-tab name="redeemed_points" label="TOP PUNTOS REDIMIDOS" />
+                
+                  <q-tab name="doctor_history" label="MOVIMIENTOS REALIZADOS POR LOS MEDICOS" />
                 </q-tabs>
                 <q-tab-panels v-model="tab" animated>
-                  <q-tab-panel name="causado">
+                  <q-tab-panel name="redeemed_points">
                    
                   </q-tab-panel>
         
-                  <q-tab-panel name="pagado">
-                    <div class="text-h6">Alarms</div>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  <q-tab-panel name="doctor_history">
+
                   </q-tab-panel>
                 </q-tab-panels>
   
-               </q-card-section>
-        
-            </q-card>
-        </div>
-        <div class="col">
-           <q-card class="my-card">
-              <q-card-section>
-                 <q-toolbar class="text-primary">                 
-                  <q-toolbar-title>
-                    GASTOS
-                  </q-toolbar-title>
-                  <q-btn flat round dense icon="perm_data_setting" ></q-btn>                  
-                </q-toolbar>
               </q-card-section>
-
-              <q-card-section>
-                </q-card-section>
         
             </q-card>
         </div>

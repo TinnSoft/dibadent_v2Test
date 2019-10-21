@@ -28,8 +28,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getCompanyValues','CompanyController@show');
 
     Route::resource('users', 'UsersController');
-    Route::get('getUserValues','UsersController@edit');
+    Route::get('getUserValues','UsersController@edit');    
     Route::get('getDoctorlist','UsersController@getDoctors');
+    Route::get('getRadiologistlist','UsersController@getRadiologist');
+
+    Route::resource('patients', 'PatientsController');
+    Route::get('getPatientsValues','PatientsController@edit');    
+    Route::get('getPatientlist','PatientsController@getPatients');
     
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
 

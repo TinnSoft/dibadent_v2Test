@@ -58,7 +58,11 @@
                             transition-show="scale"
                             transition-hide="scale"
                           >
-                            <q-date :readonly="isReadOnly" v-model="form.birthday" @input="() => $refs.qDateProxy.hide()" />
+                            <q-date
+                              :readonly="isReadOnly"
+                              v-model="form.birthday"
+                              @input="() => $refs.qDateProxy.hide()"
+                            />
                           </q-popup-proxy>
                         </q-icon>
                       </template>
@@ -74,6 +78,17 @@
                       type="email"
                       v-model="form.email"
                       label="*Email"
+                    />
+
+                    <q-select
+                      clearable
+                      filled
+                      v-model="selectedGender"
+                      :options="genders"
+                      label="Género"
+                      stack-label
+                      dense
+                      options-dense
                     />
 
                     <q-input
@@ -97,28 +112,16 @@
                     />
                   </div>
                 </div>
+                <div class="col-12 col-md-1"></div>
+                <div class="col-12 col-md-5">
+                  <div class="q-gutter-sm">
+                    <q-input v-model="form.comments" filled type="textarea" label="Comentarios" />
+                  </div>
+                </div>
               </div>
             </div>
           </q-card-section>
 
-          <q-card-section v-if="kindOfProcess=='create'">
-            <kBlockQuote
-              textToShow="<strong>La Contraseña</strong> se enviará automáticamente al correo 
-                         ingresado en este formulario"
-              customClass="doc-note doc-note--tip"
-            ></kBlockQuote>
-          </q-card-section>
-          <q-card-section v-if="kindOfProcess=='edit'">
-            <q-banner inline-actions class="bg-grey-3">
-              <template v-slot:avatar>
-                <q-icon name="email" color="primary" />
-              </template>
-              Resetear contraseña.
-              <template v-slot:action>
-                <q-btn flat color="primary" label="Enviar" />
-              </template>
-            </q-banner>
-          </q-card-section>
           <q-card-actions v-if="kindOfProcess!='view'" align="right" class="text-primary">
             <q-btn
               rpunded
@@ -155,12 +158,13 @@ export default {
       loading: false,
       kindOfProcess: "create",
       error: false,
-      toolbarLabel: "NUEVO DOCTOR",
-      model: "users",
+      toolbarLabel: "NUEVO PACIENTE",
+      model: "patients",
       form: {},
       base: {},
-      pathFetchData: "/api/users/create",
-      pathCatehory: "getCategoryIncome"
+      genders: [],
+      selectedGender: null,
+      pathFetchData: "/api/patients/create"
     };
   },
   components: {},
@@ -184,10 +188,13 @@ export default {
       var vm = this;
       vm.spinnerText = "Cargando...";
       vm.loading = true;
+      vm.selectedGender = null;
+
       axios
         .get(vm.pathFetchData)
         .then(function(response) {
           vm.$set(vm.$data, "form", response.data.form);
+          vm.$set(vm.$data, "genders", response.data.genders);
           vm.loading = false;
         })
         .catch(function(error) {
@@ -205,14 +212,14 @@ export default {
       vm.category_id = null;
       if (kindOfProcess === "edit") {
         vm.pathFetchData = `/api/${vm.model}/${customerId}/${kindOfProcess}`;
-        vm.toolbarLabel = "EDITAR DOCTOR";
+        vm.toolbarLabel = "EDITAR PACIENTE";
       } else if (kindOfProcess === "view") {
         vm.isReadOnly = true;
         vm.pathFetchData = `/api/${vm.model}/${customerId}/edit`;
-        vm.toolbarLabel = "INFORMACIÓN DEL DOCTOR";
+        vm.toolbarLabel = "INFORMACIÓN DEL PACIENTE";
       } else {
         vm.pathFetchData = `/api/${vm.model}/${kindOfProcess}`;
-        vm.toolbarLabel = "NUEVO DOCTOR";
+        vm.toolbarLabel = "NUEVO PACIENTE";
       }
 
       vm.fetchData();
@@ -220,7 +227,6 @@ export default {
     },
 
     submit() {
-       this.$set(this.$data.form, "_process", 'DOCTOR');
       if (this.kindOfProcess === "edit") {
         this.spinnerText = "Actualizando...";
         this.update();
@@ -233,6 +239,7 @@ export default {
       let vm = this;
       vm.$set(vm.$data, "errors", null);
       vm.loading = true;
+      vm.$set(vm.form, "gender_id", vm.selectedGender.value);
 
       axios
         .post(`/api/${vm.model}`, vm.form)
@@ -259,6 +266,7 @@ export default {
       var vm = this;
       vm.errors = null;
       vm.loading = true;
+      vm.$set(vm.form, "gender_id", vm.selectedGender.value);
 
       axios
         .put(`/api/${vm.model}/${vm.form.id}`, vm.form)

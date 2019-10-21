@@ -24,8 +24,8 @@
             dense
             color="primary"
             :disable="loading"
-            label="Nuevo Doctor"
-            @click="openDoctorModal($refs,'create')"
+            label="Nuevo Paciente"
+            @click="openPatientModal($refs,'create')"
           />
           <q-btn
             flat
@@ -44,13 +44,13 @@
             color="grey"
             iconname="edit"
             tooltiplabel="Editar"
-            @click="editDoctorModal($refs, props.row)"
+            @click="editPatientModal($refs, props.row)"
           ></kButton>
           <kButton color="grey" iconname="remove_red_eye" tooltiplabel="Ver" @click="show($refs, props.row)"></kButton>
           <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
         </q-td>
       </q-table>
-      <doctorModal ref="_doctor" @hide="closeDoctorModal"></doctorModal>
+      <patientModal ref="_patient" @hide="closePatientModal"></patientModal>
     </div>
   </div>
 </template>
@@ -58,22 +58,22 @@
 <script>
 import store from "../../store";
 import kButton from "../../components/tables/cButton.vue";
-import doctorModal from "./modals/mDoctor.vue";
+import patientModal from "./modals/mPatient.vue";
 import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
   components: {
     kButton,
-    doctorModal
+    patientModal
   },
   created() {
-    this.columns = doctorColumns();
+    this.columns = patientColumns();
     this.fetchData();
   },
   data() {
     return {
-      model: "users",
+      model: "patients",
       filter: "",
       loading: false,
       table: [],
@@ -83,7 +83,7 @@ export default {
       },      
       visibleColumns:['name','last_name','email','home_address','phone','birthday','actions'],
       form: {},
-      path: "getDoctorlist"
+      path: "getPatientlist"
     };
   },
   computed: {
@@ -95,18 +95,17 @@ export default {
     }
   },
   methods: {    
-     closeDoctorModal() {
+     closePatientModal() {
       this.fetchData();
     },
     show(refs, cell) {
-      //this.$router.push(`/${this.model}/${cell.row.public_id}`);
-      this.openDoctorModal(refs, "view", cell.id);
+      this.openPatientModal(refs, "view", cell.id);
     },
-    editDoctorModal(refs, cell) {
-      this.openDoctorModal(refs, "edit", cell.id);
+    editPatientModal(refs, cell) {
+      this.openPatientModal(refs, "edit", cell.id);
     },
-    openDoctorModal(refs, processType, itemId) {
-      refs._doctor.open(processType, itemId);
+    openPatientModal(refs, processType, itemId) {
+      refs._patient.open(processType, itemId);
     },
     fetchData() {
       let vm = this;
@@ -133,7 +132,7 @@ export default {
           cancel: "NO, Cancelar"
       }).onOk(() => {
           axios
-            .delete("/api/users/" + val.row.id)
+            .delete("/api/patients/" + val.row.id)
             .then(function(response) {
               if (response.data.deleted) {
                 kNotify(
@@ -155,7 +154,7 @@ export default {
   }
 };
 
-function doctorColumns() {
+function patientColumns() {
   return [
     {
       label: "ID",
