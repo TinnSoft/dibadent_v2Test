@@ -1,5 +1,5 @@
 <template>
-<q-page padding>
+  <q-page padding>
     <!--
     <template v-if="income_value===0 && outcome_value===0">    
       <transition
@@ -23,95 +23,114 @@
       </transition>
     </template>
     -->
-    <div class="q-pa-md">  
+    <div class="q-pa-md">
       <div class="row">
         <div class="col">
-           <kCard class="my-card" title="Radiografías Generadas Último mes" background-color="primary" icon-name="" :total="income_value" subtitle="Total entradas" />
-             
+          <kCard
+            class="my-card"
+            title="Radiografías Generadas Último mes"
+            background-color="primary"
+            icon-name
+            :total="income_value"
+            subtitle="Total entradas"
+          />
         </div>
         <div class="col">
-           <kCard class="my-card" title="Radiografías Generadas Último año" background-color="orange" icon-name="" :total="outcome_value" subtitle="Total gastos" />              
-            
+          <kCard
+            class="my-card"
+            title="Radiografías Generadas Último año"
+            background-color="orange"
+            icon-name
+            :total="outcome_value"
+            subtitle="Total gastos"
+          />
         </div>
-      </div>  
-      <br>
+      </div>
+      <br />
       <div class="row">
-        <div class="col">  
-            <q-card class="my-card">             
-              <q-card-section>
-                <q-toolbar class="text-primary">                 
-                  <q-toolbar-title>
-                    RADIOGRAFÍAS
-                  </q-toolbar-title>
-                  <!--<q-btn flat round dense icon="date_range" ></q-btn>    -->
-                    <q-btn-dropdown split outline dense
-                      push disable-main-btn
-                      :label="filterBylabel"
-                      icon="filter_list">
-                      <q-list dense>
-                        <q-item clickable v-close-popup @click.native="filterPeriod('d')">
-                          <q-item-label>
-                            <q-item-section label >Hoy</q-item-section>
-                          </q-item-label>
-                        </q-item>
-                        <q-item clickable v-close-popup @click.native="filterPeriod('w')">
-                          <q-item-label>
-                            <q-item-section label >Última semana</q-item-section>
-                          </q-item-label>
-                        </q-item>
-                        <q-item clickable v-close-popup @click.native="filterPeriod('m')">
-                          <q-item-label>
-                            <q-item-section label>Último mes</q-item-section>
-                          </q-item-label>
-                        </q-item>
-                        <q-item clickable v-close-popup @click.native="filterPeriod('y')">
-                          <q-item-label>
-                            <q-item-section label >Último Año</q-item-section>
-                          </q-item-label>
-                        </q-item>
-                      </q-list>
-                    </q-btn-dropdown>
-                </q-toolbar>              
-              </q-card-section>    
-            </q-card>          
-        </div>
         <div class="col">
-           <q-card class="my-card">            
+          <q-card flat>
+            <q-card-section>
+              <q-toolbar class="text-primary">
+                <q-toolbar-title>RADIOGRAFÍAS</q-toolbar-title>
+              </q-toolbar>
 
-              <q-card-section>
-                <q-tabs
-                  v-model="tab"
+              <div class="text-subtitle2">Medicos que mas generaron radiografias durante el ultimo mes</div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col">
+          <q-card class="my-card">
+            <q-card-section>
+              <q-toolbar class="text-primary">
+                <q-toolbar-title>TOP PUNTOS REDIMIDOS</q-toolbar-title>
+                <!--<q-btn flat round dense icon="date_range" ></q-btn>    -->
+                <q-btn-dropdown
+                  split
+                  outline
                   dense
-                  class="text-grey"
-                  active-color="purple"
-                  indicator-color="purple"
-                  align="justify"
-                  narrow-indicator
+                  push
+                  disable-main-btn
+                  :label="filterBylabel"
+                  icon="filter_list"
                 >
-                  <q-tab name="redeemed_points" label="TOP PUNTOS REDIMIDOS" />
-                
-                  <q-tab name="doctor_history" label="MOVIMIENTOS REALIZADOS POR LOS MEDICOS" />
-                </q-tabs>
-                <q-tab-panels v-model="tab" animated>
-                  <q-tab-panel name="redeemed_points">
-                   
-                  </q-tab-panel>
-        
-                  <q-tab-panel name="doctor_history">
-
-                  </q-tab-panel>
-                </q-tab-panels>
-  
-              </q-card-section>
-        
-            </q-card>
+                  <q-list dense>
+                    <q-item clickable v-close-popup @click.native="filterPeriod('d')">
+                      <q-item-label>
+                        <q-item-section label>Hoy</q-item-section>
+                      </q-item-label>
+                    </q-item>
+                    <q-item clickable v-close-popup @click.native="filterPeriod('w')">
+                      <q-item-label>
+                        <q-item-section label>Última semana</q-item-section>
+                      </q-item-label>
+                    </q-item>
+                    <q-item clickable v-close-popup @click.native="filterPeriod('m')">
+                      <q-item-label>
+                        <q-item-section label>Último mes</q-item-section>
+                      </q-item-label>
+                    </q-item>
+                    <q-item clickable v-close-popup @click.native="filterPeriod('y')">
+                      <q-item-label>
+                        <q-item-section label>Último Año</q-item-section>
+                      </q-item-label>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+              </q-toolbar>
+            </q-card-section>
+          </q-card>
         </div>
-      </div>  
-    </div>
+        <div class="col">
+          <q-card class="my-card">
+            <q-card-section>
+              <q-tabs
+                v-model="tab"
+                dense
+                class="text-grey"
+                active-color="purple"
+                indicator-color="purple"
+                align="justify"
+                narrow-indicator
+              >
+                <q-tab name="redeemed_points" label="TOP PUNTOS REDIMIDOS" />
 
-    
-   
-</q-page>
+                <q-tab name="doctor_history" label="MOVIMIENTOS REALIZADOS POR LOS MEDICOS" />
+              </q-tabs>
+              <q-tab-panels v-model="tab" animated>
+                <q-tab-panel name="redeemed_points"></q-tab-panel>
+
+                <q-tab-panel name="doctor_history"></q-tab-panel>
+              </q-tab-panels>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+    </div>
+  </q-page>
 </template>
 
 <script>
@@ -121,11 +140,11 @@ export default {
   name: "home",
   middleware: "auth",
   components: {
-   // dashboardChart,
+    // dashboardChart,
   },
   data: function() {
     return {
-      tab: 'causado',
+      tab: "causado",
       filterBylabel: "Hoy",
       model: 30,
       min: 0,
@@ -159,7 +178,7 @@ export default {
         "Viernes",
         "Sabado",
         "Domingo"
-      ],
+      ]
     };
   },
   metaInfo() {
@@ -282,7 +301,7 @@ export default {
     },
     fetchData() {
       let vm = this;
-     
+
       vm.isProcessing = true;
       axios
         .get(`/api/${vm.path}`)
@@ -307,7 +326,8 @@ export default {
 };
 </script>
 <style lang="stylus">
-.my-card
-  width 100%
-  max-width 95%
+.my-card {
+  width: 100%;
+  max-width: 95%;
+}
 </style>

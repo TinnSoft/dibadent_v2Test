@@ -7,7 +7,7 @@
       </q-card-section>
     </q-card>
     </q-card>-->
-    <q-card-section class="bg-blue-grey-6 text-white">
+    <q-card-section class="bg-light-blue-4 text-white">
       <div class="text-h6">{{kValue}}</div>
       <div class="text-subtitle2">Total {{title}}</div>
     </q-card-section>
