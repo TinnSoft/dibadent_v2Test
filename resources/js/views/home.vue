@@ -1,28 +1,5 @@
 <template>
   <q-page padding>
-    <!--
-    <template v-if="income_value===0 && outcome_value===0">    
-      <transition
-              enter-active-class="animated bounceInLeft"
-              leave-active-class="animated bounceOutRight"
-              appear
-            >
-                <q-banner class="bg-primary text-white"
-                  v-if="visible"
-                  appear                                  
-                >
-                  <template v-slot:avatar>
-                    <q-icon name="info_outline" color="primary" ></q-icon>
-                  </template>
-                  {{withouthMovementsMsg}}
-                  <template v-slot:action>
-                    <q-btn flat color="white" label="Cerrar" ></q-btn>
-                  </template>
-                  
-                </q-banner>
-      </transition>
-    </template>
-    -->
     <div class="q-pa-md">
       <div class="row">
         <div class="col">
@@ -31,7 +8,7 @@
             title="Radiografías Generadas Último mes"
             background-color="primary"
             icon-name
-            :total="income_value"
+            :total="qty_of_radiography_generated_lastMonth"
             subtitle="Total entradas"
           />
         </div>
@@ -41,7 +18,7 @@
             title="Radiografías Generadas Último año"
             background-color="orange"
             icon-name
-            :total="outcome_value"
+            :total="qty_of_radiography_generated_lastYear"
             subtitle="Total gastos"
           />
         </div>
@@ -49,13 +26,16 @@
       <br />
       <div class="row">
         <div class="col">
-          <q-card flat>
+          <q-card class="my-card">
             <q-card-section>
-              <q-toolbar class="text-primary">
-                <q-toolbar-title>RADIOGRAFÍAS</q-toolbar-title>
-              </q-toolbar>
-
-              <div class="text-subtitle2">Medicos que mas generaron radiografias durante el ultimo mes</div>
+              <div
+                class="text-subtitle2"
+              >Medicos que mas generaron radiografias durante el ultimo mes</div>
+              <dashboardChart 
+                :chart-data="datacollection"
+                :options="barOptions"
+                :dataOriginal="datacollection.datasets[0].data"
+              />
             </q-card-section>
           </q-card>
         </div>
@@ -63,70 +43,60 @@
       <br />
       <div class="row">
         <div class="col">
-          <q-card class="my-card">
-            <q-card-section>
-              <q-toolbar class="text-primary">
-                <q-toolbar-title>TOP PUNTOS REDIMIDOS</q-toolbar-title>
-                <!--<q-btn flat round dense icon="date_range" ></q-btn>    -->
-                <q-btn-dropdown
-                  split
-                  outline
-                  dense
-                  push
-                  disable-main-btn
-                  :label="filterBylabel"
-                  icon="filter_list"
-                >
-                  <q-list dense>
-                    <q-item clickable v-close-popup @click.native="filterPeriod('d')">
-                      <q-item-label>
-                        <q-item-section label>Hoy</q-item-section>
-                      </q-item-label>
-                    </q-item>
-                    <q-item clickable v-close-popup @click.native="filterPeriod('w')">
-                      <q-item-label>
-                        <q-item-section label>Última semana</q-item-section>
-                      </q-item-label>
-                    </q-item>
-                    <q-item clickable v-close-popup @click.native="filterPeriod('m')">
-                      <q-item-label>
-                        <q-item-section label>Último mes</q-item-section>
-                      </q-item-label>
-                    </q-item>
-                    <q-item clickable v-close-popup @click.native="filterPeriod('y')">
-                      <q-item-label>
-                        <q-item-section label>Último Año</q-item-section>
-                      </q-item-label>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-              </q-toolbar>
-            </q-card-section>
-          </q-card>
+          <q-table
+            class="my-card"
+            title="Top de Puntos redimidos"
+            dense
+            :data="data_redeemedPoints"
+            :columns="columns_redeemedPoints"
+            row-key="name"
+          >
+            <template v-slot:top-right="props">
+              <q-input dense debounce="300" v-model="filter_redeemedPoints" placeholder="Buscar">
+                <template v-slot:append>
+                  <q-icon name="search"></q-icon>
+                </template>
+              </q-input>
+              <q-space></q-space>
+              <q-btn
+                flat
+                round
+                dense
+                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                class="q-ml-md"
+              >
+                <q-tooltip>Ver en pantalla completa</q-tooltip>
+              </q-btn>
+            </template>
+          </q-table>
         </div>
         <div class="col">
-          <q-card class="my-card">
-            <q-card-section>
-              <q-tabs
-                v-model="tab"
+          <q-table
+            class="my-card"
+            title="Movimientos realizados por tus doctores"
+            dense
+            :data="data_doctorMovements"
+            :columns="columns_doctorMovements"
+            row-key="name"
+          >
+            <template v-slot:top-right="props">
+              <q-input dense debounce="300" v-model="filter_doctorMovements" placeholder="Buscar">
+                <template v-slot:append>
+                  <q-icon name="search"></q-icon>
+                </template>
+              </q-input>
+              <q-space></q-space>
+              <q-btn
+                flat
+                round
                 dense
-                class="text-grey"
-                active-color="purple"
-                indicator-color="purple"
-                align="justify"
-                narrow-indicator
+                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                class="q-ml-md"
               >
-                <q-tab name="redeemed_points" label="TOP PUNTOS REDIMIDOS" />
-
-                <q-tab name="doctor_history" label="MOVIMIENTOS REALIZADOS POR LOS MEDICOS" />
-              </q-tabs>
-              <q-tab-panels v-model="tab" animated>
-                <q-tab-panel name="redeemed_points"></q-tab-panel>
-
-                <q-tab-panel name="doctor_history"></q-tab-panel>
-              </q-tab-panels>
-            </q-card-section>
-          </q-card>
+                <q-tooltip>Ver en pantalla completa</q-tooltip>
+              </q-btn>
+            </template>
+          </q-table>
         </div>
       </div>
     </div>
@@ -134,16 +104,22 @@
 </template>
 
 <script>
-//import dashboardChart from "../components/chart/Line.js";
+import dashboardChart from "../components/chart/Bar.js";
 
 export default {
   name: "home",
   middleware: "auth",
   components: {
-    // dashboardChart,
+    dashboardChart
   },
   data: function() {
     return {
+      columns_redeemedPoints: [],
+      data_redeemedPoints: [],
+      filter_redeemedPoints: [],
+      columns_doctorMovements: [],
+      data_doctorMovements: [],
+      filter_doctorMovements: [],
       tab: "causado",
       filterBylabel: "Hoy",
       model: 30,
@@ -178,18 +154,24 @@ export default {
         "Viernes",
         "Sabado",
         "Domingo"
-      ]
+      ],
+      barOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+      }
     };
   },
   metaInfo() {
     return { title: this.$t("home") };
   },
   created() {
+    this.columns_redeemedPoints = columns_redeemedPoints();
+    this.columns_doctorMovements = columns_doctorMovements();
     this.fillOptions();
     this.fetchData();
   },
   computed: {
-    income_value() {
+    qty_of_radiography_generated_lastMonth() {
       try {
         if (this.filter === "d") {
           return this.form.income.day;
@@ -204,7 +186,7 @@ export default {
         return 0;
       }
     },
-    outcome_value() {
+    qty_of_radiography_generated_lastYear() {
       try {
         if (this.filter === "d") {
           return this.form.outcome.day;
@@ -223,53 +205,14 @@ export default {
   methods: {
     fillOptions() {
       this.datacollection = {
-        labels: [],
+        labels: this.YearLabels,
         datasets: [
-          {
-            label: "Ingresos",
-            fill: true,
-            // lineTension: 0.1,
-            backgroundColor: "rgba(26,179,148,0.5)",
-            borderColor: "rgba(26,179,148,0.7)",
-            borderCapStyle: "butt",
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: "miter",
-            pointBorderColor: "#fff",
-            pointBackgroundColor: "rgba(26,179,148,1)",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: [],
-            spanGaps: false
-          },
-          {
-            label: "Gastos",
-            fill: true,
-            // lineTension: 0.1,
-            backgroundColor: "rgba(235, 200, 181,0.4)",
-            borderColor: "rgba(245, 127, 64,1)",
-            borderCapStyle: "butt",
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: "miter",
-            pointBorderColor: "rgba(245, 127, 64,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(245, 127, 64,1)",
-            pointHoverBorderColor: "rgba(245, 127, 64,1)",
-            pointHoverBorderWidth: 2,
-            pointRadius: 1,
-            pointHitRadius: 10,
-            data: [],
-            spanGaps: false
-          }
-        ]
+        {
+          label: '',
+          backgroundColor: '#2870E8',
+          data: [40,20,15,45,36]
+        }
+      ]
       };
     },
     filterPeriod(val) {
@@ -314,7 +257,7 @@ export default {
           vm.datacollection.labels = vm.WeekLabels;
           vm.isProcessing = false;
 
-          if (vm.income_value === 0 && vm.outcome_value === 0) {
+          if (vm.qty_of_radiography_generated_lastMonth === 0 && vm.qty_of_radiography_generated_lastYear === 0) {
             vm.visible = true;
           }
         })
@@ -324,6 +267,90 @@ export default {
     }
   }
 };
+
+function columns_doctorMovements() {
+  return [
+    {
+      label: "ID",
+      field: "id",
+      name: "id",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Doctor",
+      field: "name",
+      name: "name",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Descripción del movimiento",
+      field: "last_name",
+      name: "last_name",
+      sortable: true,
+      filter: true
+    },
+    {
+      label: "Fecha",
+      field: "email",
+      name: "email",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Acciones",
+      field: "actions",
+      name: "actions",
+      type: "string"
+    }
+  ];
+}
+
+function columns_redeemedPoints() {
+  return [
+    {
+      label: "ID",
+      field: "id",
+      name: "id",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Doctor",
+      field: "name",
+      name: "name",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Puntos Redimidos",
+      field: "last_name",
+      name: "last_name",
+      sortable: true,
+      filter: true
+    },
+    {
+      label: "Fecha",
+      field: "email",
+      name: "email",
+      sortable: true,
+      filter: true,
+      type: "string"
+    },
+    {
+      label: "Acciones",
+      field: "actions",
+      name: "actions",
+      type: "string"
+    }
+  ];
+}
 </script>
 <style lang="stylus">
 .my-card {
