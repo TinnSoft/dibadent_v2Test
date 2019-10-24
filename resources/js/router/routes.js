@@ -13,9 +13,12 @@ const SettingsDoctor = () =>  import ('~/views/settings/doctor').then(m => m.def
 const SettingsRadiologist = () =>  import ('~/views/settings/radiologist').then(m => m.default || m)
 const SettingsPatient = () =>  import ('~/views/settings/patient').then(m => m.default || m)
 
+const PointsIndex = () =>  import ('~/views/points/index').then(m => m.default || m)
+
 export default [
     { path: "/", name: "home", component: Home },
     { path: "/login", name: "login", component: Login },
+    { path: "/points", name: "points", component: PointsIndex },
     {
         path: "/password/reset",
         name: "password.request",
