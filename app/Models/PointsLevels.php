@@ -24,11 +24,11 @@ class PointsLevels extends Model
 
 
     public static function initialize()
-    {patient_id
+    {
         return [
 			'level_name'=>null,
             'required_points'=>null,
-            'limit_date'=>null
+            'limit_date'=>null,
         ];
     }
 }

@@ -18,23 +18,27 @@
             <q-tab-panel name="levels">
               <q-table
                 title="Configurar niveles x puntos"
-                :data="data"
+                :data="table"
                 :columns="columns"
                 row-key="name"
                 binary-state-sort
+                :loading="loading"
               >
                 <template v-slot:body="props">
                   <q-tr :props="props">
+                    <q-td key="level_name" :props="props">
+                      {{ props.row.level_name }}
+                    </q-td>
                     <q-td key="required_points" :props="props">
                       {{ props.row.required_points }}
                       <q-popup-edit v-model="props.row.required_points">
                         <q-input v-model="props.row.required_points" dense autofocus counter />
                       </q-popup-edit>
                     </q-td>
-                    <q-td key="time_limit" :props="props">
+                    <q-td key="limit_date" :props="props">
                       {{ props.row.time_limit }}
                       <q-popup-edit
-                        v-model="props.row.time_limit"
+                        v-model="props.row.limit_date"
                         title="Actualizar el limite de tiempo"
                         buttons
                       >
@@ -47,16 +51,9 @@
             </q-tab-panel>
 
             <q-tab-panel name="promo">
-              <div class="text-h4 q-mb-md">Alarms</div>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
             </q-tab-panel>
 
             <q-tab-panel name="vigence">
-              <div class="text-h4 q-mb-md">Movies</div>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-              <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
             </q-tab-panel>
           </q-tab-panels>
         </template>
@@ -74,30 +71,52 @@ export default {
       splitterModel: 20,
       columns: [
         {
-          name: "level",
+          name: "level_name",
           required: true,
           label: "Nivel",
           align: "left",
-          field: "level",
+          field: "level_name",
           sortable: true
         },
         {
           name: "required_points",
           align: "center",
-          label: "Calories",
+          label: "Puntos Requeridos",
           field: "required_points",
           sortable: true
         },
         {
-          name: "time_limit",
+          name: "limit_date",
           label: "Limite de tiempo",
-          field: "time_limit",
+          field: "limit_date",
           sortable: true,
           style: "width: 10px"
         }
       ],
-      data: []
+      table: [],
+      pointsLevelPath: "getPointsLevelslist",
+      loading: false
     };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      let vm = this;
+      vm.loading = true;
+
+      axios
+        .get(`/api/${vm.pointsLevelPath}`)
+        .then(function(response) {
+          vm.$set(vm, "table", response.data.records);
+          console.log( response.data.records)
+          vm.loading = false;
+        })
+        .catch(function(error) {
+          vm.loading = false;
+        });
+    }
   }
 };
 </script>
