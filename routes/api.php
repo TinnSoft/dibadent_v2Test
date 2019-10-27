@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getPatientsValues','PatientsController@edit');    
     Route::get('getPatientlist','PatientsController@getPatients');
 
+    Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');
     
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
