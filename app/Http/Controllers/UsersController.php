@@ -27,15 +27,18 @@ class UsersController extends Controller
 
     public function show()
     {               
-
-        $UserValue = Users::where('id',  Auth::user()->id)        
-        ->select('id','name','last_name','email','password','birthday','home_address','phone')              
-        ->first();
-
         return response()
         ->json([
-        'form' =>  $UserValue
+        'form' =>  $this->getUserInfo()
         ]);         
+    }
+
+    
+    public function getUserInfo()
+    {               
+        return Users::with('profile')->where('id',  Auth::user()->id)        
+        ->select('id','name','last_name','email','password','birthday','home_address','phone','profile_id')              
+        ->first();      
     }
 
     public function getDoctors()

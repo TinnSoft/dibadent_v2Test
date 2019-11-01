@@ -86,6 +86,9 @@ export default {
       return this.$store.getters["auth/user"].email;
     }
   },
+  created(){
+    console.log('created: ',this.$store.getters["auth/user"].profile)
+  },
   methods: {
     /*  _subString(val) {
       return val.substring(0, 1);

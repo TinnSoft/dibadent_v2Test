@@ -19,6 +19,6 @@ Route::get('password/reset/{token}', function () {
 })->name('password.reset');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();

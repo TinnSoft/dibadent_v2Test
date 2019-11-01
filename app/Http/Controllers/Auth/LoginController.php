@@ -55,7 +55,8 @@ class LoginController extends Controller
     }
 
     protected function sendLoginResponse(Request $request)
-    {        
+    {     
+        //$request->session()->regenerate();
         $this->clearLoginAttempts($request);
        
         $token = (string) $this->guard()->getToken();
@@ -71,7 +72,7 @@ class LoginController extends Controller
         return [
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $expiration,
+            'expires_in' => null,
         ];
     }
     /**
