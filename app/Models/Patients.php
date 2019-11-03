@@ -16,7 +16,7 @@ class Patients extends Model
     protected $fillable=['user_id','gender_id','name','last_name','email','birthday','home_address','phone','comments',
     'created_by','modified_by','created_at','updated_at','deleted_at'];
 
-
+    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -25,6 +25,13 @@ class Patients extends Model
     protected $hidden = [
         'created_at','updated_at','deleted_at','modified_by','created_by'
     ];
+
+    
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->last_name}";
+    }
+
 
     public static function initialize()
     {

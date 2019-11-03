@@ -24,7 +24,7 @@ class PatientsDoctors extends Model
 
     public function patient()
     {
-        return $this->hasOne(Patients::class, 'id', 'patient_id')->select(array('id', 'name','last_name','email','birthday'));
+        return $this->hasOne(Patients::class, 'id', 'patient_id')->select(array('id', 'name','last_name','email'));
     }
 
     public function doctor()
@@ -33,7 +33,7 @@ class PatientsDoctors extends Model
     }
 
     public static function initialize()
-    {patient_id
+    {
         return [
 			'doctor_id'=>null,
             'patient_id'=>null

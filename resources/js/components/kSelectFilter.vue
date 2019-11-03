@@ -7,8 +7,6 @@
     @filter="filterFunc"
     :options="opt"
   >
-    <!-- :options="this.selfFilter ? this.options : this.$attrs.options" -->
-    <!-- @filter="(v, f, c) => { this.selfFilter ? filterFn(v, f, c) : $emit('filter', v, f, c) }" -->
     <template v-slot:no-option>
       <q-item>
         <q-item-section class="text-grey">Sin Resultados</q-item-section>

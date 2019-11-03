@@ -8,9 +8,14 @@ use App\Mail\PasswordGenerated;
 use Illuminate\Database\QueryException;
 use Carbon\Carbon;
 use App\Models\Users;
+use App\Models\AcumulatedPointsLevels;
+use App\Models\PatientsDoctors;
+use App\Models\Patients;
+use App\Models\PointsRedemption;
 use Illuminate\Support\Str;
 use DB;
 use Illuminate\Support\Facades\Mail;
+
 
 class UsersController extends Controller
 {   
@@ -33,6 +38,44 @@ class UsersController extends Controller
         ]);         
     }
 
+    public function getDoctorDashboardData()
+    {   
+        $dataAcumulatedPoints = AcumulatedPointsLevels::with('points_level')->where('user_id',  Auth::user()->id)        
+        ->select('id','points_level_id','acumulated_points')              
+        ->first();   
+
+        $acumulatedPoints=0;
+        $redeemedPointsLastYear= DB::table('points_redemption')->sum('points_redeemed');
+        $pointsNextToBeat=0;
+        $level='Aún no tienes Nivel';
+        
+        if($dataAcumulatedPoints)
+        {
+            $acumulatedPoints=$dataAcumulatedPoints->acumulated_points;
+            $level=$dataAcumulatedPoints->points_level->level_name;
+        }
+        
+       $patientsAsociatedToDoctor = PatientsDoctors::where('doctor_id', Auth::user()->id)->select('patient_id')->get();
+       $dataPacientList = Patients::whereIn('id',  $patientsAsociatedToDoctor)
+       ->select('id','id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),'home_address',
+       'name','last_name','phone','email','comments')->get();
+
+       //$dataProcedures=Procedures::where('doctor_id', Auth::user()->id)->select()-get();
+       //'medicalProcedures'=> $dataProcedures
+
+       $pointsSummary=['level'=>$level, 
+                        'acumulatedPoints'=>$acumulatedPoints,
+                        'redeemedPoints'=>$redeemedPointsLastYear,
+                        'pointsNextToBeat'=>$pointsNextToBeat,
+                        'prueba'=>$dataAcumulatedPoints
+                    ];
+
+       return response()
+       ->json([
+           'pointsSummary' => $pointsSummary,
+           'patientList'=> $dataPacientList           
+       ]);
+    }
     
     public function getUserInfo()
     {               

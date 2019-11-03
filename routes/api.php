@@ -27,13 +27,21 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getUserValues','UsersController@edit');    
     Route::get('getDoctorlist','UsersController@getDoctors');
     Route::get('getRadiologistlist','UsersController@getRadiologist');
-
+    Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
+    
+    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');
+    Route::get('getProceduresByPatientAndDoctor/{patient_id}','ProceduresController@getProceduresByPatientAndDoctor');
+    Route::post('/uploadImage', 'ImagesController@upload');
+    
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    
     Route::get('getPatientlist','PatientsController@getPatients');
 
     Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');
+    
+
+    
     
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
 

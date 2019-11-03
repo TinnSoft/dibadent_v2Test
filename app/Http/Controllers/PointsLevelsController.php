@@ -24,6 +24,8 @@ class PointsLevelsController extends Controller
            'records' => $data
        ]);
     }
+
+   
     public function store(Request $request)
     {     
         $newID=(int)PointsLevels::max('id')+1;
