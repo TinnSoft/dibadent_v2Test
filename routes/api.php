@@ -18,6 +18,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Route::get('/user', function (Request $request) {
     //     return $request->user();
     // });
+    
+    Route::resource('images', 'ImagesController');
+    Route::post('uploadFile/{id}', 'ImagesController@uploadFile');
+
     Route::get('/user','UsersController@getUserInfo');   
 
     Route::resource('company', 'CompanyController');
@@ -29,9 +33,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getRadiologistlist','UsersController@getRadiologist');
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
     
+    
     Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');
     Route::get('getProceduresByPatientAndDoctor/{patient_id}','ProceduresController@getProceduresByPatientAndDoctor');
-    Route::post('/uploadImage', 'ImagesController@upload');
     
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    
@@ -39,8 +43,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');
-    
-
     
     
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');

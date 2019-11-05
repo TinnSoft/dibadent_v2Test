@@ -140,19 +140,31 @@
                 <q-tab-panel name="loadimage">
                   <q-uploader
                     label="Cargar Imagen"
-                    multiple
                     dense
-                    batch
-                    :factory="factoryFn"
                     flat
+                    multiple
+                    :readonly="checkIfExistProcedure"
+                    auto-upload
+                    :url="_medicalProcedureId"
                     accept=".jpg, image/*"
                     color="grey-5"
                     style="max-width: 300px"
+                    @failed="showerror"
                   />
                 </q-tab-panel>
 
                 <q-tab-panel name="images">
                   <div class="text-h6">Imagenes asociadas al paciente</div>
+
+                  <q-carousel swipeable animated v-model="slide" thumbnails infinite>
+                    <q-carousel-slide
+                      :name="1"
+                      img-src="../../../../public/storage/_Images/_radiology/KodwZFqueBu6NC4IMcfmIjY4Pnjk4IWt30j7fhxz.jpeg"
+                    />
+                    <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
+                    <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
+                    <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
+                  </q-carousel>
                 </q-tab-panel>
               </q-tab-panels>
             </q-timeline-entry>
@@ -165,12 +177,13 @@
 
 <script>
 import store from "../../store";
-
 export default {
   middleware: "auth",
   components: {},
   data() {
     return {
+      basePath: "D:/proyectos/Radiology",
+      slide: 1,
       tabSelected: "loadimage",
       form: {},
       pointsSummary: {
@@ -186,13 +199,24 @@ export default {
       comments: "",
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
-      urlToUploadImages: "uploadImage"
+      urlToUploadImages: "/api/uploadFile/",
+      medicalProcedureId: null
     };
   },
   created() {
     this.fetchData(this.pathDashboardData);
   },
   computed: {
+    _medicalProcedureId() {
+      return this.urlToUploadImages + this.medicalProcedureId;
+    },
+    checkIfExistProcedure() {
+      if (!this.medicalProcedureId) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     user_name() {
       return (
         this.$store.getters["auth/user"].name +
@@ -209,43 +233,32 @@ export default {
     }
   },
   methods: {
-    factoryFn(file) {
-     var vm = this;
-      return new Promise((resolve, reject) => {
-        // Retrieve JWT token from your store.
-        const token = store.getters['auth/token'];
-        resolve({
-          url: vm.urlToUploadImages,
-          method: "POST",
-          headers: [
-            { name: "Content-Type", value: "application/json-patch+json" },
-            { name: "Authorization", value: `Bearer ${token}` }
-          ]
-        });
-      });
+    showerror(err) {
+      console.log(err);
     },
-
     getProcedures(val) {
-      var vm = this;
-
+      let vm = this;
+      vm.medicalProcedureId = null;
       vm.$set(vm, "medicalProcedures", []);
       vm.$set(vm.form, "medicalProcedure", null);
       vm.$refs._procedureSelect.options = [];
       vm.$refs._procedureSelect.model = null;
+
       if (val) {
         vm.fetchData("getProceduresByPatientAndDoctor/" + val);
       }
     },
     getListOfImages(val) {
-      var vm = this;
+      let vm = this;
+      vm.medicalProcedureId = val;
       if (val) {
         vm.fetchData("getImagesByProcedure/" + val);
       }
+      vm.loading = false;
     },
-    fetchData(path) {
+    async fetchData(path) {
       let vm = this;
       vm.loading = true;
-
       axios
         .get(`/api/${path}`)
         .then(function(response) {
@@ -260,7 +273,9 @@ export default {
           }
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
+            console.log(response.data.images);
           }
+
           vm.loading = false;
         })
         .catch(function(error) {

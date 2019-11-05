@@ -4,22 +4,23 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use Carbon\Carbon;
 use App\Models\Images;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use DB;
+use Illuminate\Http\File;
 
 class ImagesController extends Controller
 {
-
-    protected $rootFolderMain='public/storage/_Images/_radiology';
-    protected $rootFolderGeneralPurposes='public/storage/_Images/_general';
+    protected $rootFolderMain='public/Storage/_Images/_radiology';
+    protected $rootFolderGeneralPurposes='public/Storage/_Images/_general';
 
     public function getImagesByProcedure($ProcedureId)
     {
        $data= Images::where('procedure_id', $ProcedureId)
        ->select('id','title','file_name','other_details')->get();      
+      
 
        return response()
        ->json([
@@ -27,41 +28,36 @@ class ImagesController extends Controller
        ]);
 
     }
-
     
-
-    public function upload(Request $request)
+    public function uploadFile(Request $request, $id_procedure)
     {
         //verifica si el directorio está creado
-        Storage::makeDirectory($this->rootFolderMain);
-       
+        Storage::makeDirectory($this->rootFolderMain);   
+        
+        if (count($request->files)>0 && $id_procedure != null)              
+        {
+            foreach($request->files as $_file) {
+                $originalName=$_file->getClientOriginalName();            
+                $newFileName=Storage::putFile($this->rootFolderMain, new File($_file));
+                $imagesModel= new Images;
+                $imagesModel->created_by=Auth::user()->id;
+                $imagesModel->title=$originalName;
+                $imagesModel->file_name=$newFileName;
+                $imagesModel->procedure_id=$id_procedure;
+                $imagesModel->save();    
+            }
 
-       // if ($request->hasfile('file') && $request->file('file')->isValid()) {
+            return response()
+             ->json([
+                'saved' => true
+             ]);
+        }
             
-        //     $originalName=$request->file->getClientOriginalName();
-        //     $model=$request->all()['model'];
-        //     $publicID=$request->all()['publicID'];
-        //     $lastfilename=Storage::putFile($this->rootFolder, $request->file('file'));
-
-        //     $imagesModel= new Images;
-        //     $imagesModel->user_id=Auth::user()->id;
-        //     $imagesModel->model_id=$publicID;
-        //     $imagesModel->model=$model;
-        //     $imagesModel->filename=$originalName;
-        //     $imagesModel->new_filename=$lastfilename;
-        //     $imagesModel->save();
-
-        //     return response()
-        //     ->json([
-        //        'saved' => true,
-        //        'list' => $this->documentList($publicID, $model)
-        //     ]);
-        // }
-
         return response()
-        ->json([
-            'saved' => true
-        ], 422);
+            ->json([
+                'saved' => false
+            ],422) ;
+     
     }
 
 }

@@ -18,7 +18,7 @@ class CreateImagesTable extends Migration
             $table->unsignedBigInteger('procedure_id')->references('id')->on('procedures');    
             $table->string('title');  
             $table->string('file_name');     
-            $table->string('other_details');       
+            $table->string('other_details')->nullable();       
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
