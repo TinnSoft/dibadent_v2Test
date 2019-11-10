@@ -38,12 +38,13 @@
     >
       <q-scroll-area class="fit">
         <q-list padding style="max-width: 350px">
-          <div v-for="item in items" v-bind:key="item.title">
+          <div v-for="item in items" v-bind:key="item.id">
             <q-item
+              v-if="profile==item.profileId"
               dense
               item
               :to="item.path"
-              :key="item.title"
+              :key="item.id"
               clickable
               v-ripple
               active-class="text-primary text-bold"
@@ -84,11 +85,12 @@ export default {
   computed: {
     email() {
       return this.$store.getters["auth/user"].email;
+    },
+    profile() {
+      return this.$store.getters["auth/user"].profile_id;
     }
   },
-  created(){
-    console.log('created: ',this.$store.getters["auth/user"].profile)
-  },
+  created() {},
   methods: {
     /*  _subString(val) {
       return val.substring(0, 1);

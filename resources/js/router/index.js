@@ -2,7 +2,7 @@ import Vue from "vue";
 import store from "~/store";
 import Meta from "vue-meta";
 import routes from "./routes";
-import routesDoctor from "./routesDoctor";
+//import routesDoctor from "./routesDoctor";
 import Router from "vue-router";
 import { sync } from "vuex-router-sync";
 
@@ -16,22 +16,10 @@ const globalMiddleware = ["locale", "check-auth"];
 const routeMiddleware = resolveMiddleware(
     require.context("~/middleware", false, /.*\.js$/)
 );
-// console.log("index parce", store.getters);
-// const routes = null;
-// if (store.getters["auth/check"]) {
-//     if (store.getters["auth/user"].profile.description == "ADMIN") {
-//         routes = routesAdmin;
-//     } else if (store.getters["auth/user"].profile.description == "DOCTOR") {
-//         routes = routesDoctor;
-//     }
-// }
-
 
 const router = createRouter();
 
 sync(store, router);
-
-
 
 export default router;
 

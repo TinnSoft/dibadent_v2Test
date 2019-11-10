@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs-extra')
 const mix = require('laravel-mix')
-require('laravel-mix-versionhash')
+//require('laravel-mix-versionhash')
 
 
 mix

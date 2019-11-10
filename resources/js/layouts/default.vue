@@ -23,68 +23,69 @@ export default {
     title: window.config.appName,
     subtitle: "Sistema de gestion de radiografías en la nube",
     backgroundcolor: "bg-primary glossy",
-    items: []
-  }),
-  created() {
-    console.log("Default: ", store.getters["auth/user"]);
-
-    var itemsADMIN = [
+    items: [
       {
         icon: "home",
         title: "INICIO",
         path: "/",
         type: "alone",
-        active: true
+        active: true,
+        profileId: 1,
+        id: 1
       },
       {
         icon: "star",
         title: "PUNTOS",
         type: "alone",
-        path: "/points"
+        path: "/points",
+        profileId: 1,
+        id: 2
       },
       {
         icon: "insert_chart",
         title: "REPORTES",
         path: "/reports",
-        type: "alone"
+        type: "alone",
+        profileId: 1,
+        id: 3
       },
       {
         icon: "build",
         title: "ADMINISTRACIÓN",
         path: "/settings",
-        type: "alone"
+        type: "alone",
+        profileId: 1,
+        id: 4
       },
-       {
+      {
         icon: "contacts",
         title: "DOCTORES",
         path: "/doctor_home",
-        type: "alone"
-      }
-    ];
-
-    var itemsDOCTOR = [
+        type: "alone",
+        profileId: 1,
+        id: 5
+      },
+      
       {
         icon: "home",
         title: "INICIO",
         path: "/",
         type: "alone",
-        active: true
+        active: true,
+        profileId: 3,
+        id: 6
       },
       {
         icon: "star",
-        title: "PUNTOS",
+        title: "RETOMAR PUNTOS",
         type: "alone",
-        path: "/points"
-      }
-    ];
-    if (store.getters["auth/check"]) {
-      if (store.getters["auth/user"].profile.description == "ADMIN") {
-        this.items = itemsADMIN;
-      } else {
-        this.items = itemsDOCTOR;
-      }
-    }
-  },
+        path: "/points",
+        profileId: 3,
+        id: 7
+      },
+    ]
+  }),
+  created() {},
   components: {
     LoginLayout,
     HomeLayout

@@ -22,14 +22,11 @@ const SettingsPatient = () =>
 const PointsIndex = () =>
     import("~/views/points/index").then(m => m.default || m);
 
-const DoctorIndex = () =>
-    import("~/views/doctors/index").then(m => m.default || m);
-
 export default [
+    
     { path: "/", name: "home", component: Home },
     { path: "/login", name: "login", component: Login },
     { path: "/points", name: "points", component: PointsIndex },
-    { path: "/doctor_home", name: "doctor_home", component: DoctorIndex },
     {
         path: "/password/reset",
         name: "password.request",

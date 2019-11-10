@@ -30,7 +30,7 @@
             <q-card-section>
               <div
                 class="text-subtitle2"
-              >Bienvenido al site del doctor</div>
+              >Medicos que mas generaron radiografias durante el ultimo mes</div>
               <dashboardChart 
                 :chart-data="datacollection"
                 :options="barOptions"
@@ -104,10 +104,9 @@
 </template>
 
 <script>
-import dashboardChart from "../components/chart/Bar.js";
+import dashboardChart from "../../components/chart/Bar.js";
 
 export default {
-  name: "home_Doctor",
   middleware: "auth",
   components: {
     dashboardChart
@@ -120,7 +119,6 @@ export default {
       columns_doctorMovements: [],
       data_doctorMovements: [],
       filter_doctorMovements: [],
-      tab: "causado",
       filterBylabel: "Hoy",
       model: 30,
       min: 0,

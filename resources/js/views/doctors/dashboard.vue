@@ -151,6 +151,7 @@
                     style="max-width: 300px"
                     @failed="showerror"
                   />
+
                 </q-tab-panel>
 
                 <q-tab-panel name="images">
