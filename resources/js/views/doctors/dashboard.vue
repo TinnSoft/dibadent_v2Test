@@ -151,21 +151,57 @@
                     style="max-width: 300px"
                     @failed="showerror"
                   />
-
                 </q-tab-panel>
 
                 <q-tab-panel name="images">
                   <div class="text-h6">Imagenes asociadas al paciente</div>
+                  <div class="q-pa-md row q-gutter-md">
+                    <q-card class="my-cardImages">
+                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
 
-                  <q-carousel swipeable animated v-model="slide" thumbnails infinite>
-                    <q-carousel-slide
-                      :name="1"
-                      img-src="../../../../public/storage/_Images/_radiology/KodwZFqueBu6NC4IMcfmIjY4Pnjk4IWt30j7fhxz.jpeg"
-                    />
-                    <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-                    <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-                    <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/quasar.jpg" />
-                  </q-carousel>
+                      <q-card-actions align="around">
+                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="primary" icon="file_download"></q-btn>
+                        <q-btn flat round color="primary" icon="delete"></q-btn>
+                      </q-card-actions>
+                    </q-card>
+                    <q-card class="my-cardImages">
+                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+
+                      <q-card-actions align="around">
+                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="primary" icon="file_download"></q-btn>
+                        <q-btn flat round color="primary" icon="delete"></q-btn>
+                      </q-card-actions>
+                    </q-card>
+                    <q-card class="my-cardImages">
+                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+
+                      <q-card-actions align="around">
+                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="primary" icon="file_download"></q-btn>
+                        <q-btn flat round color="primary" icon="delete"></q-btn>
+                      </q-card-actions>
+                    </q-card>
+                    <q-card class="my-cardImages">
+                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+
+                      <q-card-actions align="around">
+                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="primary" icon="file_download"></q-btn>
+                        <q-btn flat round color="primary" icon="delete"></q-btn>
+                      </q-card-actions>
+                    </q-card>
+                    <q-card class="my-cardImages">
+                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
+
+                      <q-card-actions align="around">
+                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="primary" icon="file_download"></q-btn>
+                        <q-btn flat round color="primary" icon="delete"></q-btn>
+                      </q-card-actions>
+                    </q-card>
+                  </div>
                 </q-tab-panel>
               </q-tab-panels>
             </q-timeline-entry>
@@ -263,14 +299,15 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
-          if (response.data.patientList) {
-            vm.$set(vm, "patientList", response.data.patientList);
-          }
           if (response.data.pointsSummary) {
             vm.$set(vm, "pointsSummary", response.data.pointsSummary);
           }
           if (response.data.procedures) {
             vm.$set(vm, "medicalProcedures", response.data.procedures);
+          }
+
+          if (response.data.patientList) {
+            vm.$set(vm, "patientList", response.data.patientList);
           }
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
@@ -293,4 +330,8 @@ export default {
 .my-card 
   width: 100%
   max-width: 95%
+
+.my-cardImages
+  width: 100%
+  max-width: 250px
 </style>

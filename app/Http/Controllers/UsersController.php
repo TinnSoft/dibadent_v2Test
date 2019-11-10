@@ -55,7 +55,9 @@ class UsersController extends Controller
             $level=$dataAcumulatedPoints->points_level->level_name;
         }
         
-       $patientsAsociatedToDoctor = PatientsDoctors::where('doctor_id', Auth::user()->id)->select('patient_id')->get();
+       //$patientsAsociatedToDoctor = PatientsDoctors::where('doctor_id', Auth::user()->id)->select('patient_id')->get();
+       $patientsAsociatedToDoctor = Patients::where('doctor_id', Auth::user()->id)->select('id')->get();
+       
        $dataPacientList = Patients::whereIn('id',  $patientsAsociatedToDoctor)
        ->select('id','id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),'home_address',
        'name','last_name','phone','email','comments')->get();

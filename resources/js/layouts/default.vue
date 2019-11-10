@@ -56,16 +56,7 @@ export default {
         type: "alone",
         profileId: 1,
         id: 4
-      },
-      {
-        icon: "contacts",
-        title: "DOCTORES",
-        path: "/doctor_home",
-        type: "alone",
-        profileId: 1,
-        id: 5
-      },
-      
+      },      
       {
         icon: "home",
         title: "INICIO",
@@ -73,7 +64,7 @@ export default {
         type: "alone",
         active: true,
         profileId: 3,
-        id: 6
+        id: 5
       },
       {
         icon: "star",
@@ -81,7 +72,7 @@ export default {
         type: "alone",
         path: "/points",
         profileId: 3,
-        id: 7
+        id: 6
       },
     ]
   }),

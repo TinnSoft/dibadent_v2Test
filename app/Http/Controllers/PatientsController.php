@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Auth;
 use Carbon\Carbon;
 use App\Models\Patients;
+use App\Models\Users;
+use App\Models\PatientsDoctos;
 use DB;
 
 use Illuminate\Http\Request;
@@ -16,23 +18,32 @@ class PatientsController extends Controller
         return response()
         ->json([
             'form' => Patients::initialize(),
-            'genders'=> $this->getGenders()
+            'genders'=> $this->getGenders(),
+            'doctorList'=> $this->getDoctors(),
         ]);
     }
 
     public function show()
     {         
-        $PatientValue = Patients::where('id',  Auth::user()->id)        
-        ->select('id','name','gender_id','last_name','email','birthday','home_address','phone','comments')              
-        ->first();
-
         return response()
         ->json([
-        'form' =>  $PatientValue,
-        'genders'=> $this->getGenders()
+        'form' =>  $this->getPatientByID(Auth::user()->id),
+        'genders'=> $this->getGenders(),
+        'doctorList'=> $this->getDoctors(),
         ]);         
     }
+    public function getDoctors()
+    {
+        /*return Users::where('profile_id','=',  3)        
+        ->select('id','name','last_name','email','birthday','home_address','phone','id as value','name as label')   
+        ->whereNull('deleted_at')           
+        ->get();*/
 
+        return DB::table('users')
+        ->where('profile_id','=',  3) 
+        ->whereNull('deleted_at')
+        ->select('users.id as value', 'users.name as label')->get()->toArray();
+    }
     public function getGenders()
     {
         return DB::table('genders')
@@ -66,8 +77,8 @@ class PatientsController extends Controller
 
     private static function getPatientByID($id){
 
-        return  Patients::where('id',  $id)               
-                ->select( 'id','name','gender_id','email','last_name','home_address','birthday','phone','comments')->first();  
+        return  Patients::with('gender','doctor')->where('id',  $id)               
+                ->select( 'id','name','gender_id','doctor_id','email','last_name','home_address','birthday','phone','comments')->first();  
     }
 
     public function edit($id)
@@ -77,7 +88,8 @@ class PatientsController extends Controller
         return response()
         ->json([
             'form' =>  $data,
-            'genders'=> $this->getGenders()
+            'genders'=> $this->getGenders(),            
+            'doctorList'=> $this->getDoctors(),
         ]);         
     }
 
@@ -90,9 +102,10 @@ class PatientsController extends Controller
             ]);        
         
         $data = $request->all();           
-       
         $data['created_by'] = Auth::user()->id;    
         $data['user_id'] = Auth::user()->id;
+        $data['gender_id'] = $request->input('gender.value');
+        $data['doctor_id'] = $request->input('doctor.value');
         
         //email validation
         $checkIfExistEmail = Patients::where('email',$data['email'])->get(); 
@@ -124,9 +137,10 @@ class PatientsController extends Controller
             'email' => 'required'
         ]);      
 
+      
         //pendiente adicionar validación para que genere alerta de cuando el email ya está creado y/o es diferente al original
         
-        $newPatientValues = $request->all();         
+        $newPatientValues = $request->except(['gender']);         
        
         if (collect($newPatientValues)->isEmpty()) {
             return response()
@@ -135,7 +149,12 @@ class PatientsController extends Controller
             ], 422);
         };
 
+        
         $newPatientValues['modified_by'] = Auth::user()->id;
+        $newPatientValues['gender_id'] = $request->input('gender.value');
+        $newPatientValues['doctor_id'] = $request->input('doctor.value');
+   
+
         $item = Patients::findOrFail($id);
         $item->update($newPatientValues);
                 

@@ -83,7 +83,7 @@
                     <q-select
                       clearable
                       filled
-                      v-model="selectedGender"
+                      v-model="form.gender"
                       :options="genders"
                       label="Género"
                       stack-label
@@ -116,6 +116,19 @@
                 <div class="col-12 col-md-5">
                   <div class="q-gutter-sm">
                     <q-input v-model="form.comments" filled type="textarea" label="Comentarios" />
+
+                    <q-select
+                      :readonly="isReadOnly"
+                      clearable
+                      filled
+                      v-model="form.doctor"
+                      :options="doctors"
+                      label="doctor"
+                      stack-label
+                      dense
+                      options-dense
+                      hide-bottom-space
+                    />
                   </div>
                 </div>
               </div>
@@ -152,6 +165,7 @@ export default {
       openInventoryForm: false,
       spinnerText: "Cargando...",
       errors: null,
+      doctors: [],
       themeColor: "secondary",
       editIdAssociate: null,
       isEditActive: false,
@@ -161,9 +175,9 @@ export default {
       toolbarLabel: "NUEVO PACIENTE",
       model: "patients",
       form: {},
+      prueba: {},
       base: {},
       genders: [],
-      selectedGender: null,
       pathFetchData: "/api/patients/create"
     };
   },
@@ -188,13 +202,16 @@ export default {
       var vm = this;
       vm.spinnerText = "Cargando...";
       vm.loading = true;
-      vm.selectedGender = null;
 
       axios
         .get(vm.pathFetchData)
         .then(function(response) {
-          vm.$set(vm.$data, "form", response.data.form);
+          vm.$set(vm.$data, "doctors", response.data.doctorList);
           vm.$set(vm.$data, "genders", response.data.genders);
+          vm.$set(vm.$data, "form", response.data.form);
+
+          console.log(response.data, vm.doctors);
+
           vm.loading = false;
         })
         .catch(function(error) {
@@ -210,6 +227,7 @@ export default {
       vm.isEditActive = false;
       vm.kindOfProcess = kindOfProcess;
       vm.category_id = null;
+
       if (kindOfProcess === "edit") {
         vm.pathFetchData = `/api/${vm.model}/${customerId}/${kindOfProcess}`;
         vm.toolbarLabel = "EDITAR PACIENTE";
@@ -227,6 +245,7 @@ export default {
     },
 
     submit() {
+      console.log("formulario:", this.form);
       if (this.kindOfProcess === "edit") {
         this.spinnerText = "Actualizando...";
         this.update();
@@ -239,7 +258,6 @@ export default {
       let vm = this;
       vm.$set(vm.$data, "errors", null);
       vm.loading = true;
-      vm.$set(vm.form, "gender_id", vm.selectedGender.value);
 
       axios
         .post(`/api/${vm.model}`, vm.form)
@@ -266,7 +284,6 @@ export default {
       var vm = this;
       vm.errors = null;
       vm.loading = true;
-      vm.$set(vm.form, "gender_id", vm.selectedGender.value);
 
       axios
         .put(`/api/${vm.model}/${vm.form.id}`, vm.form)
