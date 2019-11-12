@@ -61,8 +61,9 @@ export default {
     form: new Form({
       email: "",
       password: "",
-      remember: false
+      remember: true
     }),
+    remember: true,
     progress: false
   }),
   methods: {

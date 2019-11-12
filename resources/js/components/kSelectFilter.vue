@@ -26,8 +26,8 @@ export default {
   },
   data() {
     return {
-      model: "",
-      options: this.$attrs.options
+      model: null,
+      options: Object.freeze(this.$attrs.options)
     };
   },
   methods: {
@@ -39,8 +39,11 @@ export default {
 
       update(() => {
         const needle = val.toLowerCase();
-        this.options = this.$attrs.options.filter(v =>
+        /*this.options = this.$attrs.options.filter(v =>
           v.label.toLowerCase().includes(needle)
+        );*/
+        this.options = this.$attrs.options.filter(
+          v => v.label.toLowerCase().indexOf(needle) > -1
         );
       });
     },

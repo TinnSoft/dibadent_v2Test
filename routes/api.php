@@ -34,12 +34,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
     
     
-    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');
-    Route::get('getProceduresByPatientAndDoctor/{patient_id}','ProceduresController@getProceduresByPatientAndDoctor');
+    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');    
     
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    
     Route::get('getPatientlist','PatientsController@getPatients');
+
+    Route::resource('procedures', 'ProceduresController');
+    Route::get('getProceduresValues','ProceduresController@edit');    
+    Route::get('getProcedureslist','ProceduresController@getProcedures');
+    Route::get('getProceduresByPatientAndDoctor/{patient_id}','ProceduresController@getProceduresByPatientAndDoctor');
 
     Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');

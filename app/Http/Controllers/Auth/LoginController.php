@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Events\UserLoggedIn;
 //use App\Events\RecordActivity;
@@ -46,12 +47,23 @@ class LoginController extends Controller
     protected function attemptLogin(Request $request)
     {   
         $token = $this->guard()->attempt($this->credentials($request));  
-       // abort(403, $token );
+      
         if ($token) {
             $this->guard()->setToken($token);
             return true;
         }
         return false;
+
+        /*$token = $this->guard()->attempt($this->credentials($request));
+        if (! $token) {
+            return false;
+        }
+        $user = $this->guard()->user();
+        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
+            return false;
+        }
+        $this->guard()->setToken($token);
+        return true;*/
     }
 
     protected function sendLoginResponse(Request $request)
@@ -61,7 +73,7 @@ class LoginController extends Controller
        
         $token = (string) $this->guard()->getToken();
         $expiration = $this->guard()->getPayload()->get('exp');
-
+       // abort(403, $expiration );
         event(new UserLoggedIn());
   
         
@@ -72,7 +84,7 @@ class LoginController extends Controller
         return [
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => null,
+            'expires_in' => $expiration,
         ];
     }
     /**

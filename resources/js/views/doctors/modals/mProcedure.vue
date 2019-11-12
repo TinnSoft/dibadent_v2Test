@@ -19,25 +19,41 @@
               <div class="row">
                 <div class="col-12 col-md-6">
                   <div class="q-gutter-sm">
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
+                    <q-select
                       clearable
+                      filled
+                      v-model="form.product"
+                      :error="checkIfFieldHasError(errors,'product_id')"
+                      :options="products"
                       :readonly="isReadOnly"
-                      :error="checkIfFieldHasError(errors,'name')"
-                      v-model="form.name"
-                      label="*Nombre"
+                      label="Producto"
+                      stack-label
+                      dense
+                      options-dense
+                    />
+
+                    <q-select
+                      clearable
+                      filled
+                      v-model="form.radiologist"
+                      :error="checkIfFieldHasError(errors,'radiologist_id')"
+                      :options="radiologists"
+                      :readonly="isReadOnly"
+                      label="Radiologo"
+                      stack-label
+                      dense
+                      options-dense
                     />
 
                     <q-input
                       filled
                       hide-bottom-space
+                      :error="checkIfFieldHasError(errors,'description')"
                       dense
                       clearable
                       :readonly="isReadOnly"
-                      v-model="form.last_name"
-                      label="Apellido"
+                      v-model="form.description"
+                      label="Nombre del procedimiento"
                     />
 
                     <q-input
@@ -45,10 +61,10 @@
                       hide-bottom-space
                       filled
                       :readonly="isReadOnly"
-                      v-model="form.birthday"
+                      v-model="form.procedure_date"
                       mask="date"
                       :rules="['date']"
-                      label="Fecha de Cumpleaños"
+                      label="Fecha de Procedimiento"
                       dense
                     >
                       <template v-slot:append>
@@ -60,81 +76,19 @@
                           >
                             <q-date
                               :readonly="isReadOnly"
-                              v-model="form.birthday"
+                              v-model="form.procedure_date"
                               @input="() => $refs.qDateProxy.hide()"
                             />
                           </q-popup-proxy>
                         </q-icon>
                       </template>
                     </q-input>
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      :readonly="isReadOnly"
-                      :error="checkIfFieldHasError(errors,'email')"
-                      clearable
-                      type="email"
-                      v-model="form.email"
-                      label="*Email"
-                    />
-
-                    <q-select
-                      clearable
-                      filled
-                      v-model="form.gender"
-                      :options="genders"
-                      label="Género"
-                      stack-label
-                      :readonly="isReadOnly"
-                      dense
-                      options-dense
-                    />
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      clearable
-                      :readonly="isReadOnly"
-                      v-model="form.home_address"
-                      label="Dirección"
-                    />
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      clearable
-                      :readonly="isReadOnly"
-                      v-model="form.phone"
-                      label="Telefono"
-                    />
-                  </div>
-                </div>
-                <div class="col-12 col-md-1"></div>
-                <div class="col-12 col-md-5">
-                  <div class="q-gutter-sm">
                     <q-input
                       v-model="form.comments"
                       filled
                       type="textarea"
                       label="Comentarios"
                       :readonly="isReadOnly"
-                    />
-
-                    <q-select
-                      :readonly="isReadOnly"
-                      clearable
-                      filled
-                      v-model="form.doctor"
-                      :options="doctors"
-                      label="doctor"
-                      stack-label
-                      dense
-                      options-dense
-                      hide-bottom-space
                     />
                   </div>
                 </div>
@@ -172,17 +126,17 @@ export default {
       openInventoryForm: false,
       spinnerText: "Cargando...",
       errors: null,
-      doctors: [],
       isEditActive: false,
       loading: false,
       kindOfProcess: "create",
       error: false,
-      toolbarLabel: "NUEVO PACIENTE",
-      model: "patients",
+      toolbarLabel: "NUEVO PROCEDIMIENTO",
+      model: "procedures",
       form: {},
-      base: {},
-      genders: [],
-      pathFetchData: "/api/patients/create"
+      radiologists: [],
+      products: [],
+      pathFetchData: "/api/procedure/create",
+      patientId: null
     };
   },
   components: {},
@@ -206,15 +160,12 @@ export default {
       var vm = this;
       vm.spinnerText = "Cargando...";
       vm.loading = true;
-
       axios
         .get(vm.pathFetchData)
         .then(function(response) {
-          vm.$set(vm.$data, "doctors", response.data.doctorList);
-          vm.$set(vm.$data, "genders", response.data.genders);
           vm.$set(vm.$data, "form", response.data.form);
-
-          console.log(response.data, vm.doctors);
+          vm.$set(vm.$data, "products", response.data.products);
+          vm.$set(vm.$data, "radiologists", response.data.radiologists);
 
           vm.loading = false;
         })
@@ -231,17 +182,18 @@ export default {
       vm.isEditActive = false;
       vm.kindOfProcess = kindOfProcess;
       vm.category_id = null;
+      vm.patientId = customerId;
 
       if (kindOfProcess === "edit") {
         vm.pathFetchData = `/api/${vm.model}/${customerId}/${kindOfProcess}`;
-        vm.toolbarLabel = "EDITAR PACIENTE";
+        vm.toolbarLabel = "EDITAR PROCEDIMIENTO";
       } else if (kindOfProcess === "view") {
         vm.isReadOnly = true;
         vm.pathFetchData = `/api/${vm.model}/${customerId}/edit`;
-        vm.toolbarLabel = "INFORMACIÓN DEL PACIENTE";
+        vm.toolbarLabel = "INFORMACIÓN DEL PROCEDIMIENTO";
       } else {
         vm.pathFetchData = `/api/${vm.model}/${kindOfProcess}`;
-        vm.toolbarLabel = "NUEVO PACIENTE";
+        vm.toolbarLabel = "NUEVO PROCEDIMIENTO";
       }
 
       vm.fetchData();
@@ -249,13 +201,23 @@ export default {
     },
 
     submit() {
-      console.log("formulario:", this.form);
-      if (this.kindOfProcess === "edit") {
-        this.spinnerText = "Actualizando...";
-        this.update();
+      let vm = this;
+      if (vm.form.radiologist) {
+        vm.$set(vm.$data.form, "radiologist_id", vm.form.radiologist.value);
+      }
+
+      vm.$set(vm.$data.form, "patient_id", vm.patientId);
+
+      if (vm.form.product) {
+        vm.$set(vm.$data.form, "product_id", vm.form.product.value);
+      }
+      console.log(this.form);
+      if (vm.kindOfProcess === "edit") {
+        vm.spinnerText = "Actualizando...";
+        vm.update();
       } else {
-        this.spinnerText = "Guardando...";
-        this.create();
+        vm.spinnerText = "Guardando...";
+        vm.create();
       }
     },
     create() {

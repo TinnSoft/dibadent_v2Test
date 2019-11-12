@@ -18,12 +18,13 @@ export const getters = {
 // mutations
 export const mutations = {
     [types.SAVE_TOKEN](state, { token, remember }) {
+        console.log('recordar',remember)
         state.token = token;
         Cookies.set("token", token, {
-            expires: remember ? 365000000000 : null
+            expires: remember ? 365 : null
         });
     },
-
+    
     [types.FETCH_USER_SUCCESS](state, { user }) {
         state.user = user;
     },

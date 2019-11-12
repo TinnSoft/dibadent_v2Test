@@ -24,7 +24,7 @@ class Products extends Model
 
 
     public static function initialize()
-    {patient_id
+    {
         return [
 			'description'=>null,
             'required_points'=>null

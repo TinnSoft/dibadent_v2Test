@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Procedures extends Model
 {
+    use SoftDeletes;
+
     protected $dates = ['deleted_at','created_at','updated_at'];
     
     protected $table = 'procedures';
@@ -26,7 +29,7 @@ class Procedures extends Model
 
      public function product()
     {
-        return $this->hasOne(Products::class, 'id', 'product_id')->select(array('id', 'description','required_points'));
+        return $this->hasOne(Products::class, 'id', 'product_id')->select(array('id','id as value', 'description as label'));
     }
 
     public function patient()
@@ -41,7 +44,7 @@ class Procedures extends Model
 
     public function radiologist()
     {
-        return $this->hasOne(Users::class, 'id', 'radiologist_id')->select(array('id', 'name','last_name','email'));
+        return $this->hasOne(Users::class, 'id', 'radiologist_id')->select(array('id', 'id as value', 'name as label','last_name','email'));
     }
     
     

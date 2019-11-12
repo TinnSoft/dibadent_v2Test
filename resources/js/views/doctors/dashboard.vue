@@ -1,7 +1,7 @@
 <template>
   <!-- <q-avatar size="100px" font-size="52px" color="grey-4" text-color="white" icon="person_outline" style="max-width: 300px" />-->
   <div class="q-pa-md row items-start q-gutter-md">
-    <div class="col" style="max-width: 300px">
+    <div class="col-md-grow" style="max-width: 300px">
       <q-card class="my-card">
         <q-img src="https://image.flaticon.com/icons/png/128/149/149071.png" basic>
           <div class="absolute-bottom text-subtitle2 text-center">
@@ -85,7 +85,14 @@
                 style="width: 300px"
                 @input="getProcedures(form.patient)"
               />
-              <q-btn round dense flat icon="info_outline" color="grey-5" />
+              <q-btn
+                round
+                dense
+                flat
+                icon="info_outline"
+                color="grey-5"
+                @click="showPatientModal($refs)"
+              />
             </q-timeline-entry>
             <q-timeline-entry subtitle="Procedimiento" icon="device_hub">
               <kSelectFilter
@@ -110,8 +117,24 @@
                 style="width: 300px"
                 @input="getListOfImages(form.medicalProcedure)"
               />
-              <q-btn round dense flat icon="add" color="grey-5" />
-              <q-btn round dense flat icon="info_outline" color="grey-5" />
+              <template v-if="form.patient">
+                <q-btn
+                  round
+                  dense
+                  flat
+                  icon="add"
+                  color="grey-5"
+                  @click="CreateProcedureModal($refs)"
+                />
+              </template>
+              <q-btn
+                round
+                dense
+                flat
+                icon="info_outline"
+                color="grey-5"
+                @click="showProcedureModal($refs)"
+              />
             </q-timeline-entry>
 
             <q-timeline-entry subtitle="Comentarios" icon="insert_comment">
@@ -147,7 +170,7 @@
                     auto-upload
                     :url="_medicalProcedureId"
                     accept=".jpg, image/*"
-                    color="grey-5"
+                    color="primary"
                     style="max-width: 300px"
                     @failed="showerror"
                   />
@@ -155,52 +178,17 @@
 
                 <q-tab-panel name="images">
                   <div class="text-h6">Imagenes asociadas al paciente</div>
-                  <div class="q-pa-md row q-gutter-md">
-                    <q-card class="my-cardImages">
-                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-
-                      <q-card-actions align="around">
-                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                        <q-btn flat round color="primary" icon="file_download"></q-btn>
-                        <q-btn flat round color="primary" icon="delete"></q-btn>
-                      </q-card-actions>
-                    </q-card>
-                    <q-card class="my-cardImages">
-                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-
-                      <q-card-actions align="around">
-                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                        <q-btn flat round color="primary" icon="file_download"></q-btn>
-                        <q-btn flat round color="primary" icon="delete"></q-btn>
-                      </q-card-actions>
-                    </q-card>
-                    <q-card class="my-cardImages">
-                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-
-                      <q-card-actions align="around">
-                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                        <q-btn flat round color="primary" icon="file_download"></q-btn>
-                        <q-btn flat round color="primary" icon="delete"></q-btn>
-                      </q-card-actions>
-                    </q-card>
-                    <q-card class="my-cardImages">
-                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-
-                      <q-card-actions align="around">
-                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                        <q-btn flat round color="primary" icon="file_download"></q-btn>
-                        <q-btn flat round color="primary" icon="delete"></q-btn>
-                      </q-card-actions>
-                    </q-card>
-                    <q-card class="my-cardImages">
-                      <img src="https://cdn.quasar.dev/img/mountains.jpg" />
-
-                      <q-card-actions align="around">
-                        <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                        <q-btn flat round color="primary" icon="file_download"></q-btn>
-                        <q-btn flat round color="primary" icon="delete"></q-btn>
-                      </q-card-actions>
-                    </q-card>
+                  <div class="q-pa-md row q-gutter-md" style="max-width: 700px">
+                    <div v-for="(image, i) in listOfImages" :key="i">
+                        <q-card class="my-cardImages">
+                          <img :src="image.file_name" class="img-thumbnail" alt />
+                          <q-card-actions align="around">
+                            <q-btn flat round color="primary" icon="zoom_in"></q-btn>
+                            <q-btn flat round color="primary" icon="file_download"></q-btn>
+                            <q-btn flat round color="primary" icon="delete"></q-btn>
+                          </q-card-actions>
+                        </q-card>
+                    </div>
                   </div>
                 </q-tab-panel>
               </q-tab-panels>
@@ -209,14 +197,19 @@
         </q-card-section>
       </q-card>
     </div>
+    <patientModal ref="_patient"></patientModal>
+    <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
   </div>
 </template>
 
 <script>
 import store from "../../store";
+import patientModal from "../settings/modals/mPatient.vue";
+import procedureModal from "./modals/mProcedure.vue";
+
 export default {
   middleware: "auth",
-  components: {},
+  components: { patientModal, procedureModal },
   data() {
     return {
       basePath: "D:/proyectos/Radiology",
@@ -270,6 +263,25 @@ export default {
     }
   },
   methods: {
+    closeProcedureModal() {
+      this.getProcedures(this.form.patient);
+    },
+    showProcedureModal(refs) {
+      if (this.form.medicalProcedure) {
+        this.openModal(refs._procedure, "view", this.form.medicalProcedure);
+      }
+    },
+    CreateProcedureModal(refs) {
+      this.openModal(refs._procedure, "create", this.form.patient);
+    },
+    showPatientModal(refs) {
+      if (this.form.patient) {
+        this.openModal(refs._patient, "view", this.form.patient);
+      }
+    },
+    openModal(modal, processType, itemId) {
+      modal.open(processType, itemId);
+    },
     showerror(err) {
       console.log(err);
     },
@@ -311,7 +323,6 @@ export default {
           }
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
-            console.log(response.data.images);
           }
 
           vm.loading = false;

@@ -13,8 +13,8 @@ use Illuminate\Http\File;
 
 class ImagesController extends Controller
 {
-    protected $rootFolderMain='public/Storage/_Images/_radiology';
-    protected $rootFolderGeneralPurposes='public/Storage/_Images/_general';
+    protected $rootFolderMain='/Storage/_Images/_radiology';
+    protected $rootFolderGeneralPurposes='/Storage/_Images/_general';
 
     public function getImagesByProcedure($ProcedureId)
     {
