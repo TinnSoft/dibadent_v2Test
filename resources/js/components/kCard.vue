@@ -1,15 +1,8 @@
 <template>
   <q-card flat>
-    <!-- <q-chip dense  :color="backgroundColor" text-color="white" icon="star">Total {{title}}</q-chip>
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">{{kValue}}</div>
-      </q-card-section>
-    </q-card>
-    </q-card>-->
     <q-card-section class="bg-light-blue-4 text-white">
       <div class="text-h6">{{kValue}}</div>
-      <div class="text-subtitle2">Total {{title}}</div>
+      <div class="text-subtitle2">{{title}}</div>
     </q-card-section>
   </q-card>
 </template>
@@ -20,7 +13,7 @@ export default {
   props: ["title", "total", "backgroundColor", "iconName", "subtitle"],
   computed: {
     kValue() {
-      return accounting.formatMoney(this.total);
+      return this.total;
     }
   },
   data() {

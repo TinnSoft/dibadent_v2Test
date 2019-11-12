@@ -1,37 +1,58 @@
 <template>
   <q-page padding>
-    <div class="q-pa-md">
+    <div class="q-pa-md q-gutter-md">
       <div class="row">
-        <div class="col">
+        <div class="col-md-grow">
           <kCard
             class="my-card"
-            title="Radiografías Generadas Último mes"
+            title="Procedimientos han sido generados el último mes"
             background-color="primary"
             icon-name
             :total="qty_of_radiography_generated_lastMonth"
-            subtitle="Total entradas"
           />
         </div>
-        <div class="col">
+        <br>
+        <div class="col-md-grow">
           <kCard
             class="my-card"
-            title="Radiografías Generadas Último año"
+            title="Procedimientos han sido generados el último año"
             background-color="orange"
             icon-name
             :total="qty_of_radiography_generated_lastYear"
-            subtitle="Total gastos"
           />
         </div>
       </div>
       <br />
       <div class="row">
-        <div class="col">
+        <div class="col-md-grow">
           <q-card class="my-card">
             <q-card-section>
-              <div
-                class="text-subtitle2"
-              >Medicos que mas generaron radiografias durante el ultimo mes</div>
-              <dashboardChart 
+              <q-toolbar class="bg-grey-1">
+                <q-btn flat dense size="16px" round color="primary" icon="filter_list">
+                  <q-menu fit transition-show="scale" transition-hide="scale">
+                    <q-list style="min-width: 100px">
+                      <q-item clickable>
+                        <q-item-section>Hoy</q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item clickable>
+                        <q-item-section>Última Semana</q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item clickable>
+                        <q-item-section>Último Mes</q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item clickable>
+                        <q-item-section>Último Año</q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu>
+                </q-btn>
+                <q-toolbar-title>Top de Médicos que más generaron procedimientos</q-toolbar-title>
+              </q-toolbar>
+
+              <dashboardChart
                 :chart-data="datacollection"
                 :options="barOptions"
                 :dataOriginal="datacollection.datasets[0].data"
@@ -42,7 +63,7 @@
       </div>
       <br />
       <div class="row">
-        <div class="col">
+        <div class="col-md-grow">
           <q-table
             class="my-card"
             title="Top de Puntos redimidos"
@@ -70,7 +91,7 @@
             </template>
           </q-table>
         </div>
-        <div class="col">
+        <div class="col-md-grow">
           <q-table
             class="my-card"
             title="Movimientos realizados por tus doctores"
@@ -155,7 +176,7 @@ export default {
       ],
       barOptions: {
         responsive: true,
-        maintainAspectRatio: false,
+        maintainAspectRatio: false
       }
     };
   },
@@ -205,12 +226,12 @@ export default {
       this.datacollection = {
         labels: this.YearLabels,
         datasets: [
-        {
-          label: '',
-          backgroundColor: '#2870E8',
-          data: [40,20,15,45,36]
-        }
-      ]
+          {
+            label: "",
+            backgroundColor: "#2870E8",
+            data: [40, 20, 15, 45, 36]
+          }
+        ]
       };
     },
     filterPeriod(val) {
@@ -255,7 +276,10 @@ export default {
           vm.datacollection.labels = vm.WeekLabels;
           vm.isProcessing = false;
 
-          if (vm.qty_of_radiography_generated_lastMonth === 0 && vm.qty_of_radiography_generated_lastYear === 0) {
+          if (
+            vm.qty_of_radiography_generated_lastMonth === 0 &&
+            vm.qty_of_radiography_generated_lastYear === 0
+          ) {
             vm.visible = true;
           }
         })

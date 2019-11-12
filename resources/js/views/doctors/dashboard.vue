@@ -152,9 +152,10 @@
                 indicator-color="primary"
                 align="justify"
                 narrow-indicator
+                inline-label
               >
-                <q-tab name="loadimage" label="Cargar" />
-                <q-tab name="images" label="Imagenes asociadas" />
+                <q-tab name="loadimage" label="Cargar" icon="file_upload" />
+                <q-tab name="images" label="Imagenes" icon="photo" />
               </q-tabs>
 
               <q-separator />
@@ -176,19 +177,34 @@
                   />
                 </q-tab-panel>
 
-                <q-tab-panel name="images">
-                  <div class="text-h6">Imagenes asociadas al paciente</div>
-                  <div class="q-pa-md row q-gutter-md" style="max-width: 700px">
-                    <div v-for="(image, i) in listOfImages" :key="i">
-                        <q-card class="my-cardImages">
-                          <img :src="image.file_name" class="img-thumbnail" alt />
-                          <q-card-actions align="around">
-                            <q-btn flat round color="primary" icon="zoom_in"></q-btn>
-                            <q-btn flat round color="primary" icon="file_download"></q-btn>
-                            <q-btn flat round color="primary" icon="delete"></q-btn>
-                          </q-card-actions>
-                        </q-card>
-                    </div>
+                <q-tab-panel name="images" style="max-width: 600px">
+                  <div class="row justify-center q-gutter-sm">
+                    <q-img
+                      v-for="(image, i) in listOfImages"
+                      :key="i"
+                      :src="image.file_name"
+                      style="width: 180px"
+                      ratio="1"
+                      spinner-color="white"
+                      class="rounded-borders"
+                    >
+                      <div class="absolute-bottom text-center text-body2">
+                        <q-btn flat round color="white" icon="zoom_in"></q-btn>
+                        <q-btn flat round color="white" icon="more_vert">
+                          <q-menu fit transition-show="scale" transition-hide="scale">
+                            <q-list style="min-width: 100px">
+                              <q-item clickable>
+                                <q-item-section>Descargar</q-item-section>
+                              </q-item>
+                              <q-separator />
+                              <q-item clickable>
+                                <q-item-section>Eliminar</q-item-section>
+                              </q-item>
+                            </q-list>
+                          </q-menu>
+                        </q-btn>
+                      </div>
+                    </q-img>
                   </div>
                 </q-tab-panel>
               </q-tab-panels>
@@ -345,4 +361,8 @@ export default {
 .my-cardImages
   width: 100%
   max-width: 250px
+
+.transition-item
+  height: 250px
+  width: 250px
 </style>
