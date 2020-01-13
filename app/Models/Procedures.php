@@ -46,7 +46,7 @@ class Procedures extends Model
     {
         return $this->hasOne(Users::class, 'id', 'radiologist_id')->select(array('id', 'id as value', 'name as label','last_name','email'));
     }
-    
+ 
     
     public static function initialize()
     {

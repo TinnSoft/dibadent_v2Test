@@ -8,17 +8,17 @@
             title="Procedimientos han sido generados el último mes"
             background-color="primary"
             icon-name
-            :total="qty_of_radiography_generated_lastMonth"
+            :total="procedures_generated_lastMonth"
           />
         </div>
-        <br>
+        <br />
         <div class="col-md-grow">
           <kCard
             class="my-card"
             title="Procedimientos han sido generados el último año"
             background-color="orange"
             icon-name
-            :total="qty_of_radiography_generated_lastYear"
+            :total="procedures_generated_lastYear"
           />
         </div>
       </div>
@@ -31,19 +31,19 @@
                 <q-btn flat dense size="16px" round color="primary" icon="filter_list">
                   <q-menu fit transition-show="scale" transition-hide="scale">
                     <q-list style="min-width: 100px">
-                      <q-item clickable>
+                      <q-item clickable v-close-popup @click="filterPeriod('d')">
                         <q-item-section>Hoy</q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable>
+                      <q-item clickable v-close-popup @click="filterPeriod('w')">
                         <q-item-section>Última Semana</q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable>
+                      <q-item clickable v-close-popup @click="filterPeriod('m')">
                         <q-item-section>Último Mes</q-item-section>
                       </q-item>
                       <q-separator />
-                      <q-item clickable>
+                      <q-item clickable v-close-popup @click="filterPeriod('y')">
                         <q-item-section>Último Año</q-item-section>
                       </q-item>
                     </q-list>
@@ -55,7 +55,7 @@
               <dashboardChart
                 :chart-data="datacollection"
                 :options="barOptions"
-                :dataOriginal="datacollection.datasets[0].data"
+                :data-original="procedures_bydoctor_today_qty"
               />
             </q-card-section>
           </q-card>
@@ -132,7 +132,7 @@ export default {
   components: {
     dashboardChart
   },
-  data: function() {
+  data() {
     return {
       columns_redeemedPoints: [],
       data_redeemedPoints: [],
@@ -150,7 +150,9 @@ export default {
       filter: "d",
       path: "getDashboardInfo",
       form: {},
-      datacollection: {},
+      datacollection: null,
+      datacollection_data: [],
+      datacollection_labels: [],
       YearLabels: [
         "Enero",
         "Febrero",
@@ -176,112 +178,159 @@ export default {
       ],
       barOptions: {
         responsive: true,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              },
+              stacked: true
+            }
+          ],
+          xAxes: [
+            {
+              stacked: true
+            }
+          ]
+        }
+      },
+      procedures_generated_lastMonth: 0,
+      procedures_generated_lastYear: 0,
+      procedures_bydoctor_today_qty: [],
+      procedures_bydoctor_today_labels: []
     };
   },
   metaInfo() {
     return { title: this.$t("home") };
   },
   created() {
+    this.filter = "d";
     this.columns_redeemedPoints = columns_redeemedPoints();
     this.columns_doctorMovements = columns_doctorMovements();
-    this.fillOptions();
     this.fetchData();
   },
-  computed: {
-    qty_of_radiography_generated_lastMonth() {
-      try {
-        if (this.filter === "d") {
-          return this.form.income.day;
-        } else if (this.filter === "w") {
-          return this.form.income.week;
-        } else if (this.filter === "m") {
-          return this.form.income.month;
-        } else if (this.filter === "y") {
-          return this.form.income.year;
-        }
-      } catch (e) {
-        return 0;
-      }
-    },
-    qty_of_radiography_generated_lastYear() {
-      try {
-        if (this.filter === "d") {
-          return this.form.outcome.day;
-        } else if (this.filter === "w") {
-          return this.form.outcome.week;
-        } else if (this.filter === "m") {
-          return this.form.outcome.month;
-        } else if (this.filter === "y") {
-          return this.form.outcome.year;
-        }
-      } catch (e) {
-        return 0;
-      }
-    }
-  },
+  computed: {},
   methods: {
     fillOptions() {
-      this.datacollection = {
-        labels: this.YearLabels,
-        datasets: [
-          {
-            label: "",
-            backgroundColor: "#2870E8",
-            data: [40, 20, 15, 45, 36]
-          }
-        ]
+      let vm = this;
+
+      vm.datacollection = {
+        labels: vm.datacollection_labels,
+        datasets: vm.datacollection_data
       };
     },
     filterPeriod(val) {
-      let baseData = this.form.graph_data;
-      let collection = this.datacollection;
-      this.filter = val;
-
-      if (val == "d") {
-        this.filterBylabel = "Hoy";
-        collection.labels = this.WeekLabels;
-        collection.datasets[0].data = baseData.weekData_income;
-        collection.datasets[1].data = baseData.weekData_outcome;
-      } else if (val == "w") {
-        this.filterBylabel = "Ultima Semana";
-        collection.labels = this.WeekLabels;
-        collection.datasets[0].data = baseData.weekData_income;
-        collection.datasets[1].data = baseData.weekData_outcome;
-      } else if (val == "m") {
-        this.filterBylabel = "Ultimo Mes";
-        collection.labels = baseData.labels_current_month;
-        collection.datasets[0].data = baseData.data_by_day_current_month_in;
-        collection.datasets[1].data = baseData.data_by_day_current_month_out;
-      } else if (val == "y") {
-        this.filterBylabel = "Ultimo Año";
-        collection.labels = this.YearLabels;
-        collection.datasets[0].data = baseData.DataBymont_peryear_in;
-        collection.datasets[1].data = baseData.DataBymont_peryear_out;
+      if (val) {
+        this.filter = val;
       }
+
+      if (this.filter == "d") {
+        this.filterBylabel = "Hoy";
+        this.datacollection_labels = this.procedures_bydoctor_today_labels[0];
+        this.datacollection_data = [
+          {
+            label: "",
+            backgroundColor: "#2870E8",
+            data: this.procedures_bydoctor_today_qty[0]
+          }
+        ];
+      } else if (this.filter == "w") {
+        this.filterBylabel = "Ultima Semana";
+        this.datacollection_labels = this.WeekLabels;
+
+        this.datacollection_data = [
+          {
+            label: "Doctor 1",
+            backgroundColor: "#f87979",
+            data: [40, 39, 10, 40, 39, 80, 40]
+          },
+          {
+            label: "Doctor Two",
+            backgroundColor: "#3D5B96",
+            data: [40, 39, 10, 40, 39, 80, 40]
+          },
+          {
+            label: "Doctor Three",
+            backgroundColor: "#1EFFFF",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          },
+          {
+            label: "Doctor 4",
+            backgroundColor: "#1EFFFF",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          },
+          {
+            label: "Doctor 5",
+            backgroundColor: "#1EFFFF",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          },
+          {
+            label: "Doctor 6",
+            backgroundColor: "#1EFFFF",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          },
+          {
+            label: "Doctor 7",
+            backgroundColor: "#1EFFFF",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          },
+          {
+            label: "Otros",
+            backgroundColor: "gray",
+            data: [20, 10, 12, 33, 22, 4, 0]
+          }
+        ];
+      } else if (this.filter == "m") {
+        this.filterBylabel = "Ultimo Mes";
+        //this.datacollection_labels = baseData.labels_current_month;
+      } else if (this.filter == "y") {
+        this.filterBylabel = "Ultimo Año";
+        this.datacollection_labels = this.YearLabels;
+      }
+      this.fillOptions();
     },
     fetchData() {
       let vm = this;
-
       vm.isProcessing = true;
       axios
         .get(`/api/${vm.path}`)
         .then(function(response) {
-          vm.$set(vm.$data, "form", response.data.form);
-          vm.datacollection.datasets[0].data =
-            vm.form.graph_data.weekData_income;
-          vm.datacollection.datasets[1].data =
-            vm.form.graph_data.weekData_outcome;
-          vm.datacollection.labels = vm.WeekLabels;
-          vm.isProcessing = false;
+          vm.$set(
+            vm.$data,
+            "procedures_generated_lastMonth",
+            response.data.procedures_sum.procedures_lastMonth
+          );
+          vm.$set(
+            vm.$data,
+            "procedures_generated_lastYear",
+            response.data.procedures_sum.procedures_lastYear
+          );
 
+          vm.$set(
+            vm.$data,
+            "procedures_bydoctor_today_qty",
+            response.data.procedures_ByDoctor.procedures_bydoctor_today_qty
+          );
+
+          vm.$set(
+            vm.$data,
+            "procedures_bydoctor_today_labels",
+            response.data.procedures_ByDoctor.procedures_bydoctor_today_labels
+          );
+
+          console.log(response.data);
+
+          vm.filterPeriod();
+          vm.isProcessing = false;
+          /*
           if (
             vm.qty_of_radiography_generated_lastMonth === 0 &&
             vm.qty_of_radiography_generated_lastYear === 0
           ) {
             vm.visible = true;
           }
+          */
         })
         .catch(function(error) {
           vm.isProcessing = false;
