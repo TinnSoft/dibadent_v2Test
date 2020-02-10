@@ -174,6 +174,7 @@
                     color="primary"
                     style="max-width: 300px"
                     @failed="showerror"
+                    @uploaded="uloadedFinished"
                   />
                 </q-tab-panel>
 
@@ -228,7 +229,6 @@ export default {
   components: { patientModal, procedureModal },
   data() {
     return {
-      basePath: "D:/proyectos/Radiology",
       slide: 1,
       tabSelected: "loadimage",
       form: {},
@@ -254,6 +254,7 @@ export default {
   },
   computed: {
     _medicalProcedureId() {
+      console.log(this.urlToUploadImages + this.medicalProcedureId);
       return this.urlToUploadImages + this.medicalProcedureId;
     },
     checkIfExistProcedure() {
@@ -279,6 +280,9 @@ export default {
     }
   },
   methods: {
+    uloadedFinished(val) {
+      console.log("cargado", val);
+    },
     closeProcedureModal() {
       this.getProcedures(this.form.patient);
     },
@@ -339,6 +343,7 @@ export default {
           }
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
+            console.log("imagenes ", response.data.images);
           }
 
           vm.loading = false;

@@ -23,26 +23,23 @@
       <q-tr :props="props">
         <q-td key="level_name" :props="props">
           {{ props.row.level_name }}
-          <q-popup-edit v-model="props.row.level_name">
-            <q-input
-              @blur="updateLevel(props.row)"
+          <q-popup-edit v-model="props.row.level_name" @hide ="updateLevel(props.row)">
+            <q-input              
               v-model="props.row.level_name"
               dense
-              autofocus
-              counter
+              autofocus              
             />
           </q-popup-edit>
         </q-td>
         <q-td key="required_points" :props="props">
           {{ props.row.required_points }}
-          <q-popup-edit v-model="props.row.required_points">
+          <q-popup-edit v-model="props.row.required_points" @hide="updateLevel(props.row)">
             <q-input
               type="number"
-              @blur="updateLevel(props.row)"
+              
               v-model="props.row.required_points"
               dense
-              autofocus
-              counter
+              autofocus              
             />
           </q-popup-edit>
         </q-td>
@@ -52,6 +49,7 @@
             v-model="props.row.limit_date"
             title="Actualizar vigencia"
             buttons
+             @hide="updateLevel(props.row)"
           >
             <q-input
               clearable
@@ -61,8 +59,7 @@
               mask="date"
               :rules="['date']"
               dense
-              autofocus
-              @blur="updateLevel(props.row)"
+              autofocus             
             >
               <template v-slot:append>
                 <q-icon name="event" class="cursor-pointer">
@@ -196,7 +193,6 @@ export default {
       var vm = this;
       vm.errors = null;
       vm.loading = true;
-
       var requestLevel = {
         id: _row.id,
         points_levels: _row.points_levels,

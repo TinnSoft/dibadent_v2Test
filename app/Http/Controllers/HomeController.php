@@ -108,7 +108,7 @@ class HomeController extends Controller
 
         $WeekDataArray=[];
         $WeekDataArray_out=[];        
-        
+        /*
         while($startDate<= $endDate)
         {
             $WeekDataArray2=$mainClass->FilterDataByArray($dtabyWeek,$startDate,'day');;
@@ -119,7 +119,7 @@ class HomeController extends Controller
             
             $startDate->addDay();
         }
-
+        */
         return array($data);
     }
 
