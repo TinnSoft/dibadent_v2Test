@@ -281,7 +281,7 @@ export default {
   },
   methods: {
     uloadedFinished(val) {
-      console.log("cargado", val);
+     this.getListOfImages(this.medicalProcedureId);
     },
     closeProcedureModal() {
       this.getProcedures(this.form.patient);
