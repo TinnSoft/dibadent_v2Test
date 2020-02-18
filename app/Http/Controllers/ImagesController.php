@@ -13,13 +13,13 @@ use Illuminate\Http\File;
 
 class ImagesController extends Controller
 {
-    protected $rootFolderMain='/public/_Images/_radiology';
-    protected $rootFolderGeneralPurposes='/public/_Images/_general';
+    protected $rootFolderMain='/_Images/_radiology';
+    protected $rootFolderGeneralPurposes='/_Images/_avatars';
 
     public function getImagesByProcedure($ProcedureId)
     {
        $data= Images::where('procedure_id', $ProcedureId)
-       ->select('id','title','file_name','other_details')->get();      
+       ->select('id','title','other_details',DB::raw('CONCAT("storage/",file_name) AS file_name'))->get();      
       
 
        return response()
