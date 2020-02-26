@@ -13,7 +13,7 @@ class PointsLevels extends Model
     
     protected $table = 'points_levels';
     
-    protected $fillable=['level_name','required_points','limit_date','created_by','modified_by','created_at','updated_at','deleted_at'];
+    protected $fillable=['level_name','required_points','limit_months','created_by','modified_by','created_at','updated_at','deleted_at'];
 
 
     /**
@@ -31,7 +31,7 @@ class PointsLevels extends Model
         return [
 			'level_name'=>null,
             'required_points'=>null,
-            'limit_date'=>null,
+            'limit_months'=>null,
         ];
     }
 }

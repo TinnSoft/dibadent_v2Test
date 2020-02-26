@@ -15,7 +15,7 @@ class PointsLevelsController extends Controller
         ->select('points_levels.id',
         'points_levels.level_name',
         'points_levels.required_points',
-        'points_levels.limit_date',
+        'points_levels.limit_months',
         'points_levels.created_at')              
         ->get();
 

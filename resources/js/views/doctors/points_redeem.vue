@@ -23,55 +23,33 @@
       <q-tr :props="props">
         <q-td key="level_name" :props="props">
           {{ props.row.level_name }}
-          <q-popup-edit v-model="props.row.level_name">
-            <q-input
-              @blur="updateLevel(props.row)"
-              v-model="props.row.level_name"
-              dense
-              autofocus
-              counter
-            />
+          <q-popup-edit v-model="props.row.level_name" @hide="updateLevel(props.row)">
+            <q-input v-model="props.row.level_name" dense autofocus counter />
           </q-popup-edit>
         </q-td>
         <q-td key="required_points" :props="props">
           {{ props.row.required_points }}
-          <q-popup-edit v-model="props.row.required_points">
-            <q-input
-              type="number"
-              @blur="updateLevel(props.row)"
-              v-model="props.row.required_points"
-              dense
-              autofocus
-              counter
-            />
+          <q-popup-edit v-model="props.row.required_points" @hide="updateLevel(props.row)">
+            <q-input type="number" v-model="props.row.required_points" dense autofocus counter />
           </q-popup-edit>
         </q-td>
-        <q-td key="limit_date" :props="props">
-          {{ props.row.limit_date }}
+        <q-td key="limit_months" :props="props">
+          {{ props.row.limit_months }}
           <q-popup-edit
-            v-model="props.row.limit_date"
+            v-model="props.row.limit_months"
             title="Actualizar vigencia"
             buttons
+            @hide="updateLevel(props.row)"
           >
             <q-input
               clearable
               hide-bottom-space
+              type="number"
               filled
-              v-model="props.row.limit_date"
-              mask="date"
-              :rules="['date']"
+              v-model="props.row.limit_months"
               dense
               autofocus
-              @blur="updateLevel(props.row)"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-                    <q-date v-model="props.row.limit_date" @input="() => $refs.qDateProxy.hide()" />
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
+            ></q-input>
           </q-popup-edit>
         </q-td>
         <q-td key="actions" :props="props">
@@ -115,9 +93,9 @@ export default {
           sortable: true
         },
         {
-          name: "limit_date",
-          label: "Vigente hasta",
-          field: "limit_date",
+          name: "limit_months",
+          label: "Meses de vigencia",
+          field: "limit_months",
           sortable: true,
           style: "width: 10px"
         },
@@ -202,7 +180,7 @@ export default {
         points_levels: _row.points_levels,
         required_points: _row.required_points,
         level_name: _row.level_name,
-        limit_date: _row.limit_date
+        limit_months: _row.limit_months
       };
 
       axios

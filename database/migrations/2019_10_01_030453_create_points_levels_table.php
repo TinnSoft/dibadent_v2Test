@@ -17,7 +17,7 @@ class CreatePointsLevelsTable extends Migration
             $table->bigIncrements('id');
             $table->string('level_name');
             $table->string('required_points')->nullable();   
-            $table->date('limit_date')->nullable();   
+            $table->integer('limit_months')->nullable();   
             $table->integer('created_by')->nullable();
             $table->integer('modified_by')->nullable();
             $table->timestamps();

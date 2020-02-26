@@ -81,7 +81,7 @@ export default {
       pagination: {
         rowsPerPage: 10
       },      
-      visibleColumns:['name','last_name','email','home_address','phone','birthday','actions'],
+      visibleColumns:['name','last_name','email','home_address','identification_number','phone','birthday','actions'],
       form: {},
       path: "getDoctorlist"
     };
@@ -177,6 +177,13 @@ function doctorColumns() {
       label: "Apellido",
       field: "last_name",
       name: "last_name",
+      sortable: true,
+      filter: true
+    },
+    {
+      label: "Cedula",
+      field: "identification_number",
+      name: "identification_number",
       sortable: true,
       filter: true
     },

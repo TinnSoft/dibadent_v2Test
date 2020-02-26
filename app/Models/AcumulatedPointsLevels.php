@@ -27,7 +27,7 @@ class AcumulatedPointsLevels extends Model
 
     public function points_level()
     {
-        return $this->hasOne(PointsLevels::class, 'id', 'points_level_id')->select(array('id', 'level_name','required_points','limit_date'));
+        return $this->hasOne(PointsLevels::class, 'id', 'points_level_id')->select(array('id', 'level_name','required_points','limit_months'));
     }
 
     public function user()

@@ -39,6 +39,16 @@
                       v-model="form.last_name"
                       label="Apellido"
                     />
+                    <q-input
+                      filled
+                      hide-bottom-space
+                      dense
+                      clearable
+                      :readonly="isReadOnly"
+                      :error="checkIfFieldHasError(errors,'identification_number')"
+                      v-model="form.identification_number"
+                      label="*Cedula"
+                    />
 
                     <q-input
                       clearable
@@ -58,7 +68,11 @@
                             transition-show="scale"
                             transition-hide="scale"
                           >
-                            <q-date :readonly="isReadOnly" v-model="form.birthday" @input="() => $refs.qDateProxy.hide()" />
+                            <q-date
+                              :readonly="isReadOnly"
+                              v-model="form.birthday"
+                              @input="() => $refs.qDateProxy.hide()"
+                            />
                           </q-popup-proxy>
                         </q-icon>
                       </template>
@@ -220,7 +234,7 @@ export default {
     },
 
     submit() {
-       this.$set(this.$data.form, "_process", 'DOCTOR');
+      this.$set(this.$data.form, "_process", "DOCTOR");
       if (this.kindOfProcess === "edit") {
         this.spinnerText = "Actualizando...";
         this.update();

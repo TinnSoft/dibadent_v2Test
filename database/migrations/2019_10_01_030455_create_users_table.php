@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('profile_id') ->references('id')->on('profiles');
             $table->string('name');
             $table->string('last_name')->nullable();
+            $table->string('identification_number')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

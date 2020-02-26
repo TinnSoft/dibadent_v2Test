@@ -82,7 +82,7 @@ class UsersController extends Controller
     public function getUserInfo()
     {               
         return Users::with('profile')->where('id',  Auth::user()->id)        
-        ->select('id','name','last_name','email','password','birthday','home_address','phone','profile_id')              
+        ->select('id','name','last_name','email','password','birthday','home_address','phone','profile_id','identification_number')              
         ->first();      
     }
 
@@ -104,6 +104,7 @@ class UsersController extends Controller
         'users.birthday',
         'users.home_address',
         'users.phone',
+        'users.identification_number',
         'users.created_at'
         )      
         ->orderBy('users.id','desc')        
@@ -147,7 +148,7 @@ class UsersController extends Controller
     private static function getUserByID($id){
 
         return  Users::where('id',  $id)               
-                ->select( 'id','name','email','last_name','home_address','birthday','phone')->first();  
+                ->select( 'id','name','email','last_name','home_address','birthday','phone','identification_number')->first();  
     }
 
     public function edit($id)
