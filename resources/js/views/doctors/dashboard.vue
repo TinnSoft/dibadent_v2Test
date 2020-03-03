@@ -5,7 +5,7 @@
       <q-card class="my-card">
         <q-img src="https://image.flaticon.com/icons/png/128/149/149071.png" basic>
           <div class="absolute-bottom text-subtitle2 text-center">
-            <q-btn flat color="white" label="Cambiar Imagen" />
+            <q-file filled v-model="model" label="Cambiar imagen" @input="updateAvatarImage" :name="avatar" />
           </div>
         </q-img>
 
@@ -246,6 +246,7 @@ export default {
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
       urlToUploadImages: "/api/uploadFile/",
+      urlToUploadAvatar: "/api/uploadAvatar/",
       medicalProcedureId: null
     };
   },
@@ -270,6 +271,9 @@ export default {
         " " +
         this.$store.getters["auth/user"].last_name
       );
+    },
+    changeAvatar () {
+        return this.urlToUploadAvatar + this.$store.getters["auth/user"].id
     }
   },
   filters: {
@@ -351,6 +355,9 @@ export default {
         .catch(function(error) {
           vm.loading = false;
         });
+    },
+    getAvatarImage () {
+        
     }
   }
 };
