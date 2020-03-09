@@ -78,6 +78,29 @@ class UsersController extends Controller
            'patientList'=> $dataPacientList           
        ]);
     }
+
+    public function getDoctorHistory()
+    {   
+        $data = DB::table('users')
+        ->Join('tracker', 'tracker.user_id', '=', 'users.id')        
+        ->where([
+            ['users.profile_id',$this->doctor_code]
+        ])    
+        ->where('isActive',1)    
+        ->whereNull('deleted_at')
+        ->select('tracker.id',
+        'tracker.created_at',
+        'tracker.detail'
+        )      
+        ->orderBy('tracker.id','desc')        
+        ->get()->toArray();
+
+
+       return response()
+       ->json([
+           'track' => $data           
+       ]);
+    }
     
     public function getUserInfo()
     {               
