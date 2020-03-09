@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use DB;
 use Illuminate\Http\File;
+use App\Events\RecordActivity;
 
 class ImagesController extends Controller
 {
@@ -46,6 +47,9 @@ class ImagesController extends Controller
                 $imagesModel->procedure_id=$id_procedure;
                 $imagesModel->save();    
             }
+            
+            event(new RecordActivity(Auth::user()->name.' agregó una imagen asociada al procedimiento '.$id_procedure,
+            'Images',null));
 
             return response()
              ->json([

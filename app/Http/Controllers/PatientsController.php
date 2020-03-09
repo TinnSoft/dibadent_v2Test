@@ -7,7 +7,7 @@ use App\Models\Patients;
 use App\Models\Users;
 use App\Models\PatientsDoctos;
 use DB;
-
+use App\Events\RecordActivity;
 use Illuminate\Http\Request;
 
 class PatientsController extends Controller
@@ -121,7 +121,10 @@ class PatientsController extends Controller
         $item = Patients::create($data);
 
         $emailData['email'] = $data['email'];
-      
+        
+        event(new RecordActivity(Auth::user()->name.' creó el paciente '.$item->name,
+        'Patients',null));
+
         return response()
             ->json([
                 'created' => true,
@@ -157,7 +160,10 @@ class PatientsController extends Controller
 
         $item = Patients::findOrFail($id);
         $item->update($newPatientValues);
-                
+        
+        event(new RecordActivity(Auth::user()->name.' actualizó el paciente '.$item->name,
+        'Patients',null));
+
         return response()
         ->json([
             'updated' => true,
@@ -169,6 +175,9 @@ class PatientsController extends Controller
     {   
         $post = Patients::find($id);
         $post->delete();
+
+        event(new RecordActivity(Auth::user()->name.' eliminó el paciente '.$post->name,
+        'Patients',null));
 
         return response()
         ->json([

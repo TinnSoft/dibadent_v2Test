@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\SettingsChanged;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Models\Account;
 use Auth;
 use App\Repositories\ActivityRepository;
 use App\Events\RecordActivity;

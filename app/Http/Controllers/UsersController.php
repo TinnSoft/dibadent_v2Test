@@ -15,7 +15,7 @@ use App\Models\PointsRedemption;
 use Illuminate\Support\Str;
 use DB;
 use Illuminate\Support\Facades\Mail;
-
+use App\Events\RecordActivity;
 
 class UsersController extends Controller
 {   
@@ -213,6 +213,9 @@ class UsersController extends Controller
       
         $this->sendEmail($emailData);
 
+        event(new RecordActivity(Auth::user()->name.' creó el usuario '.$item->name,
+        'Users',null));
+
         return response()
             ->json([
                 'created' => true,
@@ -242,7 +245,10 @@ class UsersController extends Controller
         $newUserValues['modified_by'] = Auth::user()->id;
         $item = Users::findOrFail($id);
         $item->update($newUserValues);
-                
+        
+        event(new RecordActivity(Auth::user()->name.' actualizó el usuario '.$item->name,
+        'Users',null));
+
         return response()
         ->json([
             'updated' => true,
@@ -254,6 +260,9 @@ class UsersController extends Controller
     {   
         $post = Users::find($id);
         $post->delete();
+
+        event(new RecordActivity(Auth::user()->name.' eliminó el usuario '.$post->name,
+        'Users',null));
 
         return response()
         ->json([

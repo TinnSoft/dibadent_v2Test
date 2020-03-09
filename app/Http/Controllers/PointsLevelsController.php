@@ -6,6 +6,7 @@ use DB;
 use App\Models\PointsLevels;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use App\Events\RecordActivity;
 
 class PointsLevelsController extends Controller
 {
@@ -37,6 +38,9 @@ class PointsLevelsController extends Controller
 
         $item = PointsLevels::create($data);
 
+        event(new RecordActivity(Auth::user()->name.' creó un nuevo nivel de puntos',
+        'PointsLevels',null));
+
         return response()
             ->json([
                 'created' => true,
@@ -55,6 +59,10 @@ class PointsLevelsController extends Controller
         $newLevelsValues['modified_by'] = Auth::user()->id;
         $item = PointsLevels::findOrFail($id);
         $item->update($newLevelsValues);
+
+        event(new RecordActivity(Auth::user()->name.' actualizó un registro de puntos',
+        'PointsLevels',null));
+
                 
         return response()
         ->json([
@@ -66,6 +74,10 @@ class PointsLevelsController extends Controller
     {   
         $post = PointsLevels::find($id);
         $post->delete();
+
+        event(new RecordActivity(Auth::user()->name.' eliminó un registro de puntos',
+        'PointsLevels',null));
+
 
         return response()
         ->json([

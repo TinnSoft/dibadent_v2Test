@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Models\Procedures;
 use DB;
+use App\Events\RecordActivity;
 
 class ProceduresController extends Controller
 {
@@ -89,6 +90,9 @@ class ProceduresController extends Controller
         $data['doctor_id'] = Auth::user()->id; 
 
         $item = Procedures::create($data);
+
+        event(new RecordActivity(Auth::user()->name.' creó un nuevo procedimiento',
+        'Procedures',null));
       
         return response()
             ->json([
@@ -114,7 +118,11 @@ class ProceduresController extends Controller
    
         $item = Procedures::findOrFail($id);
         $item->update($data);
-                
+        
+        event(new RecordActivity(Auth::user()->name.' actualizó un procedimiento',
+        'Procedures',null));
+
+
         return response()
         ->json([
             'updated' => true,
@@ -126,6 +134,9 @@ class ProceduresController extends Controller
     {   
         $post = Procedures::find($id);
         $post->delete();
+
+        event(new RecordActivity(Auth::user()->name.' eliminó un procedimiento',
+        'Procedures',null));
 
         return response()
         ->json([

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use App\Events\RecordActivity;
+use Auth;
 
 class CompanyController extends Controller
 {
@@ -59,6 +61,9 @@ class CompanyController extends Controller
             $item->update($newCompanyValues);
         }
         
+        event(new RecordActivity(Auth::user()->name.' actualizó la información de la empresa ',
+        'Company',null));
+
         return response()
         ->json([
             'updated' => true,
