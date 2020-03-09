@@ -15,12 +15,14 @@ use App\Models\PointsRedemption;
 use Illuminate\Support\Str;
 use DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 
 class UsersController extends Controller
 {   
     private $doctor_code=3;
     private $radiologist_code=2;
+    protected $rootFolderGeneralPurposes='/_Images/_avatars';
 
     public function create()
     {
@@ -82,8 +84,9 @@ class UsersController extends Controller
     public function getUserInfo()
     {               
         return Users::with('profile')->where('id',  Auth::user()->id)        
-        ->select('id','name','last_name','email','password','birthday','home_address','phone','profile_id','identification_number')              
-        ->first();      
+        ->select('id','name','last_name','email','password','birthday','home_address','phone','profile_id','identification_number', 'avatar')              
+        ->first();
+
     }
 
     public function getDoctors()
@@ -259,5 +262,30 @@ class UsersController extends Controller
         ->json([
             'deleted' => true
         ]);
+    }
+
+    public function uploadAvatar(Request $request, $id_user)
+    {
+        //verifica si el directorio está creado
+        Storage::makeDirectory($this->rootFolderGeneralPurposes);
+        if ($request->hasFile('avatar') && $id_user != null)              
+        {
+            $newFileName = Storage::putFile($this->rootFolderGeneralPurposes, $request->file('avatar'));
+            $userModel= Users::find($id_user);
+            $userModel->avatar = $newFileName;
+            $userModel->save();
+
+            return response()
+             ->json([
+                'saved' => true,
+                'avatar' => asset('storage/' . $newFileName),
+             ]);
+        }
+            
+        return response()
+            ->json([
+                'saved' => false
+            ],422) ;
+     
     }
 }

@@ -15,7 +15,6 @@ use Illuminate\Http\File;
 class ImagesController extends Controller
 {
     protected $rootFolderMain='/_Images/_radiology';
-    protected $rootFolderGeneralPurposes='/_Images/_avatars';
 
     public function getImagesByProcedure($ProcedureId)
     {
@@ -64,22 +63,23 @@ class ImagesController extends Controller
      
     }
     
-    public function uploadAvatar(Request $request, $id_user)
+    public function update(Request $request, $id)
     {
+        // dd($request);
+        $image = Images::find($id);
+
         //verifica si el directorio está creado
-        Storage::makeDirectory($this->rootFolderGeneralPurposes);
-        if (count($request->files)>0 && $id_user != null)              
-        {         
-            foreach($request->files as $_file) {
-                $newFileName=Storage::putFile($this->rootFolderGeneralPurposes, new File($_file));
-                $userModel= Users::find($id_user);
-                $userModel->avatar=$newFileName;
-                $userModel->save();
-            }
+        Storage::makeDirectory($this->rootFolderMain);
+        if ($request->hasFile('image') && $image)              
+        {
+            $newFileName = Storage::putFile($this->rootFolderMain, $request->file('image'));
+            $image->file_name = $newFileName;
+            $image->save();
 
             return response()
              ->json([
-                'saved' => true
+                'saved' => true,
+                'image' => asset('storage/' . $newFileName),
              ]);
         }
             
@@ -87,7 +87,6 @@ class ImagesController extends Controller
             ->json([
                 'saved' => false
             ],422) ;
-     
     }
 
 }
