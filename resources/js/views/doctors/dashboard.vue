@@ -3,13 +3,14 @@
   <div class="q-pa-md row items-start q-gutter-md">
     <div class="col-md-grow" style="max-width: 300px">
       <q-card class="my-card">
-        <q-img src="https://image.flaticon.com/icons/png/128/149/149071.png" basic>
-          <div class="absolute-bottom text-subtitle2 text-center">
-            <q-btn flat color="white" label="Cambiar Imagen" />
-          </div>
-        </q-img>
-
+        <q-img :src="avatarUrl" spinner-color="white"></q-img>
+        <input type="file" ref="avatarInput" style="display: none" @change="changeAvatar">
         <q-list>
+          <q-item>
+            <q-item-section>
+              <q-btn push color="teal" label="Actualizar foto" @click="$refs.avatarInput.click()" class="q-mb-md" />
+            </q-item-section>
+          </q-item>
           <q-item clickable>
             <q-item-section>
               <div class="text-h6 text-blue">{{user_name | capitalize}}</div>
@@ -194,8 +195,9 @@
                         <q-btn flat round color="white" icon="more_vert">
                           <q-menu fit transition-show="scale" transition-hide="scale">
                             <q-list style="min-width: 100px">
-                              <q-item clickable>
-                                <q-item-section>Descargar</q-item-section>
+                              <q-item clickable @click="showInputFile">
+                                <q-item-section :data-index="i">Editar</q-item-section>
+                                <input type="file" ref="imageInput" :data-image="image.id" style="display: none" @change="changeImage">
                               </q-item>
                               <q-separator />
                               <q-item clickable>
@@ -246,11 +248,14 @@ export default {
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
       urlToUploadImages: "/api/uploadFile/",
-      medicalProcedureId: null
+      urlToUploadAvatar: "/api/uploadAvatar/",
+      medicalProcedureId: null,
+      avatarUrl: null
     };
   },
   created() {
     this.fetchData(this.pathDashboardData);
+    this.avatarUrl = this.$store.getters["auth/user"].avatar
   },
   computed: {
     _medicalProcedureId() {
@@ -351,6 +356,34 @@ export default {
         .catch(function(error) {
           vm.loading = false;
         });
+    },
+    changeAvatar (e) {
+        let formData = new FormData();
+        formData.append('avatar', e.target.files[0], e.target.files[0].name)
+        axios.post(this.urlToUploadAvatar + this.$store.getters["auth/user"].id, formData)
+        .then(res => {
+          this.avatarUrl = res.data.avatar
+        }).catch(error => {
+          this.avatarUrl = this.$store.getters["auth/user"].avatar
+        })
+        
+    },
+    showInputFile (e) {
+      // this.$refs[`myRow${index}`]
+      console.log(this.$refs)
+      this.$refs[`imageInput${e.target.dataset.index}`].click()
+    },
+    changeImage (e) {
+        let formData = new FormData();
+        formData.append('image', e.target.files[0], e.target.files[0].name)
+        formData.append('_method', 'PUT')
+        axios.post('/api/images/' + e.target.dataset.image, formData)
+        .then(res => {
+          this.getListOfImages(this.medicalProcedureId)
+        }).catch(error => {
+          console.log(error);
+        })
+        
     }
   }
 };

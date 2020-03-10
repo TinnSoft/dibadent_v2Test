@@ -6,6 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Images;
+use App\Models\Users;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use DB;
@@ -15,14 +16,16 @@ use App\Events\RecordActivity;
 class ImagesController extends Controller
 {
     protected $rootFolderMain='/_Images/_radiology';
-    protected $rootFolderGeneralPurposes='/_Images/_avatars';
 
     public function getImagesByProcedure($ProcedureId)
     {
        $data= Images::where('procedure_id', $ProcedureId)
-       ->select('id','title','other_details',DB::raw('CONCAT("storage/",file_name) AS file_name'))->get();      
+       ->select('id', 'title', 'other_details', 'file_name')->get();      
       
-
+       $data->transform(function ($d) {
+           $d->file_name = asset('storage/' . $d->file_name);
+           return $d;
+       });
        return response()
        ->json([
           'images' => $data,          
@@ -62,6 +65,32 @@ class ImagesController extends Controller
                 'saved' => false
             ],422) ;
      
+    }
+    
+    public function update(Request $request, $id)
+    {
+        // dd($request);
+        $image = Images::find($id);
+
+        //verifica si el directorio está creado
+        Storage::makeDirectory($this->rootFolderMain);
+        if ($request->hasFile('image') && $image)              
+        {
+            $newFileName = Storage::putFile($this->rootFolderMain, $request->file('image'));
+            $image->file_name = $newFileName;
+            $image->save();
+
+            return response()
+             ->json([
+                'saved' => true,
+                'image' => asset('storage/' . $newFileName),
+             ]);
+        }
+            
+        return response()
+            ->json([
+                'saved' => false
+            ],422) ;
     }
 
 }
