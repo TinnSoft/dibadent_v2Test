@@ -78,5 +78,15 @@ class Users extends Authenticatable implements JWTSubject
             'phone'=>null,
         ];
     }
+
+    public function getAvatarAttribute()
+    {
+        return $this->attributes['avatar'] = asset('storage/' . $this->attributes['avatar']);
+    }
+
+    public function points()
+    {
+        return $this->hasOne();
+    }
    
 }
