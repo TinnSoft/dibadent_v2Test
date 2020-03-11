@@ -18,12 +18,13 @@ const SettingsRadiologist = () =>
     import("~/views/settings/radiologist").then(m => m.default || m);
 const SettingsPatient = () =>
     import("~/views/settings/patient").then(m => m.default || m);
+const SettingsProduct = () =>
+    import("~/views/settings/product").then(m => m.default || m);
 
 const PointsIndex = () =>
     import("~/views/points/index").then(m => m.default || m);
 
 export default [
-    
     { path: "/", name: "home", component: Home },
     { path: "/login", name: "login", component: Login },
     { path: "/points", name: "points", component: PointsIndex },
@@ -61,6 +62,11 @@ export default [
                 path: "company",
                 name: "settings.company",
                 component: SettingsCompany
+            },
+            {
+                path: "product",
+                name: "settings.product",
+                component: SettingsProduct
             }
         ]
     },

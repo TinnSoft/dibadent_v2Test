@@ -34,6 +34,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getRadiologistlist','UsersController@getRadiologist');
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
     
+    Route::resource('products', 'ProductsController');
+    Route::get('getProductValues','ProductsController@edit');   
+    Route::get('getProductList','ProductsController@getProducts');
+    
      //dashboard
     Route::get('getDashboardInfo','HomeController@getDashboardInfo');
 
