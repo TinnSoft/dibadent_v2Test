@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->dateTime('birthday')->nullable();
             $table->string('home_address')->nullable();
-            $table->string('avatar')->nullable();
             $table->string('phone')->nullable();
             $table->boolean('isActive')->default($value=true);          
             $table->rememberToken()->nullable();    
