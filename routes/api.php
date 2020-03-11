@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::resource('products', 'ProductsController');
     Route::get('getProductValues','ProductsController@edit');   
+    Route::get('getProductList','ProductsController@getProducts');
     
      //dashboard
     Route::get('getDashboardInfo','HomeController@getDashboardInfo');

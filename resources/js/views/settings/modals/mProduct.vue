@@ -2,9 +2,9 @@
   <div class="q-pa-md">
     <div class="q-gutter-sm">
       <q-dialog v-model="openInventoryForm" @hide="handleHide">
-        <q-card style="width: 700px; max-width: 90vw;">
+        <q-card style="width: 400px; max-width: 90vw;">
           <q-bar class="bg-blue text-white">
-            <q-icon name="mail"></q-icon>
+            <q-icon name="assignment"></q-icon>
             <div>{{toolbarLabel}}</div>
 
             <q-space></q-space>
@@ -17,7 +17,7 @@
           <q-card-section>
             <div class="doc-container">
               <div class="row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 ">
                   <div class="q-gutter-sm">
                     <q-input
                       filled
@@ -40,62 +40,12 @@
                       label="Puntos requeridos"
                     />
                    
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      :readonly="isReadOnly"
-                      :error="checkIfFieldHasError(errors,'email')"
-                      clearable
-                      type="email"
-                      v-model="form.email"
-                      label="*Email"
-                    />
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      clearable
-                      :readonly="isReadOnly"
-                      v-model="form.home_address"
-                      label="Dirección"
-                    />
-
-                    <q-input
-                      filled
-                      hide-bottom-space
-                      dense
-                      clearable
-                      :readonly="isReadOnly"
-                      v-model="form.phone"
-                      label="Telefono"
-                    />
                   </div>
                 </div>
               </div>
             </div>
           </q-card-section>
 
-          <q-card-section v-if="kindOfProcess=='create'">
-            <kBlockQuote
-              textToShow="<strong>La Contraseña</strong> se enviará automáticamente al correo 
-                         ingresado en este formulario"
-              customClass="doc-note doc-note--tip"
-            ></kBlockQuote>
-          </q-card-section>
-          <q-card-section v-if="kindOfProcess=='edit'">
-            <q-banner inline-actions class="bg-grey-3">
-              <template v-slot:avatar>
-                <q-icon name="email" color="primary" />
-              </template>
-              Resetear contraseña.
-              <template v-slot:action>
-                <q-btn flat color="primary" label="Enviar" />
-              </template>
-            </q-banner>
-          </q-card-section>
           <q-card-actions v-if="kindOfProcess!='view'" align="right" class="text-primary">
             <q-btn
               rpunded

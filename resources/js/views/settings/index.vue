@@ -115,6 +115,26 @@
                 <q-icon name="chevron_right" color="primary" />
               </q-item-section>
             </q-item>
+            <q-item
+              clickable
+              :active="link === 'product'"
+              @click="link = 'product'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/product"
+            >
+              <q-item-section avatar top>
+                <q-avatar icon="accessible" color="primary" text-color="white" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label class="text-black" lines="1">Productos</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <q-icon name="chevron_right" color="primary" />
+              </q-item-section>
+            </q-item>
           </q-list>
         </q-scroll-area>
       </q-drawer>

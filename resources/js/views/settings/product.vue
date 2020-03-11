@@ -73,7 +73,7 @@ export default {
   },
   data() {
     return {
-      model: "users",
+      model: "products",
       filter: "",
       loading: false,
       table: [],
@@ -81,9 +81,9 @@ export default {
       pagination: {
         rowsPerPage: 10
       },      
-      visibleColumns:['name','last_name','email','home_address','identification_number','phone','birthday','actions'],
+      visibleColumns:['description','required_points','actions'],
       form: {},
-      path: "getProductlist"
+      path: "getProductList"
     };
   },
   computed: {
@@ -133,7 +133,7 @@ export default {
           cancel: "NO, Cancelar"
       }).onOk(() => {
           axios
-            .delete("/api/users/" + val.row.id)
+            .delete("/api/products/" + val.row.id)
             .then(function(response) {
               if (response.data.deleted) {
                 kNotify(
@@ -166,51 +166,20 @@ function productColumns() {
       type: "string"
     },
     {
-      label: "Nombre",
-      field: "name",
-      name: "name",
+      label: "Descripción",
+      field: "description",
+      name: "description",
       sortable: true,
       filter: true,
       type: "string"
     },
     {
-      label: "Apellido",
-      field: "last_name",
-      name: "last_name",
+      label: "Puntos Requeridos",
+      field: "required_points",
+      name: "required_points",
       sortable: true,
       filter: true
-    },
-    {
-      label: "Cedula",
-      field: "identification_number",
-      name: "identification_number",
-      sortable: true,
-      filter: true
-    },
-    {
-      label: "Email",
-      field: "email",
-      name: "email",
-      sortable: true,
-      filter: true,
-      type: "string"
-    },
-    {
-      label: "Dirección",
-      field: "home_address",
-      name: "home_address",
-      sortable: true,
-      filter: true,
-      type: "string"
-    },
-    {
-      label: "Telefono",
-      field: "phone",
-      name: "phone",
-      sortable: true,
-      filter: true,
-      type: "string"
-    },
+    },    
     {
       label: "Acciones",
       field: "actions",

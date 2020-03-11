@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 use App\Events\RecordActivity;
 use App\Models\Products;
+use Illuminate\Database\QueryException;
+use Auth;
 
 class ProductsController extends Controller
 {
@@ -33,6 +35,13 @@ class ProductsController extends Controller
                 ->select( 'id','description','required_points')->first();  
     }
 
+    public function create()
+    {
+        return response()
+        ->json([
+            'form' => Products::initialize()
+        ]);
+    }
 
     public function edit($id)
     {
@@ -55,8 +64,6 @@ class ProductsController extends Controller
         $data['created_by'] = Auth::user()->id;
              
         $item = Products::create($data);
-      
-        $this->sendEmail($emailData);
 
         event(new RecordActivity(Auth::user()->name.' creó el producto '.$item->description,
         'Products',null));
