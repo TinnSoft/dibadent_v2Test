@@ -80,7 +80,7 @@ class HomeController extends Controller
         })
         ->select(DB::raw("count(procedures.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"))
         //->whereYear('procedures.created_at', '=', date('Y'))->whereDay('procedures.created_at', '=', date('d'))
-        ->groupBy('procedures.doctor_id')
+        ->groupBy('procedures.doctor_id','users.name')
         ->orderBy('quantity', 'desc')
         ->take(10)
         ->get();
