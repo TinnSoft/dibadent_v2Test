@@ -33,8 +33,8 @@ $config = [
   @if (app()->isLocal())
     <script src="{{ mix('dist/js/app.js') }}"></script>
   @else
-    <script src="{{ mix('dist/js/manifest.js') }}"></script>
-    <script src="{{ mix('dist/js/vendor.js') }}"></script>
+     {{--<script src="{{ mix('dist/js/manifest.js') }}"></script> --}}
+    {{-- <script src="{{ mix('dist/js/vendor.js') }}"></script> --}}
     <script src="{{ mix('dist/js/app.js') }}"></script>
   @endif
 
