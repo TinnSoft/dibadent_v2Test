@@ -49,12 +49,18 @@ class UsersController extends Controller
         $acumulatedPoints=0;
         $redeemedPointsLastYear= DB::table('points_redemption')->sum('points_redeemed');
         $pointsNextToBeat=0;
-        $level='Aún no tienes Nivel';
+        $level='SIN ASIGNAR';
         
         if($dataAcumulatedPoints)
         {
-            $acumulatedPoints=$dataAcumulatedPoints->acumulated_points;
-            $level=$dataAcumulatedPoints->points_level->level_name;
+            if ($dataAcumulatedPoints->acumulated_points)
+            {
+                $acumulatedPoints=$dataAcumulatedPoints->acumulated_points;
+            }
+            if ($dataAcumulatedPoints->points_level)
+            {
+                $level=$dataAcumulatedPoints->points_level->level_name;
+            }
         }
         
        //$patientsAsociatedToDoctor = PatientsDoctors::where('doctor_id', Auth::user()->id)->select('patient_id')->get();
@@ -306,6 +312,10 @@ class UsersController extends Controller
             $userModel= Users::find($id_user);
             $userModel->avatar = $newFileName;
             $userModel->save();
+
+            
+            event(new RecordActivity(Auth::user()->name.' actualizó su imagen de perfil',
+            'Users',null));
 
             return response()
              ->json([

@@ -13,9 +13,11 @@ class AlterUsersTableAddAvatarColumn extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-           $table->string('avatar', 255)->after('profile_id')->nullable(); 
-        });
+        if (!Schema::hasColumn('users', 'avatar')) {
+            Schema::table('users', function (Blueprint $table) {
+            $table->string('avatar', 255)->after('profile_id')->nullable(); 
+            });
+        }
     }
 
     /**

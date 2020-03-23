@@ -53,8 +53,28 @@ class HomeController extends Controller
         return response()
         ->json([
         'procedures_sum' => $quantityOfProcedures,
-        'procedures_ByDoctor'=> $quantityOfProceduresByDoctor
+        'procedures_ByDoctor'=> $quantityOfProceduresByDoctor,
+        'tracking_Doctors'=> $mainClass->getDoctorsTrack()
         ]);
+    }
+
+    //retorna los movimientos realizados por los doctores
+    private static function getDoctorsTrack()
+    {
+        $data= DB::table('tracker')
+        ->join('users', function ($join) {
+            $join->on('users.id', '=', 'tracker.user_id');
+        })
+        ->join('profiles', function ($join) {
+            $join->on('profiles.id', '=', 'users.profile_id');
+        })
+        ->where('profiles.description','=', 'DOCTOR')  
+        ->select('tracker.id','tracker.detail', 'tracker.created_at')
+        ->orderBy('tracker.id', 'desc')
+        ->take(100)
+        ->get();
+        
+        return $data;
     }
 
     private static function getQuantityOfProcedures($daterange)

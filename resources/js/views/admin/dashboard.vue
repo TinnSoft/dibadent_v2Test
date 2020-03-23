@@ -319,6 +319,12 @@ export default {
             response.data.procedures_ByDoctor.procedures_bydoctor_today_labels
           );
 
+          vm.$set(
+            vm.$data,
+            "data_doctorMovements",
+            response.data.tracking_Doctors
+          );
+
           console.log(response.data);
 
           vm.filterPeriod();
@@ -350,34 +356,20 @@ function columns_doctorMovements() {
       type: "string"
     },
     {
-      label: "Doctor",
-      field: "name",
-      name: "name",
-      sortable: true,
-      filter: true,
-      type: "string"
-    },
-    {
       label: "Descripción del movimiento",
-      field: "last_name",
-      name: "last_name",
+      field: "detail",
+      name: "detail",
       sortable: true,
       filter: true
     },
     {
       label: "Fecha",
-      field: "email",
-      name: "email",
+      field: "created_at",
+      name: "created_at",
       sortable: true,
       filter: true,
       type: "string"
     },
-    {
-      label: "Acciones",
-      field: "actions",
-      name: "actions",
-      type: "string"
-    }
   ];
 }
 

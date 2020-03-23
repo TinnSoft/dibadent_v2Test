@@ -10,6 +10,40 @@
         <q-btn round dense flat icon="notifications">
           <q-badge color="red" text-color="white" floating>2</q-badge>
           <q-tooltip>Notificaciones</q-tooltip>
+          <q-menu>
+            <div class="row no-wrap q-pa-md">
+              <q-list bordered class="rounded-borders" style="max-width: 600px">
+                <q-item-label header>Notificaciones</q-item-label>
+                <q-item>
+                  <q-item-section top>
+                    <q-item-label lines="1">
+                      <span class="text-grey-8">- GitHub repository</span>
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section top side>
+                    <div class="text-grey-8 q-gutter-xs">
+                      <q-btn class="gt-xs" size="12px" flat dense round icon="done"></q-btn>
+                    </div>
+                  </q-item-section>
+                </q-item>
+
+                <q-separator spaced></q-separator>
+
+                <q-item>
+                  <q-item-section top>
+                    <q-item-label lines="1">
+                      <span class="text-grey-8">- GitHub repository</span>
+                    </q-item-label>
+                  </q-item-section>
+                  <q-item-section top side>
+                    <div class="text-grey-8 q-gutter-xs">
+                      <q-btn class="gt-xs" size="12px" flat dense round icon="done"></q-btn>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </div>
+          </q-menu>
         </q-btn>
         <q-btn
           flat
@@ -79,7 +113,7 @@ export default {
       leftOverlay: false,
       leftBehavior: "default",
       leftBreakpoint: 992,
-      scrolling: true
+      scrolling: true,
     };
   },
   computed: {
@@ -90,12 +124,15 @@ export default {
       return this.$store.getters["auth/user"].profile_id;
     }
   },
-  created() {},
-  methods: {
-    /*  _subString(val) {
-      return val.substring(0, 1);
-    },*/
+  created() {
+    let profileName = this.$store.getters["auth/user"].profile.description;
 
+    console.log(profileName);
+  },
+  methods: {
+    getNotifications(){
+
+    },
     async logout() {
       await this.$store.dispatch("auth/logout");
       this.$router.push({ name: "login" });

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Images;
 use App\Models\Users;
+use App\Models\PointsHistory;
+use App\Models\PointsLevels;
+use App\Models\AcumulatedPointsLevels;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use DB;
@@ -33,6 +36,7 @@ class ImagesController extends Controller
 
     }
     
+    //Carga una nueva imagen de radiologia 
     public function uploadFile(Request $request, $id_procedure)
     {
         //verifica si el directorio está creado
@@ -51,12 +55,15 @@ class ImagesController extends Controller
                 $imagesModel->save();    
             }
             
-            event(new RecordActivity(Auth::user()->name.' agregó una imagen asociada al procedimiento '.$id_procedure,
+            $storePoint=$this->storePoints();
+
+            event(new RecordActivity(Auth::user()->name.' cargó una radiografía '.$id_procedure,
             'Images',null));
 
             return response()
              ->json([
-                'saved' => true
+                'saved' => true,
+                'results'=>$storePoint
              ]);
         }
             
@@ -66,10 +73,75 @@ class ImagesController extends Controller
             ],422) ;
      
     }
+
+    private static function storePoints()
+    {
+
+        $pointsToStore=1;
+        $data=[];        
+        $data['user_id']= Auth::user()->id;   
+        $data['value'] = $pointsToStore;
+        $data['read'] = true;
+        $item = PointsHistory::create($data);
+        $levelName=null;
+
+        //buscar si existe el usuario en AcumulatedPointsLevels    
+        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get(); 
+        $acumulatedPoints = $acumulatedPoints->shift()->acumulated_points;
+       
+        if($acumulatedPoints>0)
+        {           
+            //Actualiza el monto de puntos
+            $incrementPoints=DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->increment('acumulated_points', $pointsToStore); 
+
+            //Obtiene el listado de niveles del sistema
+            $currentLevels= PointsLevels::whereNull('deleted_at')->select('level_name','required_points','id')->orderBy('required_points', 'asc')->get();
+           $test=[];
+            if ($currentLevels)
+            {
+                foreach($currentLevels as $value) {
+                    $levelId=$value['id'];
+                    $levelPoints=(int)$value['required_points'];
+                    $levelName=$value['level_name'];
+
+                    if ($acumulatedPoints>=$levelPoints)
+                    {
+                        $updateLevel = DB::table('acumulated_points_levels')
+                        ->where('user_id', Auth::user()->id)
+                        ->update(['points_level_id' => $levelId]);
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            DB::table('acumulated_points_levels')->insert([
+                ['points_level_id' => null, 
+                'user_id' => Auth::user()->id,
+                'acumulated_points'=>$pointsToStore,
+                'created_by'=>Auth::user()->id,
+                'modified_by'=>Auth::user()->id]
+            ]);
+        }
+        
+        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get(); 
+        $acumulatedPoints = $acumulatedPoints->shift()->acumulated_points;
+
+        $datatoReturn=[];
+        $datatoReturn['levelName']=$levelName;
+        $datatoReturn['acumulatedPoints']=$acumulatedPoints;
+
+        return $datatoReturn;
+        //retornar consulta de puntos y nivel
+
+
+    }
     
+    // Actualiza la radiografía
     public function update(Request $request, $id)
     {
-        // dd($request);
+        
         $image = Images::find($id);
 
         //verifica si el directorio está creado
@@ -84,7 +156,7 @@ class ImagesController extends Controller
              ->json([
                 'saved' => true,
                 'image' => asset('storage/' . $newFileName),
-             ]);
+             ]);            
         }
             
         return response()

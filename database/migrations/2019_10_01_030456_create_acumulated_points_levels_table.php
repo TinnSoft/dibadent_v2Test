@@ -15,7 +15,7 @@ class CreateAcumulatedPointsLevelsTable extends Migration
     {
         Schema::create('acumulated_points_levels', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('points_level_id')->references('id')->on('points_levels');
+            $table->unsignedBigInteger('points_level_id')->nullable()->references('id')->on('points_levels');
             $table->unsignedBigInteger('user_id')->references('id')->on('users');             
             $table->integer('acumulated_points')->nullable();
             $table->integer('created_by')->nullable();
