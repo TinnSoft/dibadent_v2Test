@@ -68,7 +68,7 @@ export default {
       },
       {
         icon: "star",
-        title: "RETOMAR PUNTOS",
+        title: "REDIMIR PUNTOS",
         type: "alone",
         path: "/points",
         profileId: 3,

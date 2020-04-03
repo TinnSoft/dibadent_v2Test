@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getDoctorlist','UsersController@getDoctors');
     Route::get('getRadiologistlist','UsersController@getRadiologist');
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
+
+    Route::get('getNotificationList/{profileName}','TrackerController@getNotificationList');    
     
     Route::resource('products', 'ProductsController');
     Route::get('getProductValues','ProductsController@edit');   

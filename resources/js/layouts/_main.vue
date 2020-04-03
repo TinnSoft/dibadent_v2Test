@@ -8,41 +8,53 @@
         <q-toolbar-title>{{title}}</q-toolbar-title>
 
         <q-btn round dense flat icon="notifications">
-          <q-badge color="red" text-color="white" floating>2</q-badge>
+          <q-badge
+            v-if="newNotifications>0"
+            color="red"
+            text-color="white"
+            floating
+          >{{newNotifications}}</q-badge>
           <q-tooltip>Notificaciones</q-tooltip>
           <q-menu>
-            <div class="row no-wrap q-pa-md">
+            <q-toolbar class="bg-grey-3">
+              <q-toolbar-title>Notificaciones</q-toolbar-title>
+            </q-toolbar>
+            <template v-if="notificationLog">
               <q-list bordered class="rounded-borders" style="max-width: 600px">
-                <q-item-label header>Notificaciones</q-item-label>
+                <div v-for="(_notification,index) in notificationLog" v-bind:key="_notification.id">
+                  <q-item dense clickable>
+                    <q-item-section top>
+                      <q-item-label caption>{{_notification.detail}}</q-item-label>
+                    </q-item-section>
+                    <q-item-section top side>
+                      <div class="text-grey-8 q-gutter-xs">
+                        <q-btn
+                          class="gt-xs"
+                          size="10px"
+                          flat
+                          dense
+                          round
+                          icon="done"
+                          @click="eraseNotification(_notification.id, index)"
+                        >
+                          <q-tooltip>Marcar como leido</q-tooltip>
+                        </q-btn>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                </div>
+              </q-list>
+            </template>
+            <template v-else>
+              <q-list bordered class="rounded-borders" style="max-width: 600px">
                 <q-item>
-                  <q-item-section top>
-                    <q-item-label lines="1">
-                      <span class="text-grey-8">- GitHub repository</span>
-                    </q-item-label>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="notifications_none" />
                   </q-item-section>
-                  <q-item-section top side>
-                    <div class="text-grey-8 q-gutter-xs">
-                      <q-btn class="gt-xs" size="12px" flat dense round icon="done"></q-btn>
-                    </div>
-                  </q-item-section>
-                </q-item>
-
-                <q-separator spaced></q-separator>
-
-                <q-item>
-                  <q-item-section top>
-                    <q-item-label lines="1">
-                      <span class="text-grey-8">- GitHub repository</span>
-                    </q-item-label>
-                  </q-item-section>
-                  <q-item-section top side>
-                    <div class="text-grey-8 q-gutter-xs">
-                      <q-btn class="gt-xs" size="12px" flat dense round icon="done"></q-btn>
-                    </div>
-                  </q-item-section>
+                  <q-item-section class="text-orange">No tienes notificaciones disponibles</q-item-section>
                 </q-item>
               </q-list>
-            </div>
+            </template>
           </q-menu>
         </q-btn>
         <q-btn
@@ -114,6 +126,8 @@ export default {
       leftBehavior: "default",
       leftBreakpoint: 992,
       scrolling: true,
+      notificationLog: null,
+      newNotifications: 0
     };
   },
   computed: {
@@ -125,17 +139,32 @@ export default {
     }
   },
   created() {
-    let profileName = this.$store.getters["auth/user"].profile.description;
-
-    console.log(profileName);
+    this.getNotification();
   },
   methods: {
-    getNotifications(){
-
-    },
     async logout() {
       await this.$store.dispatch("auth/logout");
       this.$router.push({ name: "login" });
+    },
+    async eraseNotification(notificationID, index) {
+      console.log("borrar notificación", notificationID, index);
+      this.notificationLog.splice(index, 1);
+      this.$set(this, "newNotifications", this.newNotifications-1);
+    },
+    async getNotification() {
+      let profileName = this.$store.getters["auth/user"].profile.description;
+      let path = "getNotificationList";
+      let vm = this;
+      axios
+        .get(`/api/${path}/${profileName}`)
+        .then(function(response) {
+          if (response.data.notifications) {
+            vm.$set(vm, "notificationLog", response.data.notifications);
+            vm.$set(vm, "newNotifications", vm.notificationLog.length);
+            console.log(response.data, vm.newNotifications);
+          }
+        })
+        .catch(function(error) {});
     }
   }
 };
