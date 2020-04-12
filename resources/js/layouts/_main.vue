@@ -27,14 +27,13 @@
                       <q-item-label caption>{{_notification.detail}}</q-item-label>
                     </q-item-section>
                     <q-item-section top side>
-                      <div class="text-grey-8 q-gutter-xs">
+                      <div class="text-grey-8 q-gutter-xs">                        
                         <q-btn
-                          class="gt-xs"
-                          size="10px"
-                          flat
+                          size="sm"
+                          color="blue"
                           dense
                           round
-                          icon="done"
+                          icon="check"
                           @click="eraseNotification(_notification.id, index)"
                         >
                           <q-tooltip>Marcar como leido</q-tooltip>
@@ -42,6 +41,7 @@
                       </div>
                     </q-item-section>
                   </q-item>
+                  <q-separator spaced inset />
                 </div>
               </q-list>
             </template>

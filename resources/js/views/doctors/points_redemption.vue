@@ -14,7 +14,7 @@
                   <q-icon color="primary" name="bookmark_border" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-h6">WIP</q-item-label>
+                  <q-item-label class="text-h6">{{pointsSummary.level}}</q-item-label>
                   <q-item-label caption>Tu nivel de puntos Actual</q-item-label>
                 </q-item-section>
               </q-item>
@@ -23,7 +23,7 @@
                   <q-icon color="green" name="show_chart" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-h6 text-green">WIP</q-item-label>
+                  <q-item-label class="text-h6 text-green">{{pointsSummary.acumulatedPoints}}</q-item-label>
                   <q-item-label caption>Puntos Disponibles</q-item-label>
                 </q-item-section>
               </q-item>
@@ -32,25 +32,25 @@
                   <q-icon color="blue-grey-2" name="date_range" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-h6 text-orange">WIP</q-item-label>
+                  <q-item-label class="text-h6 text-orange">{{pointsSummary.pointsNextToBeat}}</q-item-label>
                   <q-item-label caption>Puntos próximos a vencer</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section avatar>
-                  <q-icon color="blue-grey-2" name="call_made" />
+                  <q-icon color="blue-grey-2" name="bookmark_border" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-h6 text-blue-grey">WIP</q-item-label>
+                  <q-item-label class="text-h6 text-blue-grey">{{pointsSummary.level_next}}</q-item-label>
                   <q-item-label caption>Siguiente Nivel</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
                 <q-item-section avatar>
-                  <q-icon color="blue-grey-2" name="arrow_forward" />
+                  <q-icon color="blue-grey-2" name="show_chart" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label class="text-h6 text-blue-grey">WIP</q-item-label>
+                  <q-item-label class="text-h6 text-blue-grey">{{pointsSummary.level_next_points}}</q-item-label>
                   <q-item-label caption>Puntos para el siguiente nivel</q-item-label>
                 </q-item-section>
               </q-item>
@@ -68,7 +68,7 @@
 
           <q-card-section class="bg-grey-1 text-blue">
             <q-table
-              :data="table"
+              :data="productsDB"
               :columns="columns"
               row-key="name"
               binary-state-sort
@@ -78,36 +78,22 @@
             >
               <template v-slot:body="props">
                 <q-tr :props="props">
-                  <q-td key="level_name" :props="props">
-                    {{ props.row.level_name }}
-                    <q-popup-edit v-model="props.row.level_name" @hide="updateLevel(props.row)">
-                      <q-input v-model="props.row.level_name" dense autofocus counter />
-                    </q-popup-edit>
+                  <q-td key="description" :props="props">
+                    {{ props.row.description }}                   
                   </q-td>
                   <q-td key="required_points" :props="props">
-                    {{ props.row.required_points }}
-                    <q-popup-edit
-                      v-model="props.row.required_points"
-                      @hide="updateLevel(props.row)"
-                    >
-                      <q-input
-                        type="number"
-                        v-model="props.row.required_points"
-                        dense
-                        autofocus
-                        counter
-                      />
-                    </q-popup-edit>
+                    {{ props.row.required_points }}                   
                   </q-td>
-                 
+
                   <q-td key="actions" :props="props">
-                    <!--<kButton
-                      color="grey"
-                      iconname="delete"
-                      tooltiplabel="Eliminar"
-                      @click="removeLevel(props.row)"
-                    ></kButton>-->
-                    <q-btn size="sm" color="blue" round dense @click="redempt(props.row)" icon="redeem" />
+                    <q-btn
+                      size="sm"
+                      color="blue"
+                      round
+                      dense
+                      @click="redempt(props.row)"
+                      icon="redeem"
+                    />
                   </q-td>
                 </q-tr>
               </template>
@@ -132,11 +118,11 @@ export default {
     return {
       columns: [
         {
-          name: "product",
+          name: "description",
           required: true,
           label: "PRODUCTO",
           align: "left",
-          field: "product_name",
+          field: "description",
           sortable: true
         },
         {
@@ -153,17 +139,25 @@ export default {
           type: "string"
         }
       ],
-      table: [],
+      productsDB: [],
       pointsLevelPath: "getPointsLevelslist",
-      loading: false
+      loading: false,
+      pathDashboardData: "getDoctorDashboardData",
+      pointsSummary: {
+        level: "",
+        level_next: "",
+        level_next_points: "",
+        acumulatedPoints: "",
+        redeemedPoints: "",
+        pointsNextToBeat: ""
+      }
     };
   },
   created() {
-    this.fetchData();
+    this.fetchData(this.pathDashboardData);
   },
   methods: {
-    
-    /*async fetchData(path) {
+    async fetchData(path) {
       let vm = this;
       vm.loading = true;
       axios
@@ -173,41 +167,19 @@ export default {
           if (response.data.pointsSummary) {
             vm.$set(vm, "pointsSummary", response.data.pointsSummary);
           }
-          if (response.data.procedures) {
-            vm.$set(vm, "medicalProcedures", response.data.procedures);
+          if (response.data.products) {
+            vm.$set(vm, "productsDB", response.data.products);
           }
-
-          if (response.data.patientList) {
-            vm.$set(vm, "patientList", response.data.patientList);
-          }
-          if (response.data.images) {
-            vm.$set(vm, "listOfImages", response.data.images);
-          }
-
-          vm.loading = false;
-        })
-        .catch(function(error) {
-          vm.loading = false;
-        });
-    },*/
-
-    fetchData() {
-      let vm = this;
-      vm.loading = true;
-
-      axios
-        .get(`/api/${vm.pointsLevelPath}`)
-        .then(function(response) {
-          vm.$set(vm, "table", response.data.records);
           vm.loading = false;
         })
         .catch(function(error) {
           vm.loading = false;
         });
     },
+
     redempt() {
       let vm = this;
-     // vm.loading = true;
+      // vm.loading = true;
 
       /*axios
         .post(`/api/points_levels`)
@@ -218,8 +190,7 @@ export default {
           vm.loading = false;
         });
       vm.fetchData();*/
-    },
-   
+    }
   }
 };
 </script>

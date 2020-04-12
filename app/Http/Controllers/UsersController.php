@@ -9,8 +9,10 @@ use Illuminate\Database\QueryException;
 use Carbon\Carbon;
 use App\Models\Users;
 use App\Models\AcumulatedPointsLevels;
+use App\Models\PointsLevels;
 use App\Models\PatientsDoctors;
 use App\Models\Patients;
+use App\Models\Products;
 use App\Models\PointsRedemption;
 use Illuminate\Support\Str;
 use DB;
@@ -63,6 +65,21 @@ class UsersController extends Controller
             }
         }
         
+        $_PointLevels = PointsLevels::whereNotIn('level_name',collect($level))        
+        ->where('required_points','>',$acumulatedPoints)
+        ->select('level_name','required_points')     
+        ->orderBy('required_points', 'desc')         
+        ->first(); 
+
+        if($_PointLevels){
+            $level_next=$_PointLevels->level_name;
+            $level_next_points=$_PointLevels->required_points;
+        }
+        else{
+            $level_next=$level;
+            $level_next_points=$acumulatedPoints;
+        }
+
        //$patientsAsociatedToDoctor = PatientsDoctors::where('doctor_id', Auth::user()->id)->select('patient_id')->get();
        $patientsAsociatedToDoctor = Patients::where('doctor_id', Auth::user()->id)->select('id')->get();
        
@@ -73,17 +90,23 @@ class UsersController extends Controller
        //$dataProcedures=Procedures::where('doctor_id', Auth::user()->id)->select()-get();
        //'medicalProcedures'=> $dataProcedures
 
+       $_products = Products::select('id','description','required_points')     
+        ->orderBy('id', 'asc')         
+        ->get();
+
        $pointsSummary=['level'=>$level, 
+                        'level_next'=>$level_next,
+                        'level_next_points'=>$level_next_points,
                         'acumulatedPoints'=>$acumulatedPoints,
                         'redeemedPoints'=>$redeemedPointsLastYear,
-                        'pointsNextToBeat'=>$pointsNextToBeat,
-                        'prueba'=>$dataAcumulatedPoints
+                        'pointsNextToBeat'=>$pointsNextToBeat                       
                     ];
 
        return response()
        ->json([
            'pointsSummary' => $pointsSummary,
-           'patientList'=> $dataPacientList           
+           'patientList'=> $dataPacientList,
+           'products'=> $_products           
        ]);
     }
 
