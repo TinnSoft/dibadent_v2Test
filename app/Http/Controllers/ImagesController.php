@@ -95,14 +95,9 @@ class ImagesController extends Controller
 
         //buscar si existe el usuario en AcumulatedPointsLevels    
         $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get(); 
-                
-            
-        $acumulatedPoints = 0;
-        if(isset($acumulatedPoints->shift()->acumulated_points)){
-            $acumulatedPoints = $acumulatedPoints->shift()->acumulated_points;
-        }
-  
-         
+      
+        $acumulatedPoints =isset($acumulatedPoints->shift()->acumulated_points) ? $acumulatedPoints->shift()->acumulated_points : 0;
+
         if($acumulatedPoints>0)
         {           
             //Actualiza el monto de puntos
