@@ -62,7 +62,7 @@ class CompanyController extends Controller
         }
         
         event(new RecordActivity(Auth::user()->name.' actualizó la información de la empresa ',
-        'Company',null));
+        'Company',null, false));
 
         return response()
         ->json([

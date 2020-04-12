@@ -127,7 +127,8 @@ export default {
       leftBreakpoint: 992,
       scrolling: true,
       notificationLog: null,
-      newNotifications: 0
+      newNotifications: 0,
+      urlToUpdateNotification: "/api/markNotificationAsRead/"
     };
   },
   computed: {
@@ -149,7 +150,18 @@ export default {
     async eraseNotification(notificationID, index) {
       console.log("borrar notificación", notificationID, index);
       this.notificationLog.splice(index, 1);
-      this.$set(this, "newNotifications", this.newNotifications-1);
+      this.markNotificationAsRead(notificationID);
+      this.$set(this, "newNotifications", this.newNotifications - 1);
+    },
+    markNotificationAsRead(notificationID) {
+      axios
+        .post(this.urlToUpdateNotification + notificationID)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     async getNotification() {
       let profileName = this.$store.getters["auth/user"].profile.description;

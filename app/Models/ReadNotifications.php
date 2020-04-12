@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class Tracker extends Model
+class ReadNotifications extends Model
 {   
     protected $dates = ['created_at','updated_at'];
     
-    protected $table = 'tracker';
+    protected $table = 'read_notifications';
     
-    protected $fillable=['detail','user_id','route','model','notify',
-    'created_at','updated_at'];
+    protected $fillable=['user_id','tracker_id','created_at','updated_at'];
 
 
 }

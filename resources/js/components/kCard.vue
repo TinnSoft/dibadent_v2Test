@@ -1,8 +1,8 @@
 <template>
   <q-card flat>
-    <q-card-section class="bg-light-blue-4 text-white">
-      <div class="text-h6">{{kValue}}</div>
-      <div class="text-subtitle2">{{title}}</div>
+    <q-card-section class="bg-grey-1 text-blue">
+      <div class="text-h3 text-center">{{kValue}}</div>
+      <div class="text-caption text-grey text-center">{{title}}</div>
     </q-card-section>
   </q-card>
 </template>

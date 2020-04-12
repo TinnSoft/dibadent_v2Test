@@ -6,16 +6,11 @@
     row-key="name"
     binary-state-sort
     :loading="loading"
+    dense
+    :grid="$q.screen.xs"
   >
     <template v-slot:top-right>
-      <q-btn
-        flat
-        dense
-        color="primary"
-        :disable="loading"
-        label="Agregar otro Nivel"
-        @click="addLevel"
-      />
+      <q-btn flat dense color="primary" :disable="loading" label="Agregar Nivel" @click="addLevel" />
       <q-space />
     </template>
 

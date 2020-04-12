@@ -38,8 +38,8 @@ class PointsLevelsController extends Controller
 
         $item = PointsLevels::create($data);
 
-        event(new RecordActivity(Auth::user()->name.' creó un nuevo nivel de puntos',
-        'PointsLevels',null));
+        event(new RecordActivity(Auth::user()->name.' creó el nivel de puntos '.$data['level_name'],
+        'PointsLevels',null, true));
 
         return response()
             ->json([
@@ -60,8 +60,8 @@ class PointsLevelsController extends Controller
         $item = PointsLevels::findOrFail($id);
         $item->update($newLevelsValues);
 
-        event(new RecordActivity(Auth::user()->name.' actualizó un registro de puntos',
-        'PointsLevels',null));
+        event(new RecordActivity(Auth::user()->name.' actualizó el registro de puntos '.$item->level_name,
+        'PointsLevels',null, true));
 
                 
         return response()
@@ -75,8 +75,8 @@ class PointsLevelsController extends Controller
         $post = PointsLevels::find($id);
         $post->delete();
 
-        event(new RecordActivity(Auth::user()->name.' eliminó un registro de puntos',
-        'PointsLevels',null));
+        event(new RecordActivity(Auth::user()->name.' eliminó el registro de puntos '.$post->level_name,
+        'PointsLevels',null, true));
 
 
         return response()

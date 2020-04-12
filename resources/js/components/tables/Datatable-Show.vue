@@ -1,23 +1,29 @@
 <template>
-    <q-table
-        :data="qdata"
-        dense
-        :columns="columns"
-        row-key="name"   
-        table-header-class="bg-light-blue-1"
-        flat     
-        bordered
-      >  
-        <template v-slot:bottom>
-           <cTotals :subtotal="subtotal" :discounts="discounts" :taxes="taxes" :total="total" :isTaxArray="true"></cTotals>
-        </template>
-  
-      </q-table>
+  <q-table
+    :data="qdata"
+    dense
+    :grid="$q.screen.xs"
+    :columns="columns"
+    row-key="name"
+    table-header-class="bg-light-blue-1"
+    flat
+    bordered
+  >
+    <template v-slot:bottom>
+      <cTotals
+        :subtotal="subtotal"
+        :discounts="discounts"
+        :taxes="taxes"
+        :total="total"
+        :isTaxArray="true"
+      ></cTotals>
+    </template>
+  </q-table>
 </template>
 <script type='text/javascript'>
-import cTotals from '../../components/tables/cTotal.vue';
+import cTotals from "../../components/tables/cTotal.vue";
 
-import columnsShow from '../../components/tables/columns/colShow';
+import columnsShow from "../../components/tables/columns/colShow";
 
 export default {
   props: {
@@ -50,6 +56,4 @@ export default {
     }
   }
 };
-
-
 </script>

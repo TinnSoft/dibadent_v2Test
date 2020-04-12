@@ -24,7 +24,7 @@ class PointsPromotion extends Model
 
 
     public static function initialize()
-    {patient_id
+    {
         return [
 			'enabled_from'=>null,
             'enabled_to'=>null,

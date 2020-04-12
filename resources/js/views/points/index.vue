@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <q-toolbar :glossy="$q.theme === 'mat'" :inverted="$q.theme === 'ios'" color="grey">
-      <q-toolbar-title class="text-weight-bold text-blue">Configuración de Puntos</q-toolbar-title>
+      <q-toolbar-title class="text-weight-bold text-blue">CONFIGURACIÓN DE PUNTOS</q-toolbar-title>
     </q-toolbar>
     <div class="q-gutter-y-md column" style="max-width: 700px">
       <q-splitter v-model="splitterModel" style="height: 700px">

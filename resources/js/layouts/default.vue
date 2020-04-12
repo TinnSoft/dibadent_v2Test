@@ -70,7 +70,7 @@ export default {
         icon: "star",
         title: "REDIMIR PUNTOS",
         type: "alone",
-        path: "/points",
+        path: "/points-redemption",
         profileId: 3,
         id: 6
       },

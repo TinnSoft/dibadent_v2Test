@@ -1,33 +1,29 @@
 <template>
   <q-page padding>
-    <div class="q-pa-md q-gutter-md">
+    <div class="q-pa-md items-start q-gutter-md">
       <div class="row">
-        <div class="col-md-grow">
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="Procedimientos han sido generados el último mes"
-            background-color="primary"
+            title="PROCEDIMIENTOS GENERADOS EL ULTIMO MES"
             icon-name
             :total="procedures_generated_lastMonth"
           />
         </div>
-        <br />
-        <div class="col-md-grow">
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="Procedimientos han sido generados el último año"
-            background-color="orange"
+            title="PROCEDIMIENTOS GENERADOS EL ULTIMO AÑO"
             icon-name
             :total="procedures_generated_lastYear"
           />
         </div>
       </div>
-      <br />
       <div class="row">
-        <div class="col-md-grow">
-          <q-card class="my-card">
+        <div class="col-md-grow col-xs-grow col-sm-grow items-start row_class">
+          <q-card bordered flat class="my-card">
             <q-card-section>
-              <q-toolbar class="bg-grey-1">
+              <q-toolbar>
                 <q-btn flat dense size="16px" round color="primary" icon="filter_list">
                   <q-menu fit transition-show="scale" transition-hide="scale">
                     <q-list style="min-width: 100px">
@@ -49,7 +45,9 @@
                     </q-list>
                   </q-menu>
                 </q-btn>
-                <q-toolbar-title>Top de Médicos que más generaron procedimientos</q-toolbar-title>
+                <q-toolbar-title
+                  class="text-caption text-grey"
+                >MEDICOS QUE CARGARON MAS RADIOGRAFIAS</q-toolbar-title>
               </q-toolbar>
 
               <dashboardChart
@@ -61,13 +59,15 @@
           </q-card>
         </div>
       </div>
-      <br />
       <div class="row">
-        <div class="col-md-grow">
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <q-table
             class="my-card"
             title="Top de Puntos redimidos"
+            flat
+            bordered
             dense
+            :grid="$q.screen.xs"
             :data="data_redeemedPoints"
             :columns="columns_redeemedPoints"
             row-key="name"
@@ -83,6 +83,7 @@
                 flat
                 round
                 dense
+                :grid="$q.screen.xs"
                 :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 class="q-ml-md"
               >
@@ -91,11 +92,14 @@
             </template>
           </q-table>
         </div>
-        <div class="col-md-grow">
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <q-table
             class="my-card"
             title="Movimientos realizados por tus doctores"
             dense
+            :grid="$q.screen.xs"
+            flat
+            bordered
             :data="data_doctorMovements"
             :columns="columns_doctorMovements"
             row-key="name"
@@ -369,7 +373,7 @@ function columns_doctorMovements() {
       sortable: true,
       filter: true,
       type: "string"
-    },
+    }
   ];
 }
 
@@ -418,6 +422,12 @@ function columns_redeemedPoints() {
 <style lang="stylus">
 .my-card {
   width: 100%;
-  max-width: 95%;
+  max-width: 100%;
+  min-width: 300px;
+}
+
+.row_class {
+  padding: 10px 15px;
+  margin-top: 1rem;
 }
 </style>

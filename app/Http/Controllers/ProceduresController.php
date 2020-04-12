@@ -91,8 +91,8 @@ class ProceduresController extends Controller
 
         $item = Procedures::create($data);
 
-        event(new RecordActivity(Auth::user()->name.' creó un nuevo procedimiento',
-        'Procedures',null));
+        event(new RecordActivity(Auth::user()->name.' creó el procedimiento '.$data['description'],
+        'Procedures',null, true));
       
         return response()
             ->json([
@@ -119,8 +119,8 @@ class ProceduresController extends Controller
         $item = Procedures::findOrFail($id);
         $item->update($data);
         
-        event(new RecordActivity(Auth::user()->name.' actualizó un procedimiento',
-        'Procedures',null));
+        event(new RecordActivity(Auth::user()->name.' actualizó el procedimiento '.$data['description'],
+        'Procedures',null, true));
 
 
         return response()
@@ -135,8 +135,8 @@ class ProceduresController extends Controller
         $post = Procedures::find($id);
         $post->delete();
 
-        event(new RecordActivity(Auth::user()->name.' eliminó un procedimiento',
-        'Procedures',null));
+        event(new RecordActivity(Auth::user()->name.' eliminó el procedimiento '.$post->description,
+        'Procedures',null, true));
 
         return response()
         ->json([

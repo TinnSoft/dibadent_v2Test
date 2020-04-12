@@ -15,18 +15,19 @@ class RecordActivity
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
-    public $detail, $model, $route;
+    public $detail, $model, $route, $notify;
     
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($detail, $model, $route)
+    public function __construct($detail, $model, $route,$notify)
     {
         $this->detail = $detail;
         $this->model = $model;
         $this->route = $route;
+        $this->notify = $notify;
     }
 
     /**

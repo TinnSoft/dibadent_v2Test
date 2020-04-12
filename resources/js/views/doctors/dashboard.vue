@@ -1,250 +1,243 @@
 <template>
-  <!-- <q-avatar size="100px" font-size="52px" color="grey-4" text-color="white" icon="person_outline" style="max-width: 300px" />-->
   <div>
-    <div class="q-pa-md">
-      <div class="row items-start q-gutter-md">
-        <q-responsive :ratio="4/3" class="col" style="max-height: 200px">
-          <q-card class="column">
-            <q-card-section horizontal>
-              <div class="q-pa-md q-gutter-sm">
-                <q-avatar size="160px">
-                  <img :src="avatarUrl" />
-                </q-avatar>
-                <q-btn
-                  push
-                  flat
-                  round
-                  color="primary"
-                  icon="publish"
-                  @click="$refs.avatarInput.click()"
-                />
-              </div>
+    <div class="q-pa-md q-pa-xs q-pa-sm items-start q-gutter-md">
+      <div class="row">
+        <div class="col-auto row_class">
+          <q-card flat>
+            <q-card-section class="text-blue">
+              <q-img
+                :src="avatarUrl"
+                style="width: 180px"
+                ratio="1"
+                spinner-color="white"
+                class="rounded-borders"
+              >
+                <div class="absolute-bottom text-center text-body2">
+                  <q-btn flat round color="white" icon="update" @click="$refs.avatarInput.click()"></q-btn>
+                </div>
+              </q-img>
               <input type="file" ref="avatarInput" style="display: none" @change="changeAvatar" />
-              <q-card-section>
-                <q-list>
-                  <q-item clickable>
-                    <q-item-section>
-                      <div class="text-h6 text-blue">{{user_name | capitalize}}</div>
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="primary" name="bookmark_border" />
-                    </q-item-section>
 
-                    <q-item-section>
-                      <q-item-label>{{pointsSummary.level}}</q-item-label>
-                      <q-item-label caption>Tu nivel de puntos Actual</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="primary" name="show_chart" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{pointsSummary.acumulatedPoints}}</q-item-label>
-                      <q-item-label caption>Puntos Acumulados</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card-section>
-              <q-card-section>
-                <q-list>
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="primary" name="insert_emoticon" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{pointsSummary.redeemedPoints}}</q-item-label>
-                      <q-item-label caption>Puntos Redimidos ultimo año</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable>
-                    <q-item-section avatar>
-                      <q-icon color="primary" name="info_outline" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{pointsSummary.pointsNextToBeat}}</q-item-label>
-                      <q-item-label caption>Puntos próximos a vencer</q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card-section>
+              <div class="text-h5">{{user_name | capitalize}}</div>
+              <q-item-label caption>Bienvenido Doctor</q-item-label>
             </q-card-section>
           </q-card>
-        </q-responsive>
+        </div>
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
+          <q-card flat>
+            <q-card-section class="bg-grey-1 text-blue">
+              <q-list>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="bookmark_border" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">{{pointsSummary.level}}</q-item-label>
+                    <q-item-label caption>Tu nivel de puntos Actual</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="show_chart" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">{{pointsSummary.acumulatedPoints}}</q-item-label>
+                    <q-item-label caption>Puntos Acumulados</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
+          <q-card flat>
+            <q-card-section class="bg-grey-1 text-blue">
+              <q-list>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="insert_emoticon" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">{{pointsSummary.redeemedPoints}}</q-item-label>
+                    <q-item-label caption>Puntos Redimidos ultimo año</q-item-label>
+                  </q-item-section>
+                </q-item>
+
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon color="primary" name="info_outline" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label class="text-h6">{{pointsSummary.pointsNextToBeat}}</q-item-label>
+                    <q-item-label caption>Puntos próximos a vencer</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
-    </div>
-    <div class="q-pa-md">
-      <div class="row items-start q-gutter-md">
-        <q-responsive :ratio="4/3" class="col">
-          <q-card class="column">
+
+      <div class="row">
+        <div class="col-md-grow col-xs-grow col-sm-grow row_class rounded-borders">
+          <q-card flat class="bg-blue-grey-1">
             <q-card-section>
-              <div class="row">
-                <div class="col-md-4">
-                  <q-timeline color="primary">
-                    <q-timeline-entry heading body="Cargar Imagenes" />
-
-                    <q-timeline-entry subtitle="Paciente" icon="perm_identity">
-                      <kSelectFilter
-                        v-model="form.patient"
-                        :options="patientList"
-                        :loading="loading"
-                        filled
-                        dense
-                        outlined
-                        self-filter
-                        clearable
-                        use-input
-                        fill-input
-                        hide-selected
-                        emit-value
-                        map-options
-                        input-debounce="0"
-                        label="Seleccione un Paciente"
-                        options-dense
-                        hide-bottom-space
-                        style="width: 300px"
-                        @input="getProcedures(form.patient)"
-                      />
-                      <q-btn
-                        round
-                        dense
-                        flat
-                        icon="info_outline"
-                        color="grey-5"
-                        @click="showPatientModal($refs)"
-                      />
-                    </q-timeline-entry>
-                    <q-timeline-entry subtitle="Procedimiento" icon="device_hub">
-                      <kSelectFilter
-                        ref="_procedureSelect"
-                        v-model="form.medicalProcedure"
-                        :options="medicalProcedures"
-                        :loading="loading"
-                        filled
-                        dense
-                        outlined
-                        self-filter
-                        clearable
-                        use-input
-                        fill-input
-                        hide-selected
-                        emit-value
-                        map-options
-                        input-debounce="0"
-                        label="Seleccione un Procedimiento"
-                        options-dense
-                        hide-bottom-space
-                        style="width: 300px"
-                        @input="getListOfImages(form.medicalProcedure)"
-                      />
-                      <template v-if="form.patient">
-                        <q-btn
-                          round
-                          dense
-                          flat
-                          icon="add"
-                          color="grey-5"
-                          @click="CreateProcedureModal($refs)"
-                        />
-                      </template>
-                      <q-btn
-                        round
-                        dense
-                        flat
-                        icon="info_outline"
-                        color="grey-5"
-                        @click="showProcedureModal($refs)"
-                      />
-                    </q-timeline-entry>
-
-                    <q-timeline-entry subtitle="Comentarios" icon="insert_comment">
-                      <div style="max-width: 300px">
-                        <q-input v-model="comments" filled autogrow type="text" />
-                      </div>
-                    </q-timeline-entry>
-
-                    <q-timeline-entry subtitle="Imagenes" icon="photo">
-                      <q-uploader
-                        label="Cargar Imagen"
-                        dense
-                        flat
-                        :readonly="checkIfExistProcedure"
-                        auto-upload
-                        :url="_medicalProcedureId"
-                        accept=".jpg, image/*"
-                        color="primary"
-                        style="max-width: 300px"
-                        @failed="showerror"
-                        @uploaded="uloadedFinished"
-                      />
-                    </q-timeline-entry>
-                  </q-timeline>
-                </div>
-                <div class="col-md-8">
-                  <q-tabs
-                    v-model="tabSelected"
-                    dense
-                    class="bg-grey-2 text-teal"
-                    active-color="primary"
-                    indicator-color="primary"
-                    align="justify"
-                    narrow-indicator
-                    inline-label
-                  >
-                    <q-tab name="images" label="Imagenes" icon="photo" />
-                  </q-tabs>
-
-                  <q-tab-panels v-model="tabSelected" animated>
-                    <q-tab-panel name="images" style="max-width: 600px">
-                      <div class="row justify-center q-gutter-sm">
-                        <q-img
-                          v-for="(image, i) in listOfImages"
-                          :key="i"
-                          :src="image.file_name"
-                          style="width: 180px"
-                          ratio="1"
-                          spinner-color="white"
-                          class="rounded-borders"
-                        >
-                          <div class="absolute-bottom text-center text-body2">
-                            <q-btn flat round color="white" icon="zoom_in"></q-btn>
-                            <q-btn flat round color="white" icon="more_vert">
-                              <q-menu fit transition-show="scale" transition-hide="scale">
-                                <q-list style="min-width: 100px">
-                                  <q-item clickable @click="showInputFile">
-                                    <q-item-section :data-index="i">Editar</q-item-section>
-                                    <input
-                                      type="file"
-                                      ref="imageInput"
-                                      :data-image="image.id"
-                                      style="display: none"
-                                      @change="changeImage"
-                                    />
-                                  </q-item>
-                                  <q-separator />
-                                  <q-item clickable>
-                                    <q-item-section>Eliminar</q-item-section>
-                                  </q-item>
-                                </q-list>
-                              </q-menu>
-                            </q-btn>
-                          </div>
-                        </q-img>
-                      </div>
-                    </q-tab-panel>
-                  </q-tab-panels>
-                </div>
-              </div>
+              <div class="text-h6 text-grey">CARGAR IMAGENES</div>
             </q-card-section>
-            <q-card-section></q-card-section>
           </q-card>
-        </q-responsive>
-        <patientModal ref="_patient"></patientModal>
-        <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-3 col-xs-grow row_class rounded-borders" style="min-width: 300px">
+          <q-card flat class="bg-grey-1">
+            <q-card-section class="text-blue">
+              <q-timeline color="primary">
+                <q-timeline-entry subtitle="Paciente" icon="perm_identity">
+                  <kSelectFilter
+                    v-model="form.patient"
+                    :options="patientList"
+                    :loading="loading"
+                    filled
+                    dense
+                    outlined
+                    self-filter
+                    clearable
+                    use-input
+                    fill-input
+                    hide-selected
+                    emit-value
+                    map-options
+                    input-debounce="0"
+                    label="Seleccione un Paciente"
+                    options-dense
+                    hide-bottom-space
+                    @input="getProcedures(form.patient)"
+                  />
+                  <q-btn
+                    round
+                    dense
+                    flat
+                    icon="info_outline"
+                    color="grey-5"
+                    @click="showPatientModal($refs)"
+                  />
+                </q-timeline-entry>
+                <q-timeline-entry subtitle="Procedimiento" icon="device_hub">
+                  <kSelectFilter
+                    ref="_procedureSelect"
+                    v-model="form.medicalProcedure"
+                    :options="medicalProcedures"
+                    :loading="loading"
+                    filled
+                    dense
+                    outlined
+                    self-filter
+                    clearable
+                    use-input
+                    fill-input
+                    hide-selected
+                    emit-value
+                    map-options
+                    input-debounce="0"
+                    label="Seleccione un Procedimiento"
+                    options-dense
+                    hide-bottom-space
+                    @input="getListOfImages(form.medicalProcedure)"
+                  />
+                  <template v-if="form.patient">
+                    <q-btn
+                      round
+                      dense
+                      flat
+                      icon="add"
+                      color="grey-5"
+                      @click="CreateProcedureModal($refs)"
+                    />
+                  </template>
+                  <q-btn
+                    round
+                    dense
+                    flat
+                    icon="info_outline"
+                    color="grey-5"
+                    @click="showProcedureModal($refs)"
+                  />
+                </q-timeline-entry>
+
+                <q-timeline-entry subtitle="Comentarios" icon="insert_comment">
+                  <div>
+                    <q-input v-model="comments" filled autogrow type="text" />
+                  </div>
+                </q-timeline-entry>
+
+                <q-timeline-entry subtitle="Imagenes" icon="photo">
+                  <q-uploader
+                    label="Cargar Imagen"
+                    dense
+                    flat
+                    :readonly="checkIfExistProcedure"
+                    auto-upload
+                    :url="_medicalProcedureId"
+                    accept=".jpg, image/*"
+                    color="primary"
+                    style="max-width: 270px"
+                    @failed="showerror"
+                    @uploaded="uloadedFinished"
+                  />
+                </q-timeline-entry>
+              </q-timeline>
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="col-9 col-xs-grow row_class rounded-borders">
+          <q-layout container style="height: 700px">
+            <q-page-container>
+              <q-page>
+                <div class="row justify-center q-gutter-sm">
+                  <q-img
+                    v-for="(image, i) in listOfImages"
+                    :key="i"
+                    :src="image.file_name"
+                    style="width: 180px"
+                    ratio="1"
+                    spinner-color="white"
+                    class="rounded-borders"
+                  >
+                    <div class="absolute-bottom text-center text-body2">
+                      <q-btn flat round color="white" icon="zoom_in"></q-btn>
+                      <q-btn flat round color="white" icon="more_vert">
+                        <q-menu fit transition-show="scale" transition-hide="scale">
+                          <q-list style="min-width: 100px">
+                            <q-item clickable @click="showInputFile">
+                              <q-item-section :data-index="i">Editar</q-item-section>
+                              <input
+                                type="file"
+                                ref="imageInput"
+                                :data-image="image.id"
+                                style="display: none"
+                                @change="changeImage"
+                              />
+                            </q-item>
+                            <q-separator />
+                            <q-item clickable>
+                              <q-item-section>Eliminar</q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-menu>
+                      </q-btn>
+                    </div>
+                  </q-img>
+                </div>
+              </q-page>
+              <q-page-scroller position="bottom">
+                <q-btn fab icon="keyboard_arrow_up" color="red" />
+              </q-page-scroller>
+            </q-page-container>
+          </q-layout>
+          <patientModal ref="_patient"></patientModal>
+          <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
+        </div>
       </div>
     </div>
   </div>
@@ -260,8 +253,6 @@ export default {
   components: { patientModal, procedureModal },
   data() {
     return {
-      slide: 1,
-      tabSelected: "images",
       form: {},
       pointsSummary: {
         level: "",
@@ -271,8 +262,6 @@ export default {
       },
       patientList: [],
       medicalProcedures: [],
-      defaultTab: "levels",
-      splitterModel: 20,
       comments: "",
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
@@ -427,10 +416,6 @@ export default {
 .my-menu-link
   background: #E3ECFB 
 
-.my-card 
-  width: 100%
-  max-width: 95%
-
 .my-cardImages
   width: 100%
   max-width: 250px
@@ -438,4 +423,15 @@ export default {
 .transition-item
   height: 250px
   width: 250px
+
+.my-card 
+  width: 100%
+  max-width: 100%
+  min-width: 300px
+
+
+.row_class 
+  padding: 7px 10px
+  margin-top: 1rem
+
 </style>

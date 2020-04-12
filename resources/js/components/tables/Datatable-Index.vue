@@ -1,92 +1,119 @@
 <template>
-     <div class="q-pa-md">
+  <div class="q-pa-md">
+    <q-table
+      dense
+      ref="mainTable"
+      :data="table"
+      :columns="columns"
+      :visible-columns="visibleColumns"
+      row-key="id"
+      :loading="loading"
+      :pagination.sync="paginationControl"
+      :filter="filter"
+      :grid="$q.screen.xs"
+    >
+      <template v-slot:top="props">
+        <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar">
+          <template v-slot:append>
+            <q-icon name="search"></q-icon>
+          </template>
+        </q-input>
+        <q-space></q-space>
+        <q-select
+          v-model="visibleColumns"
+          multiple
+          borderless
+          dense
+          options-dense
+          :display-value="$q.lang.table.columns"
+          emit-value
+          map-options
+          :options="columns"
+          option-value="name"
+          style="min-width: 150px"
+        ></q-select>
 
-        <q-table      
-            dense
-            ref="mainTable" 
-            :data="table" 
-            :columns="columns" 
-            :visible-columns="visibleColumns" row-key="id" 
-            :loading="loading"
-            :pagination.sync="paginationControl"
-            :filter="filter"
-            >
+        <q-btn
+          flat
+          round
+          dense
+          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="props.toggleFullscreen"
+          class="q-ml-md"
+        >
+          <q-tooltip>Ver en pantalla completa</q-tooltip>
+        </q-btn>
+      </template>
 
-            <template v-slot:top="props">
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar">
-                <template v-slot:append>
-                  <q-icon name="search" ></q-icon>
-                </template>
-              </q-input>
-             <q-space ></q-space>
-              <q-select
-                v-model="visibleColumns"
-                multiple
-                borderless
-                dense
-                options-dense
-                :display-value="$q.lang.table.columns"
-                emit-value
-                map-options
-                :options="columns"
-                option-value="name"
-                style="min-width: 150px"
-              ></q-select>
-      
-              <q-btn
-                flat round dense
-                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                @click="props.toggleFullscreen"
-                class="q-ml-md"
-              ><q-tooltip>Ver en pantalla completa</q-tooltip></q-btn>
+      <q-tr slot="body" slot-scope="props" :props="props" class="cursor-pointer">
+        <q-td auto-width v-for="col in props.cols" :key="col.name" :props="props">
+          <template v-if="col.name==='status_id'">
+            <kStatus :statusId="props.row.status_id" :processType="kmodule"></kStatus>
+          </template>
+          <template v-else-if="col.name==='public_id'">
+            <u @click="show(props)">{{props.row.public_id}}</u>
+          </template>
+          <template v-else-if="col.name==='actions'">
+            <template v-if="hasLockedBtn===true">
+              <cToggle @blur="lockUnlock(props.row, $refs)" :id="props.row.status_id"></cToggle>
             </template>
-     
-          <q-tr slot="body" slot-scope="props" :props="props" class="cursor-pointer">
-            <q-td auto-width v-for="col in props.cols" :key="col.name" :props="props">             
-              <template v-if="col.name==='status_id'">
-                <kStatus  :statusId="props.row.status_id" :processType="kmodule"></kStatus>
-              </template>
-              <template v-else-if="col.name==='public_id'">
-                <u @click="show(props)">{{props.row.public_id}}</u>
-              </template>
-              <template v-else-if="col.name==='actions'">
-                  <template v-if="hasLockedBtn===true">
-                    <cToggle @blur="lockUnlock(props.row, $refs)" :id="props.row.status_id"></cToggle>
-                  </template>
-                    
-                  <q-btn-dropdown
-                      icon="view_list"
-                      size="sm"
-                      color="primary"
-                      flat
-                      rounded
-                    >
-                      <q-list dense link>                  
-                      <cItem color="secondary" iconname="remove_red_eye" tooltiplabel="Ver" @click="show(props)"></cItem>                    
-                        <cItem color="tertiary" :statusID="props.row.status_id" iconname="edit" tooltiplabel="Editar" @click="edit(props)"></cItem>
-                        <cItem color="red" :statusID="props.row.status_id" iconname="delete" tooltiplabel="Eliminar" @click="deleteRow(props)"></cItem>
-                        
-                        <q-separator spaced ></q-separator>
-                        <q-item-label header>Otros</q-item-label>
-                      
-                        <cItem color="secondary" v-if="showEmailBtn===true" iconname="email" tooltiplabel="Enviar por email" @click="email($refs, props)"></cItem>
-                        <cItem color="secondary" iconname="print" tooltiplabel="Imprimir" @click="pdf(props)"></cItem>
-                        <cItem color="secondary" v-if="showPaymentBtn===true" :statusID="props.row.status_id" iconname="attach_money" tooltiplabel="Agregar pago" @click="edit(props)"></cItem>
 
-                      </q-list>                   
-                </q-btn-dropdown>
-                
-              </template>
-              <template v-else>
-                {{ col.value }} 
-              </template>              
-              
-            </q-td>
-          </q-tr>
-        </q-table>
-        <kSendEmailForm ref="_sendEmail"></kSendEmailForm>
-     
-    </div>
+            <q-btn-dropdown icon="view_list" size="sm" color="primary" flat rounded>
+              <q-list dense link>
+                <cItem
+                  color="secondary"
+                  iconname="remove_red_eye"
+                  tooltiplabel="Ver"
+                  @click="show(props)"
+                ></cItem>
+                <cItem
+                  color="tertiary"
+                  :statusID="props.row.status_id"
+                  iconname="edit"
+                  tooltiplabel="Editar"
+                  @click="edit(props)"
+                ></cItem>
+                <cItem
+                  color="red"
+                  :statusID="props.row.status_id"
+                  iconname="delete"
+                  tooltiplabel="Eliminar"
+                  @click="deleteRow(props)"
+                ></cItem>
+
+                <q-separator spaced></q-separator>
+                <q-item-label header>Otros</q-item-label>
+
+                <cItem
+                  color="secondary"
+                  v-if="showEmailBtn===true"
+                  iconname="email"
+                  tooltiplabel="Enviar por email"
+                  @click="email($refs, props)"
+                ></cItem>
+                <cItem
+                  color="secondary"
+                  iconname="print"
+                  tooltiplabel="Imprimir"
+                  @click="pdf(props)"
+                ></cItem>
+                <cItem
+                  color="secondary"
+                  v-if="showPaymentBtn===true"
+                  :statusID="props.row.status_id"
+                  iconname="attach_money"
+                  tooltiplabel="Agregar pago"
+                  @click="edit(props)"
+                ></cItem>
+              </q-list>
+            </q-btn-dropdown>
+          </template>
+          <template v-else>{{ col.value }}</template>
+        </q-td>
+      </q-tr>
+    </q-table>
+    <kSendEmailForm ref="_sendEmail"></kSendEmailForm>
+  </div>
 </template>
 <script type="text/javascript">
 import cToggle from "../tables/cToggle.vue";
@@ -133,7 +160,8 @@ export default {
     deleteRow(cell) {
       let vm = this;
       vm.loading = true;
-      vm.$q.dialog({
+      vm.$q
+        .dialog({
           title: "Tenga Cuidado!",
           message: vm.mwarning + cell.row.public_id + ", desea continuar?",
           ok: "SI, Eliminar!",
@@ -141,7 +169,8 @@ export default {
           color: "secondary"
         })
         .then(() => {
-          axios.delete(`api/${this.kmodule}/${cell.row.public_id}`)
+          axios
+            .delete(`api/${this.kmodule}/${cell.row.public_id}`)
             .then(function(response) {
               vm.table.splice(cell.row.__index, 1);
               vm.loading = false;
@@ -161,7 +190,7 @@ export default {
             });
         })
         .catch(() => {
-           vm.loading = false;
+          vm.loading = false;
         });
     },
     fetchData() {
@@ -216,10 +245,10 @@ export default {
         "status_id",
         "total",
         "actions",
-        'contact',
-        'IsCategory',
-        'bank_account_name',
-        'date'
+        "contact",
+        "IsCategory",
+        "bank_account_name",
+        "date"
       ],
       separator: "horizontal",
       paginationControl: { rowsPerPage: 10, page: 1 },

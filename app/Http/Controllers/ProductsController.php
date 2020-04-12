@@ -66,7 +66,7 @@ class ProductsController extends Controller
         $item = Products::create($data);
 
         event(new RecordActivity(Auth::user()->name.' creó el producto '.$item->description,
-        'Products',null));
+        'Products',null, true));
 
         return response()
             ->json([
@@ -97,7 +97,7 @@ class ProductsController extends Controller
         $item->update($newProductValues);
         
         event(new RecordActivity(Auth::user()->name.' actualizó el producto '.$item->description,
-        'Products',null));
+        'Products',null, true));
 
         return response()
         ->json([
@@ -112,7 +112,7 @@ class ProductsController extends Controller
         $post->delete();
 
         event(new RecordActivity(Auth::user()->name.' eliminó el producto '.$post->description,
-        'Products',null));
+        'Products',null, true));
 
         return response()
         ->json([

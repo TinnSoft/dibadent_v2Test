@@ -10,6 +10,7 @@ use App\Models\Users;
 use App\Models\PointsHistory;
 use App\Models\PointsLevels;
 use App\Models\AcumulatedPointsLevels;
+use App\Models\Patients;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use DB;
@@ -57,8 +58,15 @@ class ImagesController extends Controller
             
             $storePoint=$this->storePoints();
 
-            event(new RecordActivity(Auth::user()->name.' cargó una radiografía '.$id_procedure,
-            'Images',null));
+            $UserName = Patients::Join('procedures', 'procedures.patient_id', '=', 'patients.id') 
+            ->where([
+                ['procedures.id','=',$id_procedure]
+            ])     
+            ->select('patients.name')              
+            ->get();
+
+            event(new RecordActivity(Auth::user()->name.' cargó una nueva radiografía para el paciente '.$UserName->pluck('name'),
+            'Images',null, true));
 
             return response()
              ->json([

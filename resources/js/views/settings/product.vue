@@ -10,6 +10,7 @@
         :filter="filter"
         :pagination.sync="pagination"
         dense
+        :grid="$q.screen.xs"
         :visible-columns="visibleColumns"
       >
         <template v-slot:top="props">
@@ -46,7 +47,12 @@
             tooltiplabel="Editar"
             @click="editProductModal($refs, props.row)"
           ></kButton>
-          <kButton color="grey" iconname="remove_red_eye" tooltiplabel="Ver" @click="show($refs, props.row)"></kButton>
+          <kButton
+            color="grey"
+            iconname="remove_red_eye"
+            tooltiplabel="Ver"
+            @click="show($refs, props.row)"
+          ></kButton>
           <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
         </q-td>
       </q-table>
@@ -80,8 +86,8 @@ export default {
       columns: [],
       pagination: {
         rowsPerPage: 10
-      },      
-      visibleColumns:['description','required_points','actions'],
+      },
+      visibleColumns: ["description", "required_points", "actions"],
       form: {},
       path: "getProductList"
     };
@@ -94,8 +100,8 @@ export default {
       return false;
     }
   },
-  methods: {    
-     closeProductModal() {
+  methods: {
+    closeProductModal() {
       this.fetchData();
     },
     show(refs, cell) {
@@ -126,31 +132,32 @@ export default {
       let vm = this;
       vm.loading = true;
 
-       vm.$q.dialog({
-        title: "Tenga Cuidado!",
+      vm.$q
+        .dialog({
+          title: "Tenga Cuidado!",
           message: "Está eliminando un registro importante, desea continuar?",
           ok: "SI, Eliminar!",
           cancel: "NO, Cancelar"
-      }).onOk(() => {
-          axios
-            .delete("/api/products/" + val.row.id)
-            .then(function(response) {
-              if (response.data.deleted) {
-                kNotify(
-                  vm,
-                  "Se eliminó el registro satisfactoriamente",
-                  "positive"
-                );
-                vm.fetchData();
-                vm.loading = false;
-              }
-            })
-      }).onCancel(() => {
-         vm.loading = false;
-      }).onDismiss(() => {
-        vm.loading = false;
-      })
-
+        })
+        .onOk(() => {
+          axios.delete("/api/products/" + val.row.id).then(function(response) {
+            if (response.data.deleted) {
+              kNotify(
+                vm,
+                "Se eliminó el registro satisfactoriamente",
+                "positive"
+              );
+              vm.fetchData();
+              vm.loading = false;
+            }
+          });
+        })
+        .onCancel(() => {
+          vm.loading = false;
+        })
+        .onDismiss(() => {
+          vm.loading = false;
+        });
     }
   }
 };
@@ -179,7 +186,7 @@ function productColumns() {
       name: "required_points",
       sortable: true,
       filter: true
-    },    
+    },
     {
       label: "Acciones",
       field: "actions",

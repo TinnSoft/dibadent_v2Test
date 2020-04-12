@@ -246,7 +246,7 @@ class UsersController extends Controller
         $this->sendEmail($emailData);
 
         event(new RecordActivity(Auth::user()->name.' creó el usuario '.$item->name,
-        'Users',null));
+        'Users',null, false));
 
         return response()
             ->json([
@@ -279,7 +279,7 @@ class UsersController extends Controller
         $item->update($newUserValues);
         
         event(new RecordActivity(Auth::user()->name.' actualizó el usuario '.$item->name,
-        'Users',null));
+        'Users',null, false));
 
         return response()
         ->json([
@@ -294,7 +294,7 @@ class UsersController extends Controller
         $post->delete();
 
         event(new RecordActivity(Auth::user()->name.' eliminó el usuario '.$post->name,
-        'Users',null));
+        'Users',null, false));
 
         return response()
         ->json([
@@ -315,7 +315,7 @@ class UsersController extends Controller
 
             
             event(new RecordActivity(Auth::user()->name.' actualizó su imagen de perfil',
-            'Users',null));
+            'Users',null, false));
 
             return response()
              ->json([

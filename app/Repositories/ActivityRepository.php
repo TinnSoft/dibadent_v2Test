@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use Auth;
+use App\Models\Tracker;
 use Illuminate\Support\Facades\DB;
 
 class ActivityRepository
@@ -10,16 +11,16 @@ class ActivityRepository
     {
         
        DB::transaction(function() use ($model) {
-          
-           DB::table('tracker')->insert(
-                [
-                'user_id' => Auth::user()->id,
-                'detail'=>$model->detail,
-                'model'=>$model->model,
-                'route'=>$model->route
-                ]
-            );
-      
+        
+        $data=[
+            'user_id' => Auth::user()->id,
+            'detail'=>$model->detail,
+            'model'=>$model->model,
+            'route'=>$model->route,
+            'notify'=>$model->notify
+        ];
+
+        $item = Tracker::create($data);
       
     });   
     }

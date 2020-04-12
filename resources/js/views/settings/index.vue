@@ -2,9 +2,9 @@
   <q-page padding>
     <q-toolbar :glossy="$q.theme === 'mat'" :inverted="$q.theme === 'ios'" color="grey">
       <q-btn flat round dense icon="menu" @click="layoutStore.left = !layoutStore.left" />
-      <q-toolbar-title class="text-weight-bold text-blue">Configuración</q-toolbar-title>
+      <q-toolbar-title class="text-weight-bold text-blue">CONFIGURACIÓN</q-toolbar-title>
     </q-toolbar>
-    <q-layout view="lhh LpR lff" container style="height: 600px" class="shadow-2 rounded-borders">
+    <q-layout view="lhh LpR lff" container style="height: 600px" class="no-border">
       <q-drawer
         side="left"
         v-model="layoutStore.left"
@@ -14,7 +14,7 @@
         :content-class="$q.theme === 'mat' ? 'bg-white' : null"
       >
         <q-scroll-area class="fit">
-          <q-list padding class="text-primary">
+          <q-list padding class="text-primary no-border">
             <q-item
               clickable
               :active="link === 'company'"
