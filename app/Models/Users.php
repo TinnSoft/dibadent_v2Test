@@ -86,6 +86,7 @@ class Users extends Authenticatable implements JWTSubject
         }
         else
         {
+            //Reemplazar
             return $this->attributes['avatar'] = "https://image.freepik.com/vector-gratis/doctor-icono-o-avatar-blanco_136162-58.jpg";
         }
     }
