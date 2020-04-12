@@ -36,6 +36,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('getNotificationList/{profileName}','TrackerController@getNotificationList');    
     Route::post('markNotificationAsRead/{id}', 'TrackerController@markNotificationAsRead');
+
+    Route::post('redemptPoint/{product_id}', 'PointsRedemptionController@redemptPoint');
     
     Route::resource('products', 'ProductsController');
     Route::get('getProductValues','ProductsController@edit');   

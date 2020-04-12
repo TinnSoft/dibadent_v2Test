@@ -8,7 +8,7 @@
         <template v-slot:before>
           <q-tabs v-model="defaultTab" vertical>
             <q-tab name="levels" icon="thumb_up" label="Niveles" />
-            <q-tab name="promo" icon="local_offer" label="Promociones" />
+            <q-tab name="promo" icon="local_offer" label="Promos" />
           </q-tabs>
         </template>
 

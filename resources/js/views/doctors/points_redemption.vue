@@ -66,42 +66,95 @@
             <div class="text-overline">REDIME TUS PUNTOS AQUÍ</div>
           </q-card-section>
 
-          <q-card-section class="bg-grey-1 text-blue">
-            <q-table
-              :data="productsDB"
-              :columns="columns"
-              row-key="name"
-              binary-state-sort
-              :loading="loading"
-              dense
-              :grid="$q.screen.xs"
-            >
-              <template v-slot:body="props">
-                <q-tr :props="props">
-                  <q-td key="description" :props="props">
-                    {{ props.row.description }}                   
-                  </q-td>
-                  <q-td key="required_points" :props="props">
-                    {{ props.row.required_points }}                   
-                  </q-td>
+          <q-tabs
+            v-model="tab"
+            dense
+            class="text-grey"
+            active-color="primary"
+            indicator-color="primary"
+            align="justify"
+            narrow-indicator
+          >
+            <q-tab name="redemTab" icon="star_border"></q-tab>
+            <q-tab name="historyTab" icon="history"></q-tab>
+          </q-tabs>
 
-                  <q-td key="actions" :props="props">
-                    <q-btn
-                      size="sm"
-                      color="blue"
-                      round
-                      dense
-                      @click="redempt(props.row)"
-                      icon="redeem"
-                    />
-                  </q-td>
-                </q-tr>
-              </template>
-            </q-table>
-          </q-card-section>
+          <q-separator></q-separator>
+
+          <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="redemTab">
+              <q-table
+                :data="productsDB"
+                :columns="columns"
+                row-key="name"
+                binary-state-sort
+                :loading="loading"
+                dense
+              >
+                <template v-slot:body="props">
+                  <q-tr :props="props">
+                    <q-td key="description" :props="props">{{ props.row.description }}</q-td>
+                    <q-td key="required_points" :props="props">{{ props.row.required_points }}</q-td>
+
+                    <q-td key="actions" :props="props">
+                      <q-btn
+                        size="sm"
+                        color="blue"
+                        round
+                        dense
+                        @click="redempt(props.row)"
+                        icon="redeem"
+                      />
+                    </q-td>
+                  </q-tr>
+                </template>
+              </q-table>
+            </q-tab-panel>
+
+            <q-tab-panel name="historyTab">
+              <q-table
+                :data="pointsSummary.historyPointsRedemed"
+                :columns="columnsHistoryPointsRedemed"
+                row-key="code"
+                binary-state-sort
+                :loading="loading"
+                dense
+              >
+                <template v-slot:body="props">
+                  <q-tr :props="props">
+                    <q-td key="description" :props="props">{{ props.row.description }}</q-td>
+                    <q-td key="points_redeemed" :props="props">{{ props.row.points_redeemed }}</q-td>
+                    <q-td key="code" :props="props">{{ props.row.code }}</q-td>
+                    <q-td key="created_at" :props="props">{{ props.row.created_at }}</q-td>
+                  </q-tr>
+                </template>
+              </q-table>
+            </q-tab-panel>
+          </q-tab-panels>
         </q-card>
       </div>
     </div>
+    <q-dialog v-model="showRedemedPointConfirmationSuccess" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <div class="text-blue">
+            <q-icon size="xl" name="tag_faces"></q-icon>
+            <div class="text-h6">Felicidades</div>
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <span class="q-ml-sm">
+            Se ha generado el codigo de canje
+            <span class="text-weight-bold">{{redemptionCode}}</span>,
+            el cual podrás hacer efectivo con el radiólogo.
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 <script>
@@ -116,6 +169,7 @@ export default {
   },
   data() {
     return {
+      tab: "redemTab",
       columns: [
         {
           name: "description",
@@ -139,6 +193,37 @@ export default {
           type: "string"
         }
       ],
+      columnsHistoryPointsRedemed: [
+        {
+          name: "description",
+          required: true,
+          label: "PRODUCTO",
+          align: "left",
+          field: "description",
+          sortable: true
+        },
+        {
+          name: "points_redeemed",
+          align: "center",
+          label: "PUNTOS REDIMIDOS",
+          field: "points_redeemed",
+          sortable: true
+        },
+        {
+          name: "code",
+          align: "left",
+          label: "CODE",
+          field: "code",
+          sortable: true
+        },
+        {
+          name: "created_at",
+          align: "left",
+          label: "FECHA",
+          field: "created_at",
+          sortable: true
+        }
+      ],
       productsDB: [],
       pointsLevelPath: "getPointsLevelslist",
       loading: false,
@@ -149,8 +234,11 @@ export default {
         level_next_points: "",
         acumulatedPoints: "",
         redeemedPoints: "",
-        pointsNextToBeat: ""
-      }
+        pointsNextToBeat: "",
+        historyPointsRedemed: []
+      },
+      redemptionCode: null,
+      showRedemedPointConfirmationSuccess: false,      
     };
   },
   created() {
@@ -163,7 +251,6 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
-          console.log(response.data);
           if (response.data.pointsSummary) {
             vm.$set(vm, "pointsSummary", response.data.pointsSummary);
           }
@@ -176,20 +263,61 @@ export default {
           vm.loading = false;
         });
     },
-
-    redempt() {
+    redempt(value) {
       let vm = this;
-      // vm.loading = true;
 
-      /*axios
-        .post(`/api/points_levels`)
-        .then(function(response) {
+      if (value.required_points > vm.pointsSummary.acumulatedPoints) {
+        vm.alert_noEnoughPointstoDeal();
+      }
+
+      if (value.required_points < vm.pointsSummary.acumulatedPoints) {
+        vm.alert_redemptPointsConfirmation(value);
+      }
+    },
+    alert_noEnoughPointstoDeal() {
+      let vm = this;
+      vm.$q
+        .dialog({
+          title: "Opps, lo lamentamos",
+          message:
+            "No cuentas con suficientes puntos para realizar el canje, pero no te desanimes, continua cargando más radiografías y pronto lograrás tu meta."
+        })
+        .onOk(() => {})
+        .onCancel(() => {})
+        .onDismiss(() => {});
+    },
+    alert_redemptPointsConfirmation(value) {
+      let vm = this;
+      vm.$q
+        .dialog({
+          title: "Confirmar canje de puntos!",
+          message:
+            "Vas a redimir " +
+            value.required_points +
+            " puntos, desea continuar?",
+          ok: "SI, Estoy seguro!",
+          cancel: "NO, Cancelar"
+        })
+        .onOk(() => {
+          axios.post("/api/redemptPoint/" + value.id).then(function(response) {
+            if (response.data.created) {
+              console.log(response.data);
+              if (response.data.redemptionCode) {
+                vm.$set(vm, "redemptionCode", response.data.redemptionCode);
+                vm.$set(vm, "showRedemedPointConfirmationSuccess", true);
+              }
+              kNotify(vm, "Puntos redimidos satisfactoriamente", "positive");
+              vm.fetchData(vm.pathDashboardData);
+              vm.loading = false;
+            }
+          });
+        })
+        .onCancel(() => {
           vm.loading = false;
         })
-        .catch(function(error) {
+        .onDismiss(() => {
           vm.loading = false;
         });
-      vm.fetchData();*/
     }
   }
 };

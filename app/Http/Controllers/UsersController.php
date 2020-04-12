@@ -68,7 +68,7 @@ class UsersController extends Controller
         $_PointLevels = PointsLevels::whereNotIn('level_name',collect($level))        
         ->where('required_points','>',$acumulatedPoints)
         ->select('level_name','required_points')     
-        ->orderBy('required_points', 'desc')         
+        ->orderBy('required_points', 'asc')         
         ->first(); 
 
         if($_PointLevels){
@@ -94,12 +94,25 @@ class UsersController extends Controller
         ->orderBy('id', 'asc')         
         ->get();
 
+        $historyPointsRedemed = DB::table('products')
+            ->Join('points_redemption', 'products.id', '=', 'points_redemption.product_id')        
+            ->where([
+                ['points_redemption.user_id',Auth::user()->id]
+            ])     
+            ->whereNull('points_redemption.deleted_at')
+            ->select('products.description','points_redemption.points_redeemed',
+            'points_redemption.code','points_redemption.is_code_confirmed','points_redemption.created_at'
+            )      
+            ->orderBy('points_redemption.created_at','desc')        
+            ->get();
+
        $pointsSummary=['level'=>$level, 
                         'level_next'=>$level_next,
                         'level_next_points'=>$level_next_points,
                         'acumulatedPoints'=>$acumulatedPoints,
                         'redeemedPoints'=>$redeemedPointsLastYear,
-                        'pointsNextToBeat'=>$pointsNextToBeat                       
+                        'pointsNextToBeat'=>$pointsNextToBeat,
+                        'historyPointsRedemed'=>$historyPointsRedemed                   
                     ];
 
        return response()
