@@ -274,6 +274,10 @@ export default {
   created() {
     this.fetchData(this.pathDashboardData);
     this.avatarUrl = this.$store.getters["auth/user"].avatar;
+    if (!this.avatarUrl) {
+      this.avatarUrl =
+        "https://image.freepik.com/vector-gratis/doctor-icono-o-avatar-blanco_136162-58.jpg";
+    }
   },
   computed: {
     _medicalProcedureId() {
