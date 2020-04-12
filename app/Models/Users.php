@@ -82,11 +82,11 @@ class Users extends Authenticatable implements JWTSubject
     public function getAvatarAttribute()
     {
         if ($this->attributes['avatar']){
-        return $this->attributes['avatar'] = asset('storage/' . $this->attributes['avatar']);
+            return $this->attributes['avatar'] = asset('storage/' . $this->attributes['avatar']);
         }
         else
         {
-            return null;
+            return $this->attributes['avatar'] = "https://image.freepik.com/vector-gratis/doctor-icono-o-avatar-blanco_136162-58.jpg";
         }
     }
 
