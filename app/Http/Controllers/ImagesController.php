@@ -98,7 +98,7 @@ class ImagesController extends Controller
                 
             
         $acumulatedPoints = 0;
-        if(isset($acumulatedPoints->shift()->acumulated_pointsr)){
+        if(isset($acumulatedPoints->shift()->acumulated_points)){
             $acumulatedPoints = $acumulatedPoints->shift()->acumulated_points;
         }
   
