@@ -148,7 +148,6 @@ export default {
       this.$router.push({ name: "login" });
     },
     async eraseNotification(notificationID, index) {
-      console.log("borrar notificación", notificationID, index);
       this.notificationLog.splice(index, 1);
       this.markNotificationAsRead(notificationID);
       this.$set(this, "newNotifications", this.newNotifications - 1);
@@ -157,10 +156,8 @@ export default {
       axios
         .post(this.urlToUpdateNotification + notificationID)
         .then(res => {
-          console.log(res);
         })
         .catch(error => {
-          console.log(error);
         });
     },
     async getNotification() {
@@ -173,7 +170,6 @@ export default {
           if (response.data.notifications) {
             vm.$set(vm, "notificationLog", response.data.notifications);
             vm.$set(vm, "newNotifications", vm.notificationLog.length);
-            console.log(response.data, vm.newNotifications);
           }
         })
         .catch(function(error) {});

@@ -164,6 +164,28 @@
                     @click="showProcedureModal($refs)"
                   />
                 </q-timeline-entry>
+
+                <q-timeline-entry subtitle="Comentarios" icon="insert_comment">
+                  <div>
+                    <q-input v-model="comments" filled autogrow type="text" />
+                  </div>
+                </q-timeline-entry>
+
+                <q-timeline-entry subtitle="Imagenes" icon="photo">
+                  <q-uploader
+                    label="Cargar Imagen"
+                    dense
+                    flat
+                    :readonly="checkIfExistProcedure"
+                    auto-upload
+                    :url="_medicalProcedureId"
+                    accept=".jpg, image/*"
+                    color="primary"
+                    style="max-width: 270px"
+                    @failed="showerror"
+                    @uploaded="uloadedFinished"
+                  />
+                </q-timeline-entry>
               </q-timeline>
             </q-card-section>
           </q-card>
@@ -183,20 +205,28 @@
                     class="rounded-borders"
                   >
                     <div class="absolute-bottom text-center text-body2">
-                      <q-btn
-                        flat
-                        round
-                        color="white"
-                        @click="showImageModal($refs, image)"
-                        icon="zoom_in"
-                      ></q-btn>
-                      <q-btn flat round color="white" icon="delete" @click="deleteImage(image)"></q-btn>
+                      <q-btn flat round color="white" icon="zoom_in"></q-btn>
+                      <q-btn flat round color="white" icon="more_vert">
+                        <q-menu fit transition-show="scale" transition-hide="scale">
+                          <q-list style="min-width: 100px">
+                            <q-item clickable @click="showInputFile">
+                              <q-item-section :data-index="i">Editar</q-item-section>
+                              <input
+                                type="file"
+                                ref="imageInput"
+                                :data-image="image.id"
+                                style="display: none"
+                                @change="changeImage"
+                              />
+                            </q-item>
+                            <q-separator />
+                            <q-item clickable>
+                              <q-item-section>Eliminar</q-item-section>
+                            </q-item>
+                          </q-list>
+                        </q-menu>
+                      </q-btn>
                     </div>
-                    <template v-slot:error>
-                      <div
-                        class="absolute-full flex flex-center bg-negative text-white"
-                      >Error de carga</div>
-                    </template>
                   </q-img>
                 </div>
               </q-page>
@@ -207,7 +237,6 @@
           </q-layout>
           <patientModal ref="_patient"></patientModal>
           <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
-          <showImageModal ref="_showImage"></showImageModal>
         </div>
       </div>
     </div>
@@ -218,12 +247,10 @@
 import store from "../../store";
 import patientModal from "../settings/modals/mPatient.vue";
 import procedureModal from "./modals/mProcedure.vue";
-import showImageModal from "./modals/mShowImage.vue";
-import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
-  components: { patientModal, procedureModal, showImageModal },
+  components: { patientModal, procedureModal },
   data() {
     return {
       form: {},
@@ -241,8 +268,7 @@ export default {
       urlToUploadImages: "/api/uploadFile/",
       urlToUploadAvatar: "/api/uploadAvatar/",
       medicalProcedureId: null,
-      avatarUrl: null,
-      loading: false
+      avatarUrl: null
     };
   },
   created() {
@@ -251,6 +277,7 @@ export default {
   },
   computed: {
     _medicalProcedureId() {
+      console.log(this.urlToUploadImages + this.medicalProcedureId);
       return this.urlToUploadImages + this.medicalProcedureId;
     },
     checkIfExistProcedure() {
@@ -287,9 +314,6 @@ export default {
       if (this.form.medicalProcedure) {
         this.openModal(refs._procedure, "view", this.form.medicalProcedure);
       }
-    },
-    showImageModal(refs, attributes) {
-      refs._showImage.open(attributes);
     },
     CreateProcedureModal(refs) {
       this.openModal(refs._procedure, "create", this.form.patient);
@@ -383,42 +407,6 @@ export default {
         })
         .catch(error => {
           console.log(error);
-        });
-    },
-    deleteImage(value) {
-      let vm = this;
-      vm.$q
-        .dialog({
-          title: "Tenga Cuidado!",
-          message: "Estás seguro de eliminar la imagen seleccionada?",
-          ok: "SI, Eliminar!",
-          cancel: "NO, Cancelar",
-          color: "secondary"
-        })
-        .onOk(() => {
-          vm.submitDeleteImage(value.id);
-        })
-        .onCancel(() => {});
-    },
-    submitDeleteImage(id) {
-      let vm = this;
-      vm.loading = true;
-      axios
-        .delete(`api/images/${id}`)
-        .then(function(response) {
-          if (response.data.deleted) {
-            kNotify(vm, "Imagen eliminada..", "positive");
-            vm.getListOfImages(vm.medicalProcedureId);
-            vm.loading = false;
-          }
-        })
-        .catch(function(error) {
-          vm.loading = false;
-          kNotify(
-            vm,
-            "No fue posible eliminar la imagen, intente de nuevo",
-            "negative"
-          );
         });
     }
   }

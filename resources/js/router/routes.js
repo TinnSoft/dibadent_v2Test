@@ -24,6 +24,9 @@ const SettingsProduct = () =>
 const PointsIndex = () =>
     import("~/views/points/index").then(m => m.default || m);
 
+const chatPage = () =>
+    import("~/views/admin/chat").then(m => m.default || m);
+
 const PointsRedepmtionDoctor = () =>
     import("~/views/doctors/points_redemption").then(m => m.default || m);
 
@@ -31,6 +34,7 @@ export default [
     { path: "/", name: "home", component: Home },
     { path: "/login", name: "login", component: Login },
     { path: "/points", name: "points", component: PointsIndex },
+    { path: "/chat", name: "chat", component: chatPage },
     { path: "/points-redemption", name: "points-redemption", component: PointsRedepmtionDoctor },
     {
         path: "/password/reset",

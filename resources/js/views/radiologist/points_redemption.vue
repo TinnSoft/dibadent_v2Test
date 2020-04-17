@@ -213,7 +213,7 @@ export default {
         {
           name: "code",
           align: "left",
-          label: "CODIGO",
+          label: "CODE",
           field: "code",
           sortable: true
         },

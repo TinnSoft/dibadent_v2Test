@@ -97,8 +97,7 @@ class PatientsController extends Controller
     public function store(Request $request)
     {                
         $this->validate($request, [     
-            'name' => 'required',
-            'email' => 'required'
+            'name' => 'required'
             ]);        
         
         $data = $request->all();           
@@ -138,7 +137,6 @@ class PatientsController extends Controller
     {   
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required'
         ]);      
 
       

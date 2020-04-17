@@ -21,8 +21,26 @@ class ImagesController extends Controller
 {
     protected $rootFolderMain='/_Images/_radiology';
 
+    public function getImagesByPatient($PatientId)
+    {
+        //$data= Images::where('procedure_id', $ProcedureId)
+       $data= Images::where('procedure_id', $ProcedureId)
+       ->select('id', 'title', 'other_details', 'file_name')->get();      
+      
+       $data->transform(function ($d) {
+           $d->file_name = asset('storage/' . $d->file_name);
+           return $d;
+       });
+       return response()
+       ->json([
+          'images' => $data,          
+       ]);
+
+    }
+    //Para eliminar
     public function getImagesByProcedure($ProcedureId)
     {
+        //$data= Images::where('procedure_id', $ProcedureId)
        $data= Images::where('procedure_id', $ProcedureId)
        ->select('id', 'title', 'other_details', 'file_name')->get();      
       
@@ -94,14 +112,13 @@ class ImagesController extends Controller
         $levelName=null;
 
         //buscar si existe el usuario en AcumulatedPointsLevels    
-        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get(); 
-      
-        $acumulatedPoints =isset($acumulatedPoints->shift()->acumulated_points) ? $acumulatedPoints->shift()->acumulated_points : 0;
+        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get()->toArray();      
+        $acumulatedPoints =isset($acumulatedPoints[0]->acumulated_points) ? $acumulatedPoints[0]->acumulated_points : 0;
 
         if($acumulatedPoints>0)
         {           
             //Actualiza el monto de puntos
-            $incrementPoints=DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->increment('acumulated_points', $pointsToStore); 
+            //$incrementPoints=DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->increment('acumulated_points', $pointsToStore); 
 
             //Obtiene el listado de niveles del sistema
             $currentLevels= PointsLevels::whereNull('deleted_at')->select('level_name','required_points','id')->orderBy('required_points', 'asc')->get();
@@ -134,8 +151,8 @@ class ImagesController extends Controller
             ]);
         }
         
-        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get(); 
-        $acumulatedPoints = $acumulatedPoints->shift()->acumulated_points;
+        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', Auth::user()->id)->select('acumulated_points')->get()->toArray();      
+        $acumulatedPoints =isset($acumulatedPoints[0]->acumulated_points) ? $acumulatedPoints[0]->acumulated_points : 0;
 
         $datatoReturn=[];
         $datatoReturn['levelName']=$levelName;
@@ -173,5 +190,24 @@ class ImagesController extends Controller
                 'saved' => false
             ],422) ;
     }
+
+    public function destroy($id)
+    {
+        
+        $imgData = Images::find($id);
+
+        Storage::delete($imgData->file_name);
+
+        $imgData->delete();
+
+        event(new RecordActivity(Auth::user()->name.' eliminó la imagen '.$imgData->file_name,
+        'Images',null, false));
+
+        return response()
+        ->json([
+            'deleted' => true
+        ]);
+    }
+    
 
 }

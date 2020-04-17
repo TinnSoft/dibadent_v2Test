@@ -21,6 +21,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::resource('images', 'ImagesController');
     Route::post('uploadFile/{id}', 'ImagesController@uploadFile');
+    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');  
+    
+    //temporal
+    Route::get('getImagesByPatient/{patient_id}','ImagesController@getImagesByPatient');   
+
     Route::post('uploadAvatar/{id}', 'UsersController@uploadAvatar');
 
     Route::get('/user','UsersController@getUserInfo');   
@@ -46,7 +51,7 @@ Route::group(['middleware' => 'auth:api'], function () {
      //dashboard
     Route::get('getDashboardInfo','HomeController@getDashboardInfo');
 
-    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');    
+     
     
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    

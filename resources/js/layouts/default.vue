@@ -42,9 +42,9 @@ export default {
         id: 2
       },
       {
-        icon: "insert_chart",
-        title: "REPORTES",
-        path: "/reports",
+        icon: "chat",
+        title: "CHAT",
+        path: "/chat",
         type: "alone",
         profileId: 1,
         id: 3
