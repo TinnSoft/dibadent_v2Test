@@ -226,6 +226,7 @@ export default {
   components: { patientModal, procedureModal, showImageModal },
   data() {
     return {
+      middleware: "auth",
       form: {},
       pointsSummary: {
         level: "",

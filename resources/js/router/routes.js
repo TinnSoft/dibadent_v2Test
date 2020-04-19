@@ -27,6 +27,9 @@ const PointsIndex = () =>
 const chatPage = () =>
     import("~/views/admin/chat").then(m => m.default || m);
 
+const chatDoctor = () =>
+    import("~/views/doctors/chat").then(m => m.default || m);
+
 const PointsRedepmtionDoctor = () =>
     import("~/views/doctors/points_redemption").then(m => m.default || m);
 
@@ -35,6 +38,7 @@ export default [
     { path: "/login", name: "login", component: Login },
     { path: "/points", name: "points", component: PointsIndex },
     { path: "/chat", name: "chat", component: chatPage },
+    { path: "/chat_doctor", name: "chat_doctor", component: chatDoctor },
     { path: "/points-redemption", name: "points-redemption", component: PointsRedepmtionDoctor },
     {
         path: "/password/reset",

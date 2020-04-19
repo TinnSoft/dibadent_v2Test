@@ -60,7 +60,7 @@
       <q-page-container class="bg-grey-2">
         <router-view />
         <div
-          v-for="(chathistory) in conversations[currentConversationIndex].chat_history"
+          v-for="(chathistory) in conversations[currentConversationIndex].chat_history_being_doctor"
           :key="chathistory.id"
         >
           <q-chat-message
@@ -102,7 +102,7 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
-      chatDoctorspath: "getAllDoctorsChats",
+      chatDoctorspath: "getAdminAndDoctorChats",
       sentx: true,
       search: "",
       currentConversationIndex: 0,
@@ -156,6 +156,7 @@ export default {
           if (response.data.AllDoctorsChats) {
             vm.$set(vm, "conversations", response.data.AllDoctorsChats);
           }
+          
           if (response.data.avatarMe[0].avatar) {
             vm.$set(vm, "avatarMe", response.data.avatarMe[0].avatar);
           }

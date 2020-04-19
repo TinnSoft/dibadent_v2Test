@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use DB;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -81,14 +81,25 @@ class Users extends Authenticatable implements JWTSubject
 
     public function getAvatarAttribute()
     {
-        if ($this->attributes['avatar']){
-            return $this->attributes['avatar'] = asset('storage/' . $this->attributes['avatar']);
+        if ($this->attributes['avatar']){            
+            return $this->attributes['avatar'] = asset('storage/' . $this->attributes['avatar']);           
         }
         else
         {
             //Reemplazar
-            return $this->attributes['avatar'] = "https://image.freepik.com/vector-gratis/doctor-icono-o-avatar-blanco_136162-58.jpg";
+           return $this->attributes['avatar'] = "https://image.freepik.com/vector-gratis/doctor-icono-o-avatar-blanco_136162-58.jpg";
         }
+    }
+
+    public function chatHistory()
+    {
+        return $this->hasMany(Chats::class,'doctor_id_parent','id')->Join('users', 'chats.user_id', '=', 'users.id')
+        ->Join('profiles', 'users.profile_id', '=', 'profiles.id')
+        ->select(DB::raw("chats.id, chats.doctor_id_parent, 
+        date(chats.created_at) as date, (CASE WHEN profiles.description = 'ADMIN' THEN 'amber-7' ELSE 'primary' END) AS bgcolor,
+        (CASE WHEN profiles.description = 'ADMIN' THEN 'Yo' ELSE users.name END) AS who,
+        chats.comment")) ->orderBy('chats.id', 'desc');
+        
     }
 
     public function points()

@@ -29,6 +29,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('uploadAvatar/{id}', 'UsersController@uploadAvatar');
 
     Route::get('/user','UsersController@getUserInfo');   
+    
+    Route::resource('chats', 'ChatsController');
+    Route::get('getAllDoctorsChats','ChatsController@getAllDoctorsChats');   
+    Route::get('getAdminAndDoctorChats','ChatsController@getAdminAndDoctorChats');   
+    
 
     Route::resource('company', 'CompanyController');
     Route::get('getCompanyValues','CompanyController@show');

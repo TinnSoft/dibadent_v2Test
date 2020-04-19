@@ -74,6 +74,14 @@ export default {
         profileId: 3,
         id: 6
       },
+       {
+        icon: "chat",
+        title: "CHAT",
+        type: "alone",
+        path: "/chat_doctor",
+        profileId: 3,
+        id: 7
+      },
     ]
   }),
   created() {},
