@@ -129,12 +129,21 @@
                       filled
                       v-model="form.doctor"
                       :options="doctors"
-                      label="doctor"
+                      label="Doctor asignado"
                       stack-label
                       dense
                       options-dense
                       hide-bottom-space
-                    />
+                    >
+                      <template v-slot:option="scope">
+                        <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                          <q-item-section>
+                            <q-item-label v-html="scope.opt.label" />
+                            <q-item-label caption>{{ scope.opt.description }}</q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </template>
+                    </q-select>
                   </div>
                 </div>
               </div>

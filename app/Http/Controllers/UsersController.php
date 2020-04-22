@@ -42,7 +42,7 @@ class UsersController extends Controller
         ]);         
     }
 
-    public function getDoctorDashboardData()
+    public function getPatientDashboardData()
     {   
         $dataAcumulatedPoints = AcumulatedPointsLevels::with('points_level')->where('user_id',  Auth::user()->id)        
         ->select('id','points_level_id','acumulated_points')              
@@ -122,6 +122,29 @@ class UsersController extends Controller
            'products'=> $_products           
        ]);
     }
+
+    public function getDoctorDashboardData()
+    {   
+        $historyPointsRedemed = DB::table('products')
+            ->Join('points_redemption', 'products.id', '=', 'points_redemption.product_id')        
+            ->where([
+                ['points_redemption.user_id',Auth::user()->id]
+            ])     
+            ->whereNull('points_redemption.deleted_at')
+            ->select('products.description','points_redemption.points_redeemed',
+            'points_redemption.code','points_redemption.is_code_confirmed','points_redemption.created_at'
+            )      
+            ->orderBy('points_redemption.created_at','desc')        
+            ->get();
+
+     
+
+       return response()
+       ->json([
+           'pointsSummary' => $historyPointsRedemed,         
+       ]);
+    }
+
 
     public function getDoctorHistory()
     {   

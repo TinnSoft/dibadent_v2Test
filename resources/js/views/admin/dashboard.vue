@@ -20,84 +20,66 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-md-grow col-xs-grow col-sm-grow items-start row_class">
-          <q-card bordered flat class="my-card">
-            <q-card-section>
-              <q-toolbar>
-                <q-btn flat dense size="16px" round color="primary" icon="filter_list">
-                  <q-menu fit transition-show="scale" transition-hide="scale">
-                    <q-list style="min-width: 100px">
-                      <q-item clickable v-close-popup @click="filterPeriod('d')">
-                        <q-item-section>Hoy</q-item-section>
-                      </q-item>
-                      <q-separator />
-                      <q-item clickable v-close-popup @click="filterPeriod('w')">
-                        <q-item-section>Última Semana</q-item-section>
-                      </q-item>
-                      <q-separator />
-                      <q-item clickable v-close-popup @click="filterPeriod('m')">
-                        <q-item-section>Último Mes</q-item-section>
-                      </q-item>
-                      <q-separator />
-                      <q-item clickable v-close-popup @click="filterPeriod('y')">
-                        <q-item-section>Último Año</q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu>
-                </q-btn>
-                <q-toolbar-title
-                  class="text-caption text-grey"
-                >MEDICOS QUE CARGARON MAS RADIOGRAFIAS</q-toolbar-title>
-              </q-toolbar>
+        <div class="col-md-8 col-sm-12 col-xs-12">
+          <div class="col-md-grow col-xs-grow col-sm-grow items-start row_class">
+            <q-card bordered flat class="my-card">
+              <q-card-section>
+                <q-toolbar>
+                  <q-btn flat dense size="16px" round color="primary" icon="filter_list">
+                    <q-menu fit transition-show="scale" transition-hide="scale">
+                      <q-list style="min-width: 100px">
+                        <q-item clickable v-close-popup @click="filterPeriod('d')">
+                          <q-item-section>Hoy</q-item-section>
+                        </q-item>
+                        <q-separator />
+                        <q-item clickable v-close-popup @click="filterPeriod('w')">
+                          <q-item-section>Última Semana</q-item-section>
+                        </q-item>
+                        <q-separator />
+                        <q-item clickable v-close-popup @click="filterPeriod('m')">
+                          <q-item-section>Último Mes</q-item-section>
+                        </q-item>
+                        <q-separator />
+                        <q-item clickable v-close-popup @click="filterPeriod('y')">
+                          <q-item-section>Último Año</q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-menu>
+                  </q-btn>
+                  <q-toolbar-title
+                    class="text-caption text-grey"
+                  >MEDICOS QUE CARGARON MAS RADIOGRAFIAS</q-toolbar-title>
+                </q-toolbar>
 
-              <dashboardChart
-                :chart-data="datacollection"
-                :options="barOptions"
-                :data-original="procedures_bydoctor_today_qty"
-              />
-            </q-card-section>
-          </q-card>
+                <dashboardChart
+                  :chart-data="datacollection"
+                  :options="barOptions"
+                  :data-original="procedures_bydoctor_today_qty"
+                />
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+          <div class="col-md-grow col-xs-grow col-sm-grow row_class">
+            <q-card bordered flat class="my-card">
+              <q-card-section class="q-pt-xs">
+                <div class="text-h5 q-mt-sm q-mb-xs">Puntos redimidos</div>
+                <div class="text-caption text-grey">Top 5 de doctores que han redimido puntos</div>
+              </q-card-section>
+              <q-card-section>
+                <dashboardPie :chart-data="PieChartdata" />
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <q-table
             class="my-card"
-            title="Top de Puntos redimidos"
-            flat
-            bordered
-            dense
-            :grid="$q.screen.xs"
-            :data="data_redeemedPoints"
-            :columns="columns_redeemedPoints"
-            row-key="name"
-          >
-            <template v-slot:top-right="props">
-              <q-input dense debounce="300" v-model="filter_redeemedPoints" placeholder="Buscar">
-                <template v-slot:append>
-                  <q-icon name="search"></q-icon>
-                </template>
-              </q-input>
-              <q-space></q-space>
-              <q-btn
-                flat
-                round
-                dense
-                :grid="$q.screen.xs"
-                :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                class="q-ml-md"
-              >
-                <q-tooltip>Ver en pantalla completa</q-tooltip>
-              </q-btn>
-            </template>
-          </q-table>
-        </div>
-        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
-          <q-table
-            class="my-card"
             title="Movimientos realizados por tus doctores"
             dense
-            :grid="$q.screen.xs"
             flat
             bordered
             :data="data_doctorMovements"
@@ -130,17 +112,31 @@
 
 <script>
 import dashboardChart from "../../components/chart/Bar.js";
+import dashboardPie from "../../components/chart/Pie.js";
 
 export default {
   middleware: "auth",
   components: {
-    dashboardChart
+    dashboardChart,
+    dashboardPie
   },
   data() {
     return {
-      columns_redeemedPoints: [],
-      data_redeemedPoints: [],
-      filter_redeemedPoints: [],
+      PieChartdata: {
+        labels: null,
+        datasets: [
+          {
+            backgroundColor: [
+              "#126A8C",
+              "#369DC4",
+              "#2BBAF0",
+              "#136DF0",
+              "#9FC5FC"
+            ],
+            data: null
+          }
+        ]
+      },
       columns_doctorMovements: [],
       data_doctorMovements: [],
       filter_doctorMovements: [],
@@ -329,18 +325,14 @@ export default {
             response.data.tracking_Doctors
           );
 
+          vm.PieChartdata.labels = response.data.topRedemedPoints.labels;
+          vm.PieChartdata.datasets[0].data =
+            response.data.topRedemedPoints.data;
+
           console.log(response.data);
 
           vm.filterPeriod();
           vm.isProcessing = false;
-          /*
-          if (
-            vm.qty_of_radiography_generated_lastMonth === 0 &&
-            vm.qty_of_radiography_generated_lastYear === 0
-          ) {
-            vm.visible = true;
-          }
-          */
         })
         .catch(function(error) {
           vm.isProcessing = false;
@@ -361,6 +353,8 @@ function columns_doctorMovements() {
     },
     {
       label: "Descripción del movimiento",
+      format: val => `${val}`,
+      align: "left",
       field: "detail",
       name: "detail",
       sortable: true,

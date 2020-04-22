@@ -54,8 +54,28 @@ class HomeController extends Controller
         ->json([
         'procedures_sum' => $quantityOfProcedures,
         'procedures_ByDoctor'=> $quantityOfProceduresByDoctor,
-        'tracking_Doctors'=> $mainClass->getDoctorsTrack()
+        'tracking_Doctors'=> $mainClass->getDoctorsTrack(),
+        'topRedemedPoints'=>$mainClass->getTopRedemedPoints()
         ]);
+    }
+
+    private static function getTopRedemedPoints()
+    {  
+       
+        $data= DB::table('points_redemption')
+        ->join('users', function ($join) {
+            $join->on('users.id', '=', 'points_redemption.user_id');
+        })
+        ->select(DB::raw("SUM(points_redemption.points_redeemed) as points_redeemed, CONCAT(users.name,' ', users.last_name) as name"))
+        ->groupBy('points_redemption.user_id')
+        ->orderBy('points_redeemed', 'desc')        
+        ->take(5)
+        ->get();
+
+        $dataFinal['labels']=collect($data)->pluck('name')->all();
+        $dataFinal['data']=collect($data)->pluck('points_redeemed')->all();
+        
+        return $dataFinal;
     }
 
     //retorna los movimientos realizados por los doctores

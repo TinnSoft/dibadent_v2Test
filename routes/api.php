@@ -43,6 +43,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getDoctorlist','UsersController@getDoctors');
     Route::get('getRadiologistlist','UsersController@getRadiologist');
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
+    
+    Route::get('getPatientDashboardData','UsersController@getPatientDashboardData');
+    
 
     Route::get('getNotificationList/{profileName}','TrackerController@getNotificationList');    
     Route::post('markNotificationAsRead/{id}', 'TrackerController@markNotificationAsRead');
@@ -61,6 +64,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    
     Route::get('getPatientlist','PatientsController@getPatients');
+    Route::get('getPatientsAndDoctors','PatientsController@getPatientsAndDoctors');
+    
 
     Route::resource('procedures', 'ProceduresController');
     Route::get('getProceduresValues','ProceduresController@edit');    

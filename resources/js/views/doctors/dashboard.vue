@@ -79,18 +79,8 @@
       </div>
 
       <div class="row">
-        <div class="col-md-grow col-xs-grow col-sm-grow row_class rounded-borders">
-          <q-card flat class="bg-blue-grey-1">
-            <q-card-section>
-              <div class="text-h6 text-grey">CARGAR IMAGENES</div>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-
-      <div class="row">
         <div class="col-3 col-xs-grow row_class rounded-borders" style="min-width: 300px">
-          <q-card flat class="bg-grey-1">
+          <!--<q-card flat class="bg-grey-1">
             <q-card-section class="text-blue">
               <q-timeline color="primary">
                 <q-timeline-entry subtitle="Paciente" icon="perm_identity">
@@ -123,7 +113,7 @@
                     @click="showPatientModal($refs)"
                   />
                 </q-timeline-entry>
-                <q-timeline-entry subtitle="Procedimiento" icon="device_hub">
+                <q-timeline-entry subtitle="Catalogo" icon="device_hub">
                   <kSelectFilter
                     ref="_procedureSelect"
                     v-model="form.medicalProcedure"
@@ -140,7 +130,7 @@
                     emit-value
                     map-options
                     input-debounce="0"
-                    label="Seleccione un Procedimiento"
+                    label="Seleccione un Catalogo"
                     options-dense
                     hide-bottom-space
                     @input="getListOfImages(form.medicalProcedure)"
@@ -164,9 +154,120 @@
                     @click="showProcedureModal($refs)"
                   />
                 </q-timeline-entry>
+                <q-timeline-entry subtitle="Imagenes" icon="photo">
+                  <q-uploader
+                    label="Cargar Imagen"
+                    dense
+                    flat
+                    :readonly="checkIfExistProcedure"
+                    auto-upload
+                    :url="_medicalProcedureId"
+                    accept=".jpg, image/*"
+                    color="primary"
+                    style="max-width: 270px"
+                    @failed="showerror"
+                    @uploaded="uloadedFinished"
+                  />
+                </q-timeline-entry>
               </q-timeline>
             </q-card-section>
-          </q-card>
+          </q-card>-->
+          <q-list flat class="bg-grey-1">
+            <q-item class="text-blue">
+              <q-item-section>
+                <q-timeline color="primary">
+                  <q-timeline-entry heading>CARGA DE IMAGENES</q-timeline-entry>
+                  <q-timeline-entry subtitle="Paciente" icon="perm_identity">
+                    <kSelectFilter
+                      v-model="form.patient"
+                      :options="patientList"
+                      :loading="loading"
+                      filled
+                      dense
+                      outlined
+                      self-filter
+                      clearable
+                      use-input
+                      fill-input
+                      hide-selected
+                      emit-value
+                      map-options
+                      input-debounce="0"
+                      label="Seleccione un Paciente"
+                      options-dense
+                      hide-bottom-space
+                      @input="getProcedures(form.patient)"
+                    />
+                    <q-btn
+                      round
+                      dense
+                      flat
+                      icon="info_outline"
+                      color="grey-5"
+                      @click="showPatientModal($refs)"
+                    />
+                  </q-timeline-entry>
+                  <q-timeline-entry subtitle="TAG" icon="device_hub">
+                    <kSelectFilter
+                      ref="_procedureSelect"
+                      v-model="form.medicalProcedure"
+                      :options="medicalProcedures"
+                      :loading="loading"
+                      filled
+                      dense
+                      outlined
+                      self-filter
+                      clearable
+                      use-input
+                      fill-input
+                      hide-selected
+                      emit-value
+                      map-options
+                      input-debounce="0"
+                      label="Seleccione o agregue un tag"
+                      options-dense
+                      hide-bottom-space
+                      @input="getListOfImages(form.medicalProcedure)"
+                    />
+                    <template v-if="form.patient">
+                      <q-btn
+                        round
+                        dense
+                        flat
+                        icon="add"
+                        color="grey-5"
+                        @click="CreateProcedureModal($refs)"
+                      />
+                    </template>
+                    <q-btn
+                      round
+                      dense
+                      flat
+                      icon="info_outline"
+                      color="grey-5"
+                      @click="showProcedureModal($refs)"
+                    />
+                  </q-timeline-entry>
+                </q-timeline>
+              </q-item-section>
+            </q-item>
+            <q-separator spaced />
+            <q-item>
+              <q-uploader
+                class="width: 100%"
+                label="Cargar Imagen"
+                dense
+                flat
+                :readonly="checkIfExistProcedure"
+                auto-upload
+                :url="_medicalProcedureId"
+                accept=".jpg, image/*"
+                color="primary"
+                @failed="showerror"
+                @uploaded="uloadedFinished"
+              />
+            </q-item>
+          </q-list>
         </div>
         <div class="col-9 col-xs-grow row_class rounded-borders">
           <q-layout container style="height: 700px">

@@ -1,21 +1,6 @@
 <template>
-  <q-page padding>
+  <!--<q-page padding>
     <div >
-      <!--<q-card inline>
-        <q-card-section>
-          <q-icon slot="right" size="42px" name="sentiment_dissatisfied" />
-        </q-card-section>
-        <q-card>
-          <div
-            class="q-mb-md"
-            :class="[`q-display-1`, `q-display-1-opacity`]"
-          >{{ $t('page_not_found') }}</div>
-        </q-card>
-        <q-card-separator />
-        <q-card-actions>
-          <q-btn flat color="secondary" :to="{ name: 'home' }" label="Ir al inicio" />
-        </q-card-actions>
-      </q-card>-->
       <q-banner class="bg-grey-3">
         <template v-slot:avatar>
           <q-icon name="sentiment_very_dissatisfied" color="primary" />
@@ -26,7 +11,15 @@
         </template>
       </q-banner>
     </div>
-  </q-page>
+  </q-page>-->
+  <div class="fixed-center text-center">
+    <p>
+      <q-icon name="sentiment_very_dissatisfied"  style="color: #ccc;font-size: 8em;" />
+    </p>
+    <p class="text-faded">{{ $t('page_not_found') }}<strong>(404)</strong></p>
+    <q-btn flat color="primary" :to="{ name: 'home' }" label="Regresar" style="width:200px;" />
+  
+  </div>
 </template>
 
 <script>

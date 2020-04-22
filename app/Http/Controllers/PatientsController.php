@@ -42,12 +42,29 @@ class PatientsController extends Controller
         return DB::table('users')
         ->where('profile_id','=',  3) 
         ->whereNull('deleted_at')
-        ->select('users.id as value', 'users.name as label')->get()->toArray();
+        ->select('users.id as value', DB::raw("CONCAT(users.name,' ',users.last_name) as label"),
+        DB::raw("CONCAT('CC: ',users.identification_number) as description"))->get()->toArray();
     }
     public function getGenders()
     {
         return DB::table('genders')
             ->select('genders.id as value', 'genders.description as label')->get()->toArray();
+    }
+
+    public function getPatientsAndDoctors()
+    {   
+
+        $data = DB::table('patients')
+        ->whereNull('patients.deleted_at')
+        ->select('patients.id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label")
+        )      
+        ->orderBy('patients.id','desc')        
+        ->get();
+
+       return response()
+       ->json([
+           'patients' => $data
+       ]);
     }
 
     public function getPatients()

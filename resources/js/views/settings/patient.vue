@@ -10,7 +10,6 @@
         :filter="filter"
         :pagination.sync="pagination"
         dense
-        :grid="$q.screen.xs"
         :visible-columns="visibleColumns"
       >
         <template v-slot:top="props">
@@ -39,22 +38,30 @@
             <q-tooltip>Ver en pantalla completa</q-tooltip>
           </q-btn>
         </template>
-
-        <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-          <kButton
-            color="grey"
-            iconname="edit"
-            tooltiplabel="Editar"
-            @click="editPatientModal($refs, props.row)"
-          ></kButton>
-          <kButton
-            color="grey"
-            iconname="remove_red_eye"
-            tooltiplabel="Ver"
-            @click="show($refs, props.row)"
-          ></kButton>
-          <kButton color="grey" iconname="delete" tooltiplabel="Eliminar" @click="remove(props)"></kButton>
-        </q-td>
+        <template v-slot:body-cell-actions="props">
+          <q-td :props="props">
+            <div>
+              <kButton
+                color="grey"
+                iconname="edit"
+                tooltiplabel="Editar"
+                @click="editPatientModal($refs, props.row)"
+              ></kButton>
+              <kButton
+                color="grey"
+                iconname="remove_red_eye"
+                tooltiplabel="Ver"
+                @click="show($refs, props.row)"
+              ></kButton>
+              <kButton
+                color="grey"
+                iconname="delete"
+                tooltiplabel="Eliminar"
+                @click="remove(props)"
+              ></kButton>
+            </div>
+          </q-td>
+        </template>
       </q-table>
       <patientModal ref="_patient" @hide="closePatientModal"></patientModal>
     </div>

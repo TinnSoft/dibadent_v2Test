@@ -82,6 +82,15 @@ export default {
         profileId: 3,
         id: 7
       },
+      {
+        icon: "home",
+        title: "INICIO",
+        path: "/",
+        type: "alone",
+        active: true,
+        profileId: 2,
+        id: 8
+      },
     ]
   }),
   created() {},

@@ -19,7 +19,7 @@
               <input type="file" ref="avatarInput" style="display: none" @change="changeAvatar" />
 
               <div class="text-h5">{{user_name | capitalize}}</div>
-              <q-item-label caption>Bienvenido Doctor</q-item-label>
+              <q-item-label caption>Bienvenido Radiologo</q-item-label>
             </q-card-section>
           </q-card>
         </div>
@@ -32,57 +32,11 @@
                     <q-icon color="primary" name="bookmark_border" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="text-h6">{{pointsSummary.level}}</q-item-label>
-                    <q-item-label caption>Tu nivel de puntos Actual</q-item-label>
-                  </q-item-section>
-                </q-item>
-                <q-item>
-                  <q-item-section avatar>
-                    <q-icon color="primary" name="show_chart" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label class="text-h6">{{pointsSummary.acumulatedPoints}}</q-item-label>
-                    <q-item-label caption>Puntos Acumulados</q-item-label>
+                    <q-item-label class="text-h6">20</q-item-label>
+                    <q-item-label caption>Imagenes Cargadas hasta el momento</q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="col-md-grow col-xs-grow col-sm-grow row_class">
-          <q-card flat>
-            <q-card-section class="bg-grey-1 text-blue">
-              <q-list>
-                <q-item>
-                  <q-item-section avatar>
-                    <q-icon color="primary" name="insert_emoticon" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label class="text-h6">{{pointsSummary.redeemedPoints}}</q-item-label>
-                    <q-item-label caption>Puntos Redimidos ultimo año</q-item-label>
-                  </q-item-section>
-                </q-item>
-
-                <q-item>
-                  <q-item-section avatar>
-                    <q-icon color="primary" name="info_outline" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label class="text-h6">{{pointsSummary.pointsNextToBeat}}</q-item-label>
-                    <q-item-label caption>Puntos próximos a vencer</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-grow col-xs-grow col-sm-grow row_class rounded-borders">
-          <q-card flat class="bg-blue-grey-1">
-            <q-card-section>
-              <div class="text-h6 text-grey">CARGAR IMAGENES</div>
             </q-card-section>
           </q-card>
         </div>
@@ -90,105 +44,102 @@
 
       <div class="row">
         <div class="col-3 col-xs-grow row_class rounded-borders" style="min-width: 300px">
-          <q-card flat class="bg-grey-1">
-            <q-card-section class="text-blue">
-              <q-timeline color="primary">
-                <q-timeline-entry subtitle="Paciente" icon="perm_identity">
-                  <kSelectFilter
-                    v-model="form.patient"
-                    :options="patientList"
-                    :loading="loading"
-                    filled
-                    dense
-                    outlined
-                    self-filter
-                    clearable
-                    use-input
-                    fill-input
-                    hide-selected
-                    emit-value
-                    map-options
-                    input-debounce="0"
-                    label="Seleccione un Paciente"
-                    options-dense
-                    hide-bottom-space
-                    @input="getProcedures(form.patient)"
-                  />
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    icon="info_outline"
-                    color="grey-5"
-                    @click="showPatientModal($refs)"
-                  />
-                </q-timeline-entry>
-                <q-timeline-entry subtitle="Procedimiento" icon="device_hub">
-                  <kSelectFilter
-                    ref="_procedureSelect"
-                    v-model="form.medicalProcedure"
-                    :options="medicalProcedures"
-                    :loading="loading"
-                    filled
-                    dense
-                    outlined
-                    self-filter
-                    clearable
-                    use-input
-                    fill-input
-                    hide-selected
-                    emit-value
-                    map-options
-                    input-debounce="0"
-                    label="Seleccione un Procedimiento"
-                    options-dense
-                    hide-bottom-space
-                    @input="getListOfImages(form.medicalProcedure)"
-                  />
-                  <template v-if="form.patient">
+          <q-list flat class="bg-grey-1">
+            <q-item class="text-blue">
+              <q-item-section>
+                <q-timeline color="primary">
+                  <q-timeline-entry heading>CARGA DE IMAGENES</q-timeline-entry>
+                  <q-timeline-entry subtitle="Paciente" icon="perm_identity">
+                    <kSelectFilter
+                      v-model="form.patient"
+                      :options="patientList"
+                      :loading="loading"
+                      filled
+                      dense
+                      outlined
+                      self-filter
+                      clearable
+                      use-input
+                      fill-input
+                      hide-selected
+                      emit-value
+                      map-options
+                      input-debounce="0"
+                      label="Seleccione un Paciente"
+                      options-dense
+                      hide-bottom-space
+                      @input="getProcedures()"
+                    />
                     <q-btn
                       round
                       dense
                       flat
-                      icon="add"
+                      icon="info_outline"
                       color="grey-5"
-                      @click="CreateProcedureModal($refs)"
+                      @click="showPatientModal($refs)"
                     />
-                  </template>
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    icon="info_outline"
-                    color="grey-5"
-                    @click="showProcedureModal($refs)"
-                  />
-                </q-timeline-entry>
-
-                <q-timeline-entry subtitle="Comentarios" icon="insert_comment">
-                  <div>
-                    <q-input v-model="comments" filled autogrow type="text" />
-                  </div>
-                </q-timeline-entry>
-
-                <q-timeline-entry subtitle="Imagenes" icon="photo">
-                  <q-uploader
-                    label="Cargar Imagen"
-                    dense
-                    flat
-                    :readonly="checkIfExistProcedure"
-                    auto-upload
-                    :url="_medicalProcedureId"
-                    accept=".jpg, image/*"
-                    color="primary"
-                    style="max-width: 270px"
-                    @failed="showerror"
-                    @uploaded="uloadedFinished"
-                  />
-                </q-timeline-entry>
-              </q-timeline>
-            </q-card-section>
-          </q-card>
+                  </q-timeline-entry>
+                  <q-timeline-entry subtitle="TAG" icon="device_hub">
+                    <kSelectFilter
+                      ref="_procedureSelect"
+                      v-model="form.medicalProcedure"
+                      :options="medicalProcedures"
+                      :loading="loading"
+                      filled
+                      dense
+                      outlined
+                      self-filter
+                      clearable
+                      use-input
+                      fill-input
+                      hide-selected
+                      emit-value
+                      map-options
+                      input-debounce="0"
+                      label="Seleccione o agregue un tag"
+                      options-dense
+                      hide-bottom-space
+                      @input="getListOfImages(form.medicalProcedure)"
+                    />
+                    <template v-if="form.patient">
+                      <q-btn
+                        round
+                        dense
+                        flat
+                        icon="add"
+                        color="grey-5"
+                        @click="CreateProcedureModal($refs)"
+                      />
+                    </template>
+                    <q-btn
+                      round
+                      dense
+                      flat
+                      icon="info_outline"
+                      color="grey-5"
+                      @click="showProcedureModal($refs)"
+                    />
+                  </q-timeline-entry>
+                </q-timeline>
+              </q-item-section>
+            </q-item>
+            <q-separator spaced />
+            <q-item>
+              <q-uploader
+                class="width: 100%"
+                label="Cargar Imagen"
+                dense
+                flat
+                :readonly="checkIfExistProcedure"
+                auto-upload
+                :url="_medicalProcedureId"
+                accept=".jpg, image/*"
+                color="primary"
+                @failed="showerror"
+                @uploaded="uloadedFinished"
+              />
+            </q-item>
+          </q-list>
         </div>
         <div class="col-9 col-xs-grow row_class rounded-borders">
           <q-layout container style="height: 700px">
@@ -264,7 +215,7 @@ export default {
       medicalProcedures: [],
       comments: "",
       listOfImages: [],
-      pathDashboardData: "getDoctorDashboardData",
+      pathPatientList: "getPatientsAndDoctors",
       urlToUploadImages: "/api/uploadFile/",
       urlToUploadAvatar: "/api/uploadAvatar/",
       medicalProcedureId: null,
@@ -272,7 +223,7 @@ export default {
     };
   },
   created() {
-    this.fetchData(this.pathDashboardData);
+    this.fetchData(this.pathPatientList);
     this.avatarUrl = this.$store.getters["auth/user"].avatar;
   },
   computed: {
@@ -308,7 +259,7 @@ export default {
       this.fetchData(this.pathDashboardData);
     },
     closeProcedureModal() {
-      this.getProcedures(this.form.patient);
+      this.getProcedures();
     },
     showProcedureModal(refs) {
       if (this.form.medicalProcedure) {
@@ -329,7 +280,7 @@ export default {
     showerror(err) {
       console.log(err);
     },
-    getProcedures(val) {
+    getProcedures() {
       let vm = this;
       vm.medicalProcedureId = null;
       vm.$set(vm, "medicalProcedures", []);
@@ -337,9 +288,7 @@ export default {
       vm.$refs._procedureSelect.options = [];
       vm.$refs._procedureSelect.model = null;
 
-      if (val) {
-        vm.fetchData("getProceduresByPatientAndDoctor/" + val);
-      }
+      vm.fetchData("getPatientlist");
     },
     getListOfImages(val) {
       let vm = this;
@@ -356,19 +305,17 @@ export default {
         .get(`/api/${path}`)
         .then(function(response) {
           console.log(response.data);
-          if (response.data.pointsSummary) {
-            vm.$set(vm, "pointsSummary", response.data.pointsSummary);
+          if (response.data.patients) {
+            vm.$set(vm, "patientList", response.data.patients);
           }
-          if (response.data.procedures) {
+          /* if (response.data.procedures) {
             vm.$set(vm, "medicalProcedures", response.data.procedures);
           }
 
-          if (response.data.patientList) {
-            vm.$set(vm, "patientList", response.data.patientList);
-          }
+         
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
-          }
+          }*/
 
           vm.loading = false;
         })
