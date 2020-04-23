@@ -53,10 +53,11 @@ class PatientsController extends Controller
 
     public function getPatientsAndDoctors()
     {   
-
-        $data = DB::table('patients')
-        ->whereNull('patients.deleted_at')
-        ->select('patients.id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label")
+        $data = patients::whereNull('patients.deleted_at')
+        ->Join('users', 'patients.doctor_id', '=', 'users.id')
+        ->Join('profiles', 'users.profile_id', '=', 'profiles.id')
+        ->select('patients.id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),
+        DB::raw("CONCAT(users.name,' ',users.last_name) as doctor_name"),'patients.doctor_id'
         )      
         ->orderBy('patients.id','desc')        
         ->get();

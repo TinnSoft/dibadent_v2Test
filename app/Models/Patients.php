@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,6 +41,8 @@ class Patients extends Model
     {
         return $this->belongsTo(Users::class,'doctor_id')->withDefault()->select(array('id','name','id as value','name as label'));
     }
+
+   
 
     public static function initialize()
     {

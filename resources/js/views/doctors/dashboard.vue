@@ -80,98 +80,6 @@
 
       <div class="row">
         <div class="col-3 col-xs-grow row_class rounded-borders" style="min-width: 300px">
-          <!--<q-card flat class="bg-grey-1">
-            <q-card-section class="text-blue">
-              <q-timeline color="primary">
-                <q-timeline-entry subtitle="Paciente" icon="perm_identity">
-                  <kSelectFilter
-                    v-model="form.patient"
-                    :options="patientList"
-                    :loading="loading"
-                    filled
-                    dense
-                    outlined
-                    self-filter
-                    clearable
-                    use-input
-                    fill-input
-                    hide-selected
-                    emit-value
-                    map-options
-                    input-debounce="0"
-                    label="Seleccione un Paciente"
-                    options-dense
-                    hide-bottom-space
-                    @input="getProcedures(form.patient)"
-                  />
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    icon="info_outline"
-                    color="grey-5"
-                    @click="showPatientModal($refs)"
-                  />
-                </q-timeline-entry>
-                <q-timeline-entry subtitle="Catalogo" icon="device_hub">
-                  <kSelectFilter
-                    ref="_procedureSelect"
-                    v-model="form.medicalProcedure"
-                    :options="medicalProcedures"
-                    :loading="loading"
-                    filled
-                    dense
-                    outlined
-                    self-filter
-                    clearable
-                    use-input
-                    fill-input
-                    hide-selected
-                    emit-value
-                    map-options
-                    input-debounce="0"
-                    label="Seleccione un Catalogo"
-                    options-dense
-                    hide-bottom-space
-                    @input="getListOfImages(form.medicalProcedure)"
-                  />
-                  <template v-if="form.patient">
-                    <q-btn
-                      round
-                      dense
-                      flat
-                      icon="add"
-                      color="grey-5"
-                      @click="CreateProcedureModal($refs)"
-                    />
-                  </template>
-                  <q-btn
-                    round
-                    dense
-                    flat
-                    icon="info_outline"
-                    color="grey-5"
-                    @click="showProcedureModal($refs)"
-                  />
-                </q-timeline-entry>
-                <q-timeline-entry subtitle="Imagenes" icon="photo">
-                  <q-uploader
-                    label="Cargar Imagen"
-                    dense
-                    flat
-                    :readonly="checkIfExistProcedure"
-                    auto-upload
-                    :url="_medicalProcedureId"
-                    accept=".jpg, image/*"
-                    color="primary"
-                    style="max-width: 270px"
-                    @failed="showerror"
-                    @uploaded="uloadedFinished"
-                  />
-                </q-timeline-entry>
-              </q-timeline>
-            </q-card-section>
-          </q-card>-->
           <q-list flat class="bg-grey-1">
             <q-item class="text-blue">
               <q-item-section>
@@ -263,7 +171,8 @@
                 :url="_medicalProcedureId"
                 accept=".jpg, image/*"
                 color="primary"
-                @failed="showerror"
+                multiple
+                batch
                 @uploaded="uloadedFinished"
               />
             </q-item>
@@ -278,7 +187,7 @@
                     v-for="(image, i) in listOfImages"
                     :key="i"
                     :src="image.file_name"
-                    style="width: 180px"
+                    style="width: 150px"
                     ratio="1"
                     spinner-color="white"
                     class="rounded-borders"
@@ -291,7 +200,7 @@
                         @click="showImageModal($refs, image)"
                         icon="zoom_in"
                       ></q-btn>
-                      <q-btn flat round color="white" icon="delete" @click="deleteImage(image)"></q-btn>
+                      <q-btn flat round color="white" icon="delete" @click="deleteImage(image,i)"></q-btn>
                     </div>
                     <template v-slot:error>
                       <div
@@ -300,6 +209,9 @@
                     </template>
                   </q-img>
                 </div>
+                <q-inner-loading :showing="loading">
+                  <q-spinner-gears size="50px" color="primary" />
+                </q-inner-loading>
               </q-page>
               <q-page-scroller position="bottom">
                 <q-btn fab icon="keyboard_arrow_up" color="red" />
@@ -326,8 +238,7 @@ export default {
   middleware: "auth",
   components: { patientModal, procedureModal, showImageModal },
   data() {
-    return {
-      middleware: "auth",
+    return {      
       form: {},
       pointsSummary: {
         level: "",
@@ -337,7 +248,6 @@ export default {
       },
       patientList: [],
       medicalProcedures: [],
-      comments: "",
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
       urlToUploadImages: "/api/uploadFile/",
@@ -404,9 +314,6 @@ export default {
     openModal(modal, processType, itemId) {
       modal.open(processType, itemId);
     },
-    showerror(err) {
-      console.log(err);
-    },
     getProcedures(val) {
       let vm = this;
       vm.medicalProcedureId = null;
@@ -433,7 +340,6 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
-          console.log(response.data);
           if (response.data.pointsSummary) {
             vm.$set(vm, "pointsSummary", response.data.pointsSummary);
           }
@@ -470,8 +376,6 @@ export default {
         });
     },
     showInputFile(e) {
-      // this.$refs[`myRow${index}`]
-      console.log(this.$refs);
       this.$refs[`imageInput${e.target.dataset.index}`].click();
     },
     changeImage(e) {
@@ -484,10 +388,9 @@ export default {
           this.getListOfImages(this.medicalProcedureId);
         })
         .catch(error => {
-          console.log(error);
         });
     },
-    deleteImage(value) {
+    deleteImage(value, index) {
       let vm = this;
       vm.$q
         .dialog({
@@ -498,11 +401,11 @@ export default {
           color: "secondary"
         })
         .onOk(() => {
-          vm.submitDeleteImage(value.id);
+          vm.submitDeleteImage(value.id, index);
         })
         .onCancel(() => {});
     },
-    submitDeleteImage(id) {
+    submitDeleteImage(id, index) {
       let vm = this;
       vm.loading = true;
       axios
@@ -510,11 +413,12 @@ export default {
         .then(function(response) {
           if (response.data.deleted) {
             kNotify(vm, "Imagen eliminada..", "positive");
-            vm.getListOfImages(vm.medicalProcedureId);
+            vm.listOfImages.splice(index, 1);
             vm.loading = false;
           }
         })
         .catch(function(error) {
+          vm.getListOfImages(vm.medicalProcedureId);
           vm.loading = false;
           kNotify(
             vm,

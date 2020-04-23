@@ -13,6 +13,7 @@ use App\Models\AcumulatedPointsLevels;
 use App\Models\Patients;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
 use DB;
 use Illuminate\Http\File;
 use App\Events\RecordActivity;
@@ -167,11 +168,20 @@ class ImagesController extends Controller
     // Actualiza la radiografía
     public function update(Request $request, $id)
     {
-        
-        $image = Images::find($id);
 
+        //$data = $request->all();
+        $data = $request->except(['file_name']);
+
+        $item = Images::findOrFail($id);
+        $item->update($data);
+
+        return response()
+        ->json([
+           'saved' => true
+        ]);  
+        
         //verifica si el directorio está creado
-        Storage::makeDirectory($this->rootFolderMain);
+       /* Storage::makeDirectory($this->rootFolderMain);
         if ($request->hasFile('image') && $image)              
         {
             $newFileName = Storage::putFile($this->rootFolderMain, $request->file('image'));
@@ -184,11 +194,8 @@ class ImagesController extends Controller
                 'image' => asset('storage/' . $newFileName),
              ]);            
         }
-            
-        return response()
-            ->json([
-                'saved' => false
-            ],422) ;
+            */
+        
     }
 
     public function destroy($id)

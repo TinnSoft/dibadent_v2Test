@@ -70,7 +70,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource('procedures', 'ProceduresController');
     Route::get('getProceduresValues','ProceduresController@edit');    
     Route::get('getProcedureslist','ProceduresController@getProcedures');
-    Route::get('getProceduresByPatientAndDoctor/{patient_id}','ProceduresController@getProceduresByPatientAndDoctor');
+    Route::get('getProceduresByPatientAndDoctor/{patient_id}/{doctor_id?}','ProceduresController@getProceduresByPatientAndDoctor');
 
     Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');

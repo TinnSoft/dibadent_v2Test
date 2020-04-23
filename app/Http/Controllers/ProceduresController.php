@@ -12,14 +12,18 @@ use App\Events\RecordActivity;
 class ProceduresController extends Controller
 {
     
-    public function getProceduresByPatientAndDoctor($PatientId)
+    public function getProceduresByPatientAndDoctor($PatientId, $DoctorId=null)
     {
-       $data= Procedures::where('doctor_id', Auth::user()->id)
+        if(blank($DoctorId)) {
+            $DoctorId=Auth::user()->id;
+        }        
+        
+        $data= Procedures::where('doctor_id',  (int)$DoctorId)
                         ->where('patient_id',$PatientId)->select('id','description','id as value','description as label')->get();      
 
         return response()
             ->json([
-               'procedures' => $data,          
+               'procedures' => $data  
             ]);
                      
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-sm">
-      <q-dialog v-model="showImageByDoctor">
+      <q-dialog v-model="showImageByDoctor" persistent @hide="handleHide">
         <q-card style="width: 800px; max-width: 90vw;">
           <q-bar class="bg-blue text-white">
             <q-icon name="mail"></q-icon>
@@ -25,11 +25,14 @@
           </q-card-section>
           <q-card-section>
             <q-input
-              v-model="comments"
+              clearable
+              v-model="imageAttributes.other_details"
               filled
-              type="textarea"
+              autogrow
               label="Comentarios"
-              :readonly="isReadOnly"
+              counter
+              :rules="[ val => val.length <= 255 || 'Porfavor use máximo 255 carácteres']"
+              lazy-rules
             />
           </q-card-section>
         </q-card>
@@ -42,21 +45,24 @@
 export default {
   data() {
     return {
-      isReadOnly: true,
       showImageByDoctor: false,
       toolbarLabel: "IMAGEN",
-      comments: null,
+      imageAttributes: [],
       imageSource: null
     };
   },
-  components: {},
+  components: {
+   
+  },
   methods: {
     open(imageAttributes) {
       let vm = this;
       vm.imageSource = imageAttributes.file_name;
-      vm.comments = imageAttributes.other_details;
-      console.log(imageAttributes)
+      vm.imageAttributes=imageAttributes;
       vm.showImageByDoctor = true;
+    },
+     handleHide(newVal) {
+      this.$emit("hide", this.imageAttributes);
     }
   }
 };

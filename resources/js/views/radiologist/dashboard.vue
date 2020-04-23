@@ -68,7 +68,7 @@
                       label="Seleccione un Paciente"
                       options-dense
                       hide-bottom-space
-                      @input="getProcedures()"
+                      @input="getProcedures(form.patient)"
                     />
                     <q-btn
                       round
@@ -78,6 +78,14 @@
                       color="grey-5"
                       @click="showPatientModal($refs)"
                     />
+                  </q-timeline-entry>
+                  <q-timeline-entry
+                    subtitle="Doctor"
+                    icon="perm_identity"
+                    v-if="doctor_name"
+                    color="grey"
+                  >
+                    <q-input v-model="doctor_name" stack-label dense readonly></q-input>
                   </q-timeline-entry>
                   <q-timeline-entry subtitle="TAG" icon="device_hub">
                     <kSelectFilter
@@ -135,8 +143,9 @@
                 :url="_medicalProcedureId"
                 accept=".jpg, image/*"
                 color="primary"
-                @failed="showerror"
                 @uploaded="uloadedFinished"
+                multiple
+                batch
               />
             </q-item>
           </q-list>
@@ -150,36 +159,27 @@
                     v-for="(image, i) in listOfImages"
                     :key="i"
                     :src="image.file_name"
-                    style="width: 180px"
+                    style="width: 150px"
                     ratio="1"
                     spinner-color="white"
                     class="rounded-borders"
+                    transition="slide-right"
                   >
                     <div class="absolute-bottom text-center text-body2">
-                      <q-btn flat round color="white" icon="zoom_in"></q-btn>
-                      <q-btn flat round color="white" icon="more_vert">
-                        <q-menu fit transition-show="scale" transition-hide="scale">
-                          <q-list style="min-width: 100px">
-                            <q-item clickable @click="showInputFile">
-                              <q-item-section :data-index="i">Editar</q-item-section>
-                              <input
-                                type="file"
-                                ref="imageInput"
-                                :data-image="image.id"
-                                style="display: none"
-                                @change="changeImage"
-                              />
-                            </q-item>
-                            <q-separator />
-                            <q-item clickable>
-                              <q-item-section>Eliminar</q-item-section>
-                            </q-item>
-                          </q-list>
-                        </q-menu>
-                      </q-btn>
+                      <q-btn
+                        flat
+                        round
+                        color="white"
+                        icon="zoom_in"
+                        @click="showImageModal($refs, image)"
+                      ></q-btn>
+                      <q-btn flat round color="white" icon="delete" @click="deleteImage(image)"></q-btn>
                     </div>
                   </q-img>
                 </div>
+                <q-inner-loading :showing="loading">
+                  <q-spinner-gears size="50px" color="primary" />
+                </q-inner-loading>
               </q-page>
               <q-page-scroller position="bottom">
                 <q-btn fab icon="keyboard_arrow_up" color="red" />
@@ -188,6 +188,7 @@
           </q-layout>
           <patientModal ref="_patient"></patientModal>
           <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
+          <showImageModal ref="_showImage" @hide="closeImageModal"></showImageModal>
         </div>
       </div>
     </div>
@@ -198,26 +199,23 @@
 import store from "../../store";
 import patientModal from "../settings/modals/mPatient.vue";
 import procedureModal from "./modals/mProcedure.vue";
+import showImageModal from "./modals/mShowImage.vue";
+import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
-  components: { patientModal, procedureModal },
+  components: { patientModal, procedureModal, showImageModal },
   data() {
     return {
       form: {},
-      pointsSummary: {
-        level: "",
-        acumulatedPoints: "",
-        redeemedPoints: "",
-        pointsNextToBeat: ""
-      },
+      doctor_name: null,
       patientList: [],
       medicalProcedures: [],
-      comments: "",
       listOfImages: [],
       pathPatientList: "getPatientsAndDoctors",
       urlToUploadImages: "/api/uploadFile/",
       urlToUploadAvatar: "/api/uploadAvatar/",
+      model: "images",
       medicalProcedureId: null,
       avatarUrl: null
     };
@@ -228,7 +226,6 @@ export default {
   },
   computed: {
     _medicalProcedureId() {
-      console.log(this.urlToUploadImages + this.medicalProcedureId);
       return this.urlToUploadImages + this.medicalProcedureId;
     },
     checkIfExistProcedure() {
@@ -261,6 +258,18 @@ export default {
     closeProcedureModal() {
       this.getProcedures();
     },
+    closeImageModal(val) {
+      var vm = this;
+      vm.loading = true;
+      axios
+        .put(`/api/${vm.model}/${val.id}`, val)
+        .then(function(response) {
+          vm.loading = false;
+        })
+        .catch(function(error) {
+          vm.loading = false;
+        });
+    },
     showProcedureModal(refs) {
       if (this.form.medicalProcedure) {
         this.openModal(refs._procedure, "view", this.form.medicalProcedure);
@@ -274,21 +283,34 @@ export default {
         this.openModal(refs._patient, "view", this.form.patient);
       }
     },
+    showImageModal(refs, attributes) {
+      refs._showImage.open(attributes);
+    },
     openModal(modal, processType, itemId) {
       modal.open(processType, itemId);
     },
-    showerror(err) {
-      console.log(err);
-    },
-    getProcedures() {
+    getProcedures(val) {
       let vm = this;
-      vm.medicalProcedureId = null;
+
+      const _patient = vm.patientList.find(data => data.value === val);
+      if (_patient) {
+        vm.doctor_name = _patient.doctor_name;
+        console.log(
+          "getProceduresByPatientAndDoctor/" + val + "/" + _patient.doctor_id
+        );
+        vm.fetchData(
+          "getProceduresByPatientAndDoctor/" + val + "/" + _patient.doctor_id
+        );
+      } else {
+        vm.doctor_name = null;
+      }
+
+      //console.log(vm.doctor_name);
+      /*vm.medicalProcedureId = null;
       vm.$set(vm, "medicalProcedures", []);
       vm.$set(vm.form, "medicalProcedure", null);
       vm.$refs._procedureSelect.options = [];
-      vm.$refs._procedureSelect.model = null;
-
-      vm.fetchData("getPatientlist");
+      vm.$refs._procedureSelect.model = null;*/
     },
     getListOfImages(val) {
       let vm = this;
@@ -304,18 +326,16 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
-          console.log(response.data);
           if (response.data.patients) {
             vm.$set(vm, "patientList", response.data.patients);
           }
-          /* if (response.data.procedures) {
+          if (response.data.procedures) {
             vm.$set(vm, "medicalProcedures", response.data.procedures);
           }
 
-         
           if (response.data.images) {
             vm.$set(vm, "listOfImages", response.data.images);
-          }*/
+          }
 
           vm.loading = false;
         })
@@ -354,6 +374,43 @@ export default {
         })
         .catch(error => {
           console.log(error);
+        });
+    },
+    deleteImage(value, index) {
+      let vm = this;
+      vm.$q
+        .dialog({
+          title: "Tenga Cuidado!",
+          message: "Estás seguro de eliminar la imagen seleccionada?",
+          ok: "SI, Eliminar!",
+          cancel: "NO, Cancelar",
+          color: "secondary"
+        })
+        .onOk(() => {
+          vm.submitDeleteImage(value.id, index);
+        })
+        .onCancel(() => {});
+    },
+    submitDeleteImage(id, index) {
+      let vm = this;
+      vm.loading = true;
+      axios
+        .delete(`api/images/${id}`)
+        .then(function(response) {
+          if (response.data.deleted) {
+            kNotify(vm, "Imagen eliminada..", "positive");
+            vm.listOfImages.splice(index, 1);
+            vm.loading = false;
+          }
+        })
+        .catch(function(error) {
+          vm.getListOfImages(vm.medicalProcedureId);
+          vm.loading = false;
+          kNotify(
+            vm,
+            "No fue posible eliminar la imagen, intente de nuevo",
+            "negative"
+          );
         });
     }
   }
