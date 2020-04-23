@@ -23,7 +23,7 @@ class TrackerController extends Controller
             {
                 $profile='ADMIN';
             }
-            else {
+            else if ($profile='ADMIN') {
                 $profile='DOCTOR';
             }
 
@@ -40,7 +40,7 @@ class TrackerController extends Controller
             ->select('tracker.id','tracker.detail','users.id as user_id','tracker.created_at')              
             ->get();  
             
-            if (collect($activeNotifications)->isEmpty())
+            if (collect($activeNotifications)->isEmpty() || $profile='RADIOLOGO')
             {
                 $activeNotifications = null;
             }
