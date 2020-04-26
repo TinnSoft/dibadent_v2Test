@@ -1,15 +1,16 @@
 const path = require("path");
 const fs = require("fs-extra");
 const mix = require("laravel-mix");
-require("laravel-mix-versionhash");
+
 
 mix
-  .js("resources/js/app.js", "public/dist/js")
-  .sass("resources/sass/app.scss", "public/dist/css")
+    .js("resources/js/app.js", "public/dist/js")
+    .sass("resources/sass/app.scss", "public/dist/css")
     //.sourceMaps()
     .disableNotifications();
 
 if (mix.inProduction()) {
+  require("laravel-mix-versionhash");
     mix.versionHash();
 } else {
     mix.sourceMaps();
