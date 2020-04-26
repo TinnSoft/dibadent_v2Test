@@ -1,86 +1,67 @@
-const Default = () => import("~/layouts/default").then(m => m.default || m);
-const Home = () => import("~/views/home").then(m => m.default || m);
-const Login = () => import("~/views/auth/login").then(m => m.default || m);
-const PasswordEmail = () =>
-    import("~/views/auth/password/email").then(m => m.default || m);
-//const PasswordReset = () => import('~/views/auth/password/reset').then(m => m.default || m)
-const NotFound = () => import("~/views/errors/404").then(m => m.default || m);
-
-const SettingsIndex = () =>
-    import("~/views/settings/index").then(m => m.default || m);
-const SettingsProfile = () =>
-    import("~/views/settings/profile").then(m => m.default || m);
-const SettingsCompany = () =>
-    import("~/views/settings/company").then(m => m.default || m);
-const SettingsDoctor = () =>
-    import("~/views/settings/doctor").then(m => m.default || m);
-const SettingsRadiologist = () =>
-    import("~/views/settings/radiologist").then(m => m.default || m);
-const SettingsPatient = () =>
-    import("~/views/settings/patient").then(m => m.default || m);
-const SettingsProduct = () =>
-    import("~/views/settings/product").then(m => m.default || m);
-
-const PointsIndex = () =>
-    import("~/views/points/index").then(m => m.default || m);
-
-const chatPage = () =>
-    import("~/views/admin/chat").then(m => m.default || m);
-
-const chatDoctor = () =>
-    import("~/views/doctors/chat").then(m => m.default || m);
-
-const PointsRedepmtionDoctor = () =>
-    import("~/views/doctors/points_redemption").then(m => m.default || m);
+function page(path) {
+    return () => import(`~/views/${path}`).then(m => m.default || m);
+}
 
 export default [
-    { path: "/", name: "home", component: Home },
-    { path: "/login", name: "login", component: Login },
-    { path: "/points", name: "points", component: PointsIndex },
-    { path: "/chat", name: "chat", component: chatPage },
-    { path: "/chat_doctor", name: "chat_doctor", component: chatDoctor },
-    { path: "/points-redemption", name: "points-redemption", component: PointsRedepmtionDoctor },
+    { path: "/", name: "home", component: page("home.vue") },
+    { path: "/login", name: "login", component: page("auth/login.vue") },
+    {
+        path: "/points",
+        name: "pointdoctors",
+        component: page("points/index.vue")
+    },
+    { path: "/chat", name: "chat", component: page("admin/chat.vue") },
+    {
+        path: "/chat_doctor",
+        name: "chat_doctor",
+        component: page("doctors/chat.vue")
+    },
+    {
+        path: "/points-redemption",
+        name: "points-redemption",
+        component: page("doctors/points_redemption.vue")
+    },
     {
         path: "/password/reset",
         name: "password.request",
-        component: PasswordEmail
+        component: page("auth/password/email.vue")
     },
     {
         path: "/settings",
-        component: SettingsIndex,
+        component: page("settings/index.vue"),
         children: [
             { path: "", redirect: { name: "settings.company" } },
             {
                 path: "profile",
                 name: "settings.profile",
-                component: SettingsProfile
+                component: page("settings/profile.vue")
             },
             {
                 path: "doctor",
                 name: "settings.doctor",
-                component: SettingsDoctor
+                component: page("settings/doctor.vue")
             },
             {
                 path: "radiologist",
                 name: "settings.radiologist",
-                component: SettingsRadiologist
+                component: page("settings/radiologist.vue")
             },
             {
                 path: "patient",
                 name: "settings.patient",
-                component: SettingsPatient
+                component: page("settings/patient.vue")
             },
             {
                 path: "company",
                 name: "settings.company",
-                component: SettingsCompany
+                component: page("settings/company.vue")
             },
             {
                 path: "product",
                 name: "settings.product",
-                component: SettingsProduct
+                component: page("settings/product.vue")
             }
         ]
     },
-    { path: "*", component: NotFound }
+    { path: "*", component: page("errors/404.vue") }
 ];

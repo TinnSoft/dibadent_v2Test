@@ -19,9 +19,9 @@
     "lodash": "^4.17.13",
     "moment": "^2.24.0",
     "popper.js": "^1.16.1",
-    "quasar": "^1.9.15",
+    "quasar": "^1.9.16",
     "resolve-url-loader": "^3.1.1",
-    "sass": "^1.26.3",
+    "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
@@ -32,7 +32,7 @@
     "vue-router": "^3.1.6",
     "vue-style-loader": "4.1.2",
     "vue-template-compiler": "^2.6.11",
-    "vuex": "^3.2.0",
+    "vuex": "^3.3.0",
     "vuex-router-sync": "^5.0.0"
   },
   "dependencies": {
@@ -49,6 +49,7 @@
     "graphql": "^14.6.0",
     "js-cookie": "^2.2.1",
     "laravel-mix-versionhash": "^1.1.2",
+    "sweetalert2": "^9.10.12",
     "vform": "^1.0.1",
     "vuelidate": "^0.7.5",
     "webpack-bundle-analyzer": "^3.7.0"

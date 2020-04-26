@@ -4,35 +4,51 @@
       <q-toolbar-title class="text-weight-bold text-blue">CONFIGURACIÓN DE PUNTOS</q-toolbar-title>
     </q-toolbar>
     <div class="q-gutter-y-md column" style="max-width: 700px">
-      <q-splitter v-model="splitterModel" style="height: 700px">
-        <template v-slot:before>
-          <q-tabs v-model="defaultTab" vertical>
-            <q-tab name="levels" icon="thumb_up" label="Niveles" />
-            <q-tab name="promo" icon="local_offer" label="Promos" />
-          </q-tabs>
-        </template>
 
-        <template v-slot:after>
-          <q-tab-panels v-model="defaultTab" animated transition-prev="jump-up" transition-next="jump-up">
-            <q-tab-panel name="levels">
-              <kLevels></kLevels>
-            </q-tab-panel>
+      <q-card flat>
+        <q-tabs
+          v-model="defaultTab"
+          active-color="primary"
+          indicator-color="primary"
+          class="text-grey"
+          dense
+          align="justify"
+          narrow-indicator
+        >
+          <q-tab name="levels" icon="thumb_up" label="Niveles" />
+          <q-tab name="promo" icon="update" label="CARGAR" />
+        </q-tabs>
 
-            <q-tab-panel name="promo"></q-tab-panel>
-          </q-tab-panels>
-        </template>
-      </q-splitter>
+        <q-separator />
+
+        <q-tab-panels
+          v-model="defaultTab"
+          animated
+          transition-prev="jump-up"
+          transition-next="jump-up"
+        >
+          <q-tab-panel name="levels">
+            <kLevels></kLevels>
+          </q-tab-panel>
+
+          <q-tab-panel name="promo">
+            <kLoad></kLoad>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card>
     </div>
   </q-page>
 </template>
 
 <script>
 import kLevels from "./levels.vue";
+import kLoad from "./load.vue";
 
 export default {
   middleware: "auth",
   components: {
-    kLevels
+    kLevels,
+    kLoad
   },
   data() {
     return {
@@ -40,11 +56,8 @@ export default {
       splitterModel: 20
     };
   },
-  created() {
-  },
-  methods: {
-  
-  }
+  created() {},
+  methods: {}
 };
 </script>
 <style lang="sass">

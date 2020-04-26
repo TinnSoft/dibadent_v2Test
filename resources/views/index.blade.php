@@ -30,13 +30,7 @@ $config = [
   <script>window.config = @json($config); </script>
 
   {{-- Load the application scripts --}}
-  @if (app()->isLocal())
-    <script src="{{ mix('dist/js/app.js') }}"></script>
-  @else
-     {{--<script src="{{ mix('dist/js/manifest.js') }}"></script> --}}
-    {{-- <script src="{{ mix('dist/js/vendor.js') }}"></script> --}}
-    <script src="{{ mix('dist/js/app.js') }}"></script>
-  @endif
+ <script src="{{ mix('dist/js/app.js') }}"></script>
 
 
 </body>

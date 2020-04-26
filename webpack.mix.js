@@ -1,69 +1,66 @@
-const path = require('path')
-const fs = require('fs-extra')
-const mix = require('laravel-mix')
-//require('laravel-mix-versionhash')
-
+const path = require("path");
+const fs = require("fs-extra");
+const mix = require("laravel-mix");
+require("laravel-mix-versionhash");
 
 mix
-  .js('resources/js/app.js', 'public/dist/js')
-  .sass('resources/sass/app.scss', 'public/dist/css')
-  .sourceMaps()
-  .disableNotifications()
+  .js("resources/js/app.js", "public/dist/js")
+  .sass("resources/sass/app.scss", "public/dist/css")
+    //.sourceMaps()
+    .disableNotifications();
 
 if (mix.inProduction()) {
-
-  mix
-  .versionHash()
-
-  extract([
-    'vue',
-    'axios',
-    'vform',
-    'vuex',
-    'jquery',
-    'vue-i18n',
-    'vue-meta',
-    'bootstrap',
-    'vue-router',
-    'vuex-router-sync',
-    'Quasar'
-  ])
-}else {
-  mix.sourceMaps()
+    mix.versionHash();
+} else {
+    mix.sourceMaps();
 }
 
 mix.webpackConfig({
-  plugins: [
-
-  ],
-  resolve: {
-    extensions: ['.js', '.json', '.vue'],
-    alias: {
-      '~': path.join(__dirname, './resources/js'),
-      'Quasar': path.join(__dirname, './node_modules/quasar/dist/quasar.umd.min.js'),
-      'iePolyfill': path.join(__dirname, './node_modules/quasar/dist/quasar.ie.polyfills.umd.min.js'),
-      'i18nLang': path.join(__dirname, './node_modules/quasar/dist/lang/es.umd.min.js'),
-      'QuasarCss': path.join(__dirname, './node_modules/quasar/dist/quasar.min.css')
+    plugins: [],
+    resolve: {
+        extensions: [".js", ".json", ".vue"],
+        alias: {
+            "~": path.join(__dirname, "./resources/js"),
+            Quasar: path.join(
+                __dirname,
+                "./node_modules/quasar/dist/quasar.umd.min.js"
+            ),
+            iePolyfill: path.join(
+                __dirname,
+                "./node_modules/quasar/dist/quasar.ie.polyfills.umd.min.js"
+            ),
+            i18nLang: path.join(
+                __dirname,
+                "./node_modules/quasar/dist/lang/es.umd.min.js"
+            ),
+            QuasarCss: path.join(
+                __dirname,
+                "./node_modules/quasar/dist/quasar.min.css"
+            )
+        }
+    },
+    output: {
+        //chunkFilename: 'dist/js/[name].[chunkhash].js',
+        chunkFilename: "dist/js/[chunkhash].js",
+        path: mix.config.hmr ? "/" : path.resolve(__dirname, "./public/build")
     }
-  },
-  output: {
-   chunkFilename: 'dist/js/[name].[chunkhash].js',
-   path: mix.config.hmr ? '/' : path.resolve(__dirname, './public/build')
-  }
-})
+});
 mix.then(() => {
-  if (!mix.config.hmr) {
-    process.nextTick(() => publishAseets())
-  }
-})
+    if (!mix.config.hmr) {
+        process.nextTick(() => publishAseets());
+    }
+});
 
-function publishAseets () {
-  const publicDir = path.resolve(__dirname, './public')
+function publishAseets() {
+    const publicDir = path.resolve(__dirname, "./public");
 
-  if (mix.inProduction()) {
-    fs.removeSync(path.join(publicDir, 'dist'))
-  }
+    if (mix.inProduction()) {
+        fs.removeSync(path.join(publicDir, "dist"));
+    }
 
-  fs.copySync(path.join(publicDir, 'build', 'dist'), path.join(publicDir, 'dist'))
-  fs.removeSync(path.join(publicDir, 'build'))
+    fs.copySync(
+        path.join(publicDir, "build", "dist"),
+        path.join(publicDir, "dist")
+    );
+    fs.removeSync(path.join(publicDir, "build"));
 }

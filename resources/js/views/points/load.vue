@@ -1,6 +1,6 @@
 <template>
   <q-table
-    title="Configurar niveles"
+    title="Actualización de puntos"
     :data="table"
     :columns="columns"
     row-key="name"
@@ -12,7 +12,8 @@
     flat
   >
     <template v-slot:top-right>
-      <q-btn flat dense color="primary" :disable="loading" label="Agregar Nivel" @click="addLevel" />
+      <!--<q-btn flat dense color="primary" :disable="loading" label="Pegar" @click="addLevel" />-->
+      <q-btn flat round dense color="primary" :disable="loading" icon="content_paste" @click="addLevel" />
       <q-space />
     </template>
 
@@ -30,32 +31,11 @@
             <q-input type="number" v-model="props.row.required_points" dense autofocus />
           </q-popup-edit>
         </q-td>
-        <q-td key="limit_months" :props="props">
-          {{ props.row.limit_months }}
-          <q-popup-edit
-            v-model="props.row.limit_months"
-            title="Actualizar vigencia"
-            buttons
-            @hide="updateLevel(props.row)"
-          >
-            <q-input
-              clearable
-              hide-bottom-space
-              filled
-              type="number"
-              v-model="props.row.limit_months"
-              dense
-              autofocus
-            ></q-input>
+        <q-td key="loaded_points" :props="props">
+          {{ props.row.required_points }}
+          <q-popup-edit v-model="props.row.required_points" @hide="updateLevel(props.row)">
+            <q-input type="number" v-model="props.row.required_points" dense autofocus />
           </q-popup-edit>
-        </q-td>
-        <q-td key="actions" :props="props">
-          <kButton
-            color="grey"
-            iconname="delete"
-            tooltiplabel="Eliminar"
-            @click="removeLevel(props.row)"
-          ></kButton>
         </q-td>
       </q-tr>
     </template>
@@ -77,7 +57,7 @@ export default {
         {
           name: "level_name",
           required: true,
-          label: "Nivel",
+          label: "Cédula",
           align: "left",
           field: "level_name",
           sortable: true
@@ -85,22 +65,19 @@ export default {
         {
           name: "required_points",
           align: "center",
-          label: "Puntos Requeridos",
+          label: "Puntos actuales",
           field: "required_points",
           sortable: true
         },
         {
-          name: "limit_months",
-          label: "Meses de vigencia",
-          field: "limit_months",
+          name: "loaded_points",
+          align: "center",
+          label: "Puntos cargados",
+          field: "required_points",
           sortable: true,
-          style: "width: 10px"
-        },
-        {
-          label: "Acciones",
-          field: "actions",
-          name: "actions",
-          type: "string"
+          classes: "bg-grey-2 ellipsis",
+          headerClasses: "bg-primary text-white",
+          style: "max-width: 100px"
         }
       ],
       table: [],
