@@ -20,7 +20,7 @@ class CreatePatientsTable extends Migration
             $table->unsignedBigInteger('gender_id')->references('id')->on('genders');  
             $table->string('name');
             $table->string('last_name')->nullable();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->dateTime('birthday')->nullable();
             $table->string('home_address')->nullable();
             $table->string('phone')->nullable();

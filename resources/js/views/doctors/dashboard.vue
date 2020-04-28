@@ -324,7 +324,7 @@ export default {
 
       if (val) {
         vm.fetchData("getProceduresByPatientAndDoctor/" + val);
-      }
+      }      
     },
     getListOfImages(val) {
       let vm = this;

@@ -74,6 +74,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('points_levels', 'PointsLevelsController');
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');
+    Route::get('getPointsSummaryByDoctor','PointsLevelsController@getPointsSummaryByDoctor');
+    Route::put('store_NewPoints','PointsLevelsController@store_NewPoints');
+    
     
     
     //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');

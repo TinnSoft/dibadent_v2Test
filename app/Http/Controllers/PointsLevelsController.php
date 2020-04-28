@@ -4,12 +4,51 @@ namespace App\Http\Controllers;
 use Auth;
 use DB;
 use App\Models\PointsLevels;
+use App\Models\Users;
+use App\Models\PointsHistory;
+use App\Models\PointsRedemption;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Events\RecordActivity;
 
 class PointsLevelsController extends Controller
-{
+{    
+
+    public function getPointsSummaryByDoctor()
+    {   
+        
+        
+        $data = Users::Join('profiles', function ($join) {
+            $join->on('users.profile_id', '=', 'profiles.id')->where('PROFILES.description','=','DOCTOR');
+        })
+        ->leftJoin('points_history', 'points_history.USER_ID', '=', 'users.id') 
+        ->select('users.id', DB::raw("CONCAT(users.name,' ',users.last_name) as user_name"),
+            'users.identification_number',DB::raw("SUM(points_history.value) as available_points"),
+            DB::raw("'0' as new_points"))      
+        ->whereNull('users.deleted_at') 
+        ->groupBy('users.id')
+        ->get();
+
+        $redeemedPoints= PointsRedemption::select('user_id',DB::raw("SUM(points_redeemed) as points_redeemed"))
+        ->whereNull('deleted_at')
+        ->groupBy('user_id')->get();
+
+
+        foreach($data as $_item) {        
+            $val = $redeemedPoints->firstWhere('user_id', '=', $_item->id)['points_redeemed'];
+            if($val)
+            {
+                $_item['available_points'] = (int)$_item['available_points'] - (int)$val;
+            }            
+       }
+
+
+       return response()
+       ->json([
+           'records' => $data
+       ]);
+    }
+
     public function getPointsLevels()
     {   
         $data = PointsLevels::whereNull('deleted_at')      
@@ -68,6 +107,20 @@ class PointsLevelsController extends Controller
         ->json([
             'updated' => true,
             'id' => $item->id             
+        ]);
+    }
+
+    public function store_NewPoints(Request $request)
+    {   
+       
+        $newLevelsValues = $request->all();   
+        
+        PointsHistory::insert($newLevelsValues);
+
+        return response()
+        ->json([
+            'created' => true,
+            'test' => $newLevelsValues
         ]);
     }
     public function destroy($id)

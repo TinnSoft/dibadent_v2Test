@@ -42,7 +42,7 @@
 
 <script>
 import kLevels from "./levels.vue";
-import kLoad from "./load.vue";
+import kLoad from "./loadPoints.vue";
 
 export default {
   middleware: "auth",
