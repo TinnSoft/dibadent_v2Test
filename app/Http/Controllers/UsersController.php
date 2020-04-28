@@ -233,13 +233,13 @@ class UsersController extends Controller
     {    
 
         $body='Cordial saludo, <br/><br/>';
-        $body .= 'A continuación puedes visualizar sus credenciales de acceso a la herramienta:  <br/><br/>';
+        $body .= 'A continuación puedes visualizar sus credenciales de acceso a dibadent:  <br/><br/>';
         $body .= 'Usuario: <strong>'.$data['email'].' </strong> <br/>';
         $body .= 'Contraseña: <strong>'.$data['password'].'</strong><br/><br/>';
-        $body .= 'Para iniciar sesion ingrese a la siguiente ruta: www.prueba.com <br/><br/>';
+        $body .= 'Para iniciar sesion ingrese a la siguiente ruta: https://dibadent.com/login <br/><br/>';
         $body .= 'Cordialmente,';
         $body .= '<br/><br/><br/>';
-        $body .= 'Equipo Administrativo<br/>';
+        $body .= 'Equipo Dibadent<br/>';
 
       
         Mail::to($data['email'])

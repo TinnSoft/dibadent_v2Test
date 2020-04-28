@@ -155,6 +155,7 @@ export default {
           vm.loading = false;
         })
         .catch(function(error) {
+          console.log(error.response)
           vm.loading = false;
         });
     },
