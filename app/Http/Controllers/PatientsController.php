@@ -124,17 +124,6 @@ class PatientsController extends Controller
         $data['gender_id'] = $request->input('gender.value');
         $data['doctor_id'] = $request->input('doctor.value');
         
-        //email validation
-        $checkIfExistEmail = Patients::where('email',$data['email'])->get(); 
-       
-        if ($checkIfExistEmail->isNotEmpty())
-        {
-            return response()
-            ->json([
-                'emailAlreadyExists' => 'La dirección de correo ingresada ya existe, intente con una diferente'
-            ], 422);
-        }        
-
         $item = Patients::create($data);
 
         $emailData['email'] = $data['email'];

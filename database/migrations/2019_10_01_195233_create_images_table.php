@@ -15,7 +15,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('procedure_id')->references('id')->on('procedures')->nullable();    
+            $table->unsignedBigInteger('patient_id')->references('id')->on('patients')->nullable();    
             $table->string('title');  
             $table->string('file_name');     
             $table->string('other_details')->nullable();       
@@ -23,7 +23,7 @@ class CreateImagesTable extends Migration
             $table->bigInteger('modified_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('procedure_id')->references('id')->on('procedures');
+            $table->foreign('patient_id')->references('id')->on('patients');
         });
     }
 

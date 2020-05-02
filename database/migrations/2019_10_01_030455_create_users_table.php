@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->dateTime('last_login')->nullable();       
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('modified_by')->nullable();
+            $table->string('avatar', 255)->nullable(); 
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('profile_id')->references('id')->on('profiles');

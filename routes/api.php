@@ -21,10 +21,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::resource('images', 'ImagesController');
     Route::post('uploadFile/{id}', 'ImagesController@uploadFile');
-    Route::get('getImagesByProcedure/{procedure_id}','ImagesController@getImagesByProcedure');  
-    
-    //temporal
-    Route::get('getImagesByPatient/{patient_id}','ImagesController@getImagesByPatient');   
+    Route::get('getImagesByPatient/{patient_id}','ImagesController@getImagesByPatient');  
 
     Route::post('uploadAvatar/{id}', 'UsersController@uploadAvatar');
 

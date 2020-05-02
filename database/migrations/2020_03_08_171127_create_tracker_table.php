@@ -19,6 +19,9 @@ class CreateTrackerTable extends Migration
             $table->string('detail')->nullable();  
             $table->string('route')->nullable();  
             $table->string('model')->nullable();  
+            $table->boolean('notify')->default(false);
+            $table->boolean('read')->default(false);  
+            $table->integer('value')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();

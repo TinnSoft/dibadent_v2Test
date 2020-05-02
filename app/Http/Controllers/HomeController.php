@@ -31,29 +31,31 @@ class HomeController extends Controller
 
     public function getDashboardInfo()
     {
-        $quantityOfProcedures=[];
-        $quantityOfProceduresByDoctor=[];
+        $sumOfImages=[];
+        $_ImagesByDoctor=[];
         
         if(Auth::check()) {
             $mainClass=new HomeController();
 
             //procedimientos por mes y año consolidado
-            $quantityOfProcedures= collect(["procedures_lastMonth"=>$mainClass->getQuantityOfProcedures('m'),
-            "procedures_lastYear"=>$mainClass->getQuantityOfProcedures('y'),
+            $sumOfImages= collect(["images_lastMonth"=>$mainClass->getQuantityOfImages('m'),
+            "images_lastYear"=>$mainClass->getQuantityOfImages('y'),
             ]);
             
             //cantidad de procedimientos por doctor (año, mes, semana, dia)
-            $quantityOfProceduresByDoctor=collect(
-                ["procedures_bydoctor_today_qty"=>$mainClass->getQuantityOfProceduresByDoctor_day('quantity'),
-                "procedures_bydoctor_today_labels"=>$mainClass->getQuantityOfProceduresByDoctor_day('name'),
-                "procedures_bydoctor_weekly_data"=>$mainClass->getQuantityOfProceduresByDoctor_weekly()
+            $imagesByDoctor_values_day= $mainClass->getImagesLoadedByDoctor('d');
+
+            $_ImagesByDoctor=collect(
+                ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
+                "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
+                "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
             ]);
 
         }
         return response()
         ->json([
-        'procedures_sum' => $quantityOfProcedures,
-        'procedures_ByDoctor'=> $quantityOfProceduresByDoctor,
+        'images_sum' => $sumOfImages,
+        'images_ByDoctor'=> $_ImagesByDoctor,
         'tracking_Doctors'=> $mainClass->getDoctorsTrack(),
         'topRedemedPoints'=>$mainClass->getTopRedemedPoints()
         ]);
@@ -97,30 +99,54 @@ class HomeController extends Controller
         return $data;
     }
 
-    private static function getQuantityOfProcedures($daterange)
+    private static function getQuantityOfImages($filter)
     {
-        $total= DB::table('procedures')
-        ->when($daterange=='m', function ($query) {
-            return $query->whereYear('created_at', date('Y'))->whereMonth('created_at', '=', date('m'));
+        $data= DB::table('images')
+        ->when($filter=='m', function ($query) {
+            return $query->whereYear('images.created_at', date('Y'))->whereMonth('images.created_at', '=', date('m'));
         })
-        ->when($daterange=='y', function ($query) {
-            return $query->whereYear('created_at', '=', date('Y'));
+        ->when($filter=='y', function ($query) {
+            return $query->whereYear('images.created_at', '=', date('Y'));
         })
+        ->whereNull('deleted_at')
         ->count('id');
-        
-        return $total;
+
+        return $data;
     }
     
+    private static function getImagesLoadedByDoctor($filter)
+    {
+
+        $data= DB::table('images')
+        ->join('users', function ($join) {
+            $join->on('users.id', '=', 'images.created_by');
+        })
+        ->join('patients', function ($join) {
+            $join->on('patients.doctor_id', '=', 'users.id');
+        })
+        ->when($filter=='d', function ($query) {
+            return $query->whereYear('images.created_at', date('Y'))->whereDay('images.created_at', '=', date('d'))
+            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"));
+        }) 
+        ->whereNull('images.deleted_at')
+        ->groupBy('users.id')              
+        ->take(10)
+        ->get();
+        
+        return $data;
+    }
+
+
     //retorna el top 10 de doctores y su cantidad de procedimientos realizados durante determinado periodo de tiempo
     private static function getQuantityOfProceduresByDoctor_day($fieldtoFilter)
     {
-        $data= DB::table('procedures')
+        $data= DB::table('images')
         ->join('users', function ($join) {
-            $join->on('users.id', '=', 'procedures.doctor_id');
+            $join->on('users.id', '=', 'images.doctor_id');
         })
-        ->select(DB::raw("count(procedures.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"))
-        //->whereYear('procedures.created_at', '=', date('Y'))->whereDay('procedures.created_at', '=', date('d'))
-        ->groupBy('procedures.doctor_id','users.name','radiology.users.last_name')
+        ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"))
+        ->whereYear('images.created_at', '=', date('Y'))->whereDay('images.created_at', '=', date('d'))
+        ->groupBy('images.patient_id')
         ->orderBy('quantity', 'desc')
         ->take(10)
         ->get();

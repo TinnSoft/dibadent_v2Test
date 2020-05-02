@@ -10,6 +10,7 @@ use App\Models\PointsRedemption;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use App\Events\RecordActivity;
+use DateTime;
 
 class PointsLevelsController extends Controller
 {    
@@ -112,10 +113,14 @@ class PointsLevelsController extends Controller
 
     public function store_NewPoints(Request $request)
     {   
-       
-        $newLevelsValues = $request->all();   
-        
+       //Pendiente adicionar las fechas de creacion y actualizacion
+        $newLevelsValues = $request->all();                    
+     
         PointsHistory::insert($newLevelsValues);
+
+        foreach($newLevelsValues as $value) {
+            $this->updatePointLevels($value['user_id'],$value['value']);
+        }        
 
         return response()
         ->json([
@@ -123,6 +128,63 @@ class PointsLevelsController extends Controller
             'test' => $newLevelsValues
         ]);
     }
+    
+
+    private function updatePointLevels($userId, $pointsToStore)
+    {
+
+        $levelName=null;
+
+        //buscar si existe el usuario en AcumulatedPointsLevels    
+        $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', $userId)->select('acumulated_points')->get()->toArray();      
+        $acumulatedPoints =isset($acumulatedPoints[0]->acumulated_points) ? $acumulatedPoints[0]->acumulated_points : 0;
+
+        if($acumulatedPoints>0)
+        {           
+            //Actualiza el monto de puntos
+            $incrementPoints=DB::table('acumulated_points_levels')->where('user_id', $userId)->increment('acumulated_points', $pointsToStore); 
+            $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', $userId)->select('acumulated_points')->get()->toArray();      
+            $acumulatedPoints =isset($acumulatedPoints[0]->acumulated_points) ? $acumulatedPoints[0]->acumulated_points : 0;
+
+            //Obtiene el listado de niveles del sistema
+            $currentLevels= PointsLevels::whereNull('deleted_at')->select('level_name','required_points','id')->orderBy('required_points', 'asc')->get();
+   
+            if ($currentLevels)
+            {
+                foreach($currentLevels as $value) {
+                    $levelId=$value['id'];
+                    $levelPoints=$value['required_points'];
+                    $levelName=$value['level_name'];
+
+                    if ((int)$acumulatedPoints>=(int)$levelPoints)
+                    {
+                        $updateLevel = DB::table('acumulated_points_levels')
+                        ->where('user_id', $userId)
+                        ->update(['points_level_id' => $levelId,'created_by' => Auth::user()->id,'updated_at' => now()]);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if ($pointsToStore>0)
+            {
+                DB::table('acumulated_points_levels')->insert([
+                    ['points_level_id' => null, 
+                    'user_id' => $userId,
+                    'acumulated_points'=>$pointsToStore,
+                    'created_by'=>Auth::user()->id,
+                    'modified_by'=>Auth::user()->id,
+                    'created_at'=>now(),
+                    'updated_at'=>now()]
+                ]);
+
+                $this->updatePointLevels($userId, 0);
+            }
+        }
+    }
+    
+
     public function destroy($id)
     {   
         $post = PointsLevels::find($id);

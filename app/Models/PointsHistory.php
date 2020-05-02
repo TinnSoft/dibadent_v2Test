@@ -13,4 +13,5 @@ class PointsHistory extends Model
     
     protected $fillable=['value','user_id','created_at','updated_at','deleted_at'];
 
+
 }

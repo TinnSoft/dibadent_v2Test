@@ -104,7 +104,7 @@
                       label="Seleccione un Paciente"
                       options-dense
                       hide-bottom-space
-                      @input="getProcedures(form.patient)"
+                      @input="getListOfImages(form.patient)"
                     />
                     <q-btn
                       round
@@ -113,47 +113,6 @@
                       icon="info_outline"
                       color="grey-5"
                       @click="showPatientModal($refs)"
-                    />
-                  </q-timeline-entry>
-                  <q-timeline-entry subtitle="TAG" icon="device_hub">
-                    <kSelectFilter
-                      ref="_procedureSelect"
-                      v-model="form.medicalProcedure"
-                      :options="medicalProcedures"
-                      :loading="loading"
-                      filled
-                      dense
-                      outlined
-                      self-filter
-                      clearable
-                      use-input
-                      fill-input
-                      hide-selected
-                      emit-value
-                      map-options
-                      input-debounce="0"
-                      label="Seleccione o agregue un tag"
-                      options-dense
-                      hide-bottom-space
-                      @input="getListOfImages(form.medicalProcedure)"
-                    />
-                    <template v-if="form.patient">
-                      <q-btn
-                        round
-                        dense
-                        flat
-                        icon="add"
-                        color="grey-5"
-                        @click="CreateProcedureModal($refs)"
-                      />
-                    </template>
-                    <q-btn
-                      round
-                      dense
-                      flat
-                      icon="info_outline"
-                      color="grey-5"
-                      @click="showProcedureModal($refs)"
                     />
                   </q-timeline-entry>
                 </q-timeline>
@@ -166,9 +125,9 @@
                 label="Cargar Imagen"
                 dense
                 flat
-                :readonly="checkIfExistProcedure"
+                :readonly="checkIfExistPatient"
                 auto-upload
-                :url="_medicalProcedureId"
+                :url="_patientID"
                 accept=".jpg, image/*"
                 color="primary"
                 multiple
@@ -219,7 +178,6 @@
             </q-page-container>
           </q-layout>
           <patientModal ref="_patient"></patientModal>
-          <procedureModal ref="_procedure" @hide="closeProcedureModal"></procedureModal>
           <showImageModal ref="_showImage"></showImageModal>
         </div>
       </div>
@@ -230,15 +188,14 @@
 <script>
 import store from "../../store";
 import patientModal from "../settings/modals/mPatient.vue";
-import procedureModal from "./modals/mProcedure.vue";
 import showImageModal from "./modals/mShowImage.vue";
 import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
-  components: { patientModal, procedureModal, showImageModal },
+  components: { patientModal, showImageModal },
   data() {
-    return {      
+    return {
       form: {},
       pointsSummary: {
         level: "",
@@ -247,12 +204,11 @@ export default {
         pointsNextToBeat: ""
       },
       patientList: [],
-      medicalProcedures: [],
       listOfImages: [],
       pathDashboardData: "getDoctorDashboardData",
       urlToUploadImages: "/api/uploadFile/",
       urlToUploadAvatar: "/api/uploadAvatar/",
-      medicalProcedureId: null,
+      patientID: null,
       avatarUrl: null,
       loading: false
     };
@@ -262,11 +218,11 @@ export default {
     this.avatarUrl = this.$store.getters["auth/user"].avatar;
   },
   computed: {
-    _medicalProcedureId() {
-      return this.urlToUploadImages + this.medicalProcedureId;
+    _patientID() {
+      return this.urlToUploadImages + this.patientID;
     },
-    checkIfExistProcedure() {
-      if (!this.medicalProcedureId) {
+    checkIfExistPatient() {
+      if (!this.patientID) {
         return true;
       } else {
         return false;
@@ -289,22 +245,12 @@ export default {
   },
   methods: {
     uloadedFinished(val) {
-      this.getListOfImages(this.medicalProcedureId);
+      this.getListOfImages(this.patientID);
       this.fetchData(this.pathDashboardData);
     },
-    closeProcedureModal() {
-      this.getProcedures(this.form.patient);
-    },
-    showProcedureModal(refs) {
-      if (this.form.medicalProcedure) {
-        this.openModal(refs._procedure, "view", this.form.medicalProcedure);
-      }
-    },
+
     showImageModal(refs, attributes) {
       refs._showImage.open(attributes);
-    },
-    CreateProcedureModal(refs) {
-      this.openModal(refs._procedure, "create", this.form.patient);
     },
     showPatientModal(refs) {
       if (this.form.patient) {
@@ -314,23 +260,11 @@ export default {
     openModal(modal, processType, itemId) {
       modal.open(processType, itemId);
     },
-    getProcedures(val) {
-      let vm = this;
-      vm.medicalProcedureId = null;
-      vm.$set(vm, "medicalProcedures", []);
-      vm.$set(vm.form, "medicalProcedure", null);
-      vm.$refs._procedureSelect.options = [];
-      vm.$refs._procedureSelect.model = null;
-
-      if (val) {
-        vm.fetchData("getProceduresByPatientAndDoctor/" + val);
-      }      
-    },
     getListOfImages(val) {
       let vm = this;
-      vm.medicalProcedureId = val;
+      vm.patientID = val;
       if (val) {
-        vm.fetchData("getImagesByProcedure/" + val);
+        vm.fetchData("getImagesByPatient/" + val);
       }
       vm.loading = false;
     },
@@ -343,10 +277,6 @@ export default {
           if (response.data.pointsSummary) {
             vm.$set(vm, "pointsSummary", response.data.pointsSummary);
           }
-          if (response.data.procedures) {
-            vm.$set(vm, "medicalProcedures", response.data.procedures);
-          }
-
           if (response.data.patientList) {
             vm.$set(vm, "patientList", response.data.patientList);
           }
@@ -385,10 +315,9 @@ export default {
       axios
         .post("/api/images/" + e.target.dataset.image, formData)
         .then(res => {
-          this.getListOfImages(this.medicalProcedureId);
+          this.getListOfImages(this.patientID);
         })
-        .catch(error => {
-        });
+        .catch(error => {});
     },
     deleteImage(value, index) {
       let vm = this;
@@ -418,7 +347,7 @@ export default {
           }
         })
         .catch(function(error) {
-          vm.getListOfImages(vm.medicalProcedureId);
+          vm.getListOfImages(vm.patientID);
           vm.loading = false;
           kNotify(
             vm,

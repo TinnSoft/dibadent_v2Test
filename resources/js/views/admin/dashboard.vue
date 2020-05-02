@@ -5,17 +5,17 @@
         <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="PROCEDIMIENTOS GENERADOS EL ULTIMO MES"
+            title="IMAGENES CARGADAS EL ULTIMO MES"
             icon-name
-            :total="procedures_generated_lastMonth"
+            :total="images_generated_lastMonth"
           />
         </div>
         <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="PROCEDIMIENTOS GENERADOS EL ULTIMO AÑO"
+            title="IMAGENES CARGADAS EL ULTIMO AÑO"
             icon-name
-            :total="procedures_generated_lastYear"
+            :total="images_generated_lastYear"
           />
         </div>
       </div>
@@ -48,7 +48,7 @@
                   </q-btn>
                   <q-toolbar-title
                     class="text-caption text-grey"
-                  >MEDICOS QUE CARGARON MAS RADIOGRAFIAS</q-toolbar-title>
+                  >TOP DE RADIOGRAFIAS ASIGNADAS A DOCTORES {{filterBylabel}}</q-toolbar-title>
                 </q-toolbar>
 
                 <dashboardChart
@@ -195,10 +195,10 @@ export default {
           ]
         }
       },
-      procedures_generated_lastMonth: 0,
-      procedures_generated_lastYear: 0,
-      procedures_bydoctor_today_qty: [],
-      procedures_bydoctor_today_labels: []
+      images_generated_lastMonth: 0,
+      images_generated_lastYear: 0,
+      images_ByDoctor_today_qty: [],
+      images_ByDoctor_today_labels: []
     };
   },
   metaInfo() {
@@ -227,12 +227,18 @@ export default {
 
       if (this.filter == "d") {
         this.filterBylabel = "Hoy";
-        this.datacollection_labels = this.procedures_bydoctor_today_labels[0];
+        this.datacollection_labels = this.images_ByDoctor_today_labels;
         this.datacollection_data = [
           {
             label: "",
-            backgroundColor: "#2870E8",
-            data: this.procedures_bydoctor_today_qty[0]
+            backgroundColor: [
+              "#126A8C",
+              "#369DC4",
+              "#2BBAF0",
+              "#136DF0",
+              "#9FC5FC"
+            ],
+            data: this.images_ByDoctor_today_qty
           }
         ];
       } else if (this.filter == "w") {
@@ -253,7 +259,7 @@ export default {
           {
             label: "Doctor Three",
             backgroundColor: "#1EFFFF",
-            data: [20, 10, 12, 33, 22, 4, 0]
+            data: [0, 10, 12, 33, 22, 4, 0]
           },
           {
             label: "Doctor 4",
@@ -298,25 +304,25 @@ export default {
         .then(function(response) {
           vm.$set(
             vm.$data,
-            "procedures_generated_lastMonth",
-            response.data.procedures_sum.procedures_lastMonth
+            "images_generated_lastMonth",
+            response.data.images_sum.images_lastMonth
           );
           vm.$set(
             vm.$data,
-            "procedures_generated_lastYear",
-            response.data.procedures_sum.procedures_lastYear
-          );
-
-          vm.$set(
-            vm.$data,
-            "procedures_bydoctor_today_qty",
-            response.data.procedures_ByDoctor.procedures_bydoctor_today_qty
+            "images_generated_lastYear",
+            response.data.images_sum.images_lastYear
           );
 
           vm.$set(
             vm.$data,
-            "procedures_bydoctor_today_labels",
-            response.data.procedures_ByDoctor.procedures_bydoctor_today_labels
+            "images_ByDoctor_today_qty",
+            response.data.images_ByDoctor.today_ImagesByDoctor_qty
+          );
+
+          vm.$set(
+            vm.$data,
+            "images_ByDoctor_today_labels",
+            response.data.images_ByDoctor.today_ImagesByDoctor_labels
           );
 
           vm.$set(
