@@ -68,7 +68,7 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label class="text-black" lines="1">Medicos</q-item-label>
+                <q-item-label class="text-black" lines="1">Doctores</q-item-label>
               </q-item-section>
 
               <q-item-section side>

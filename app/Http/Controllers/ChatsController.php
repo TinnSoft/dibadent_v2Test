@@ -45,7 +45,7 @@ class ChatsController extends Controller
         $_AdminAndDoctorChats= Users::Join('profiles', 'users.profile_id', '=', 'profiles.id')    
         ->where('profiles.description','=', 'ADMIN')    
         ->whereNull('users.deleted_at')  
-        ->select(DB::raw("users.id, users.avatar, CONCAT(users.name,' ', users.last_name) as user_name, 
+        ->select(DB::raw("users.id, users.avatar, CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as user_name, 
         null as date, null as time"))
         ->orderBy('users.id', 'desc')
         ->get();
