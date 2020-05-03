@@ -36,12 +36,19 @@ class HomeController extends Controller
         
        
         //procedimientos por mes y año consolidado
-        $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
-        "images_lastYear"=>$this->getQuantityOfImages('y'),
-        ]);
+        $errormessage=null;
+        try{
+            $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
+            "images_lastYear"=>$this->getQuantityOfImages('y'),
+            ]);
+
+            }catch(\Exception $e){
+                $errormessage=$e;
+            }   
+      
             
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
-        $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
+        //$imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
        /* $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
@@ -56,6 +63,7 @@ class HomeController extends Controller
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
+        'error'=>$errormessage
         ]);
     }
 
