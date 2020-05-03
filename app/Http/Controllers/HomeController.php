@@ -34,7 +34,7 @@ class HomeController extends Controller
         $sumOfImages=[];
         $_ImagesByDoctor=[];
         
-        /*
+       
         //procedimientos por mes y año consolidado
         $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
         "images_lastYear"=>$this->getQuantityOfImages('y'),
@@ -48,11 +48,11 @@ class HomeController extends Controller
                 "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
                 "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
         ]);
-            */
+            
       
         return response()
         ->json([
-        'images_sum' => [],//$sumOfImages,
+        'images_sum' => $sumOfImages,
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
