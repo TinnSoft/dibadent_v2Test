@@ -37,7 +37,7 @@ class HomeController extends Controller
        
         //procedimientos por mes y año consolidado
         $errormessage=null;
-        try{
+        /*try{
             $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y'),
             ]);
@@ -45,10 +45,10 @@ class HomeController extends Controller
             }catch(\Exception $e){
                 $errormessage=$e;
             }   
-      
+      */
             
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
-        //$imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
+        $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
        /* $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
