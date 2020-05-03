@@ -41,7 +41,7 @@ class HomeController extends Controller
             $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
         } catch (Throwable $e) {
-            $errormsg=$e;
+            $errormsg=report($e);
             report($e);            
             return false;
         }  
@@ -64,7 +64,7 @@ class HomeController extends Controller
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
-        'error'=>Auth::user()
+        'error'=>$errormsg
         ]);
     }
 
