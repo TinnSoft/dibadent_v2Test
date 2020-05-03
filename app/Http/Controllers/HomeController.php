@@ -36,13 +36,13 @@ class HomeController extends Controller
         
        
         //procedimientos por mes y año consolidado
-
+        $errormsg=null;
         try {
             $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
         } catch (Throwable $e) {
             report($e);
-    
+            $errormsg=$e;
             return false;
         }  
         
@@ -64,6 +64,7 @@ class HomeController extends Controller
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
+        'error'=>$errormsg
         ]);
     }
 
