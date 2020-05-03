@@ -51,19 +51,19 @@ class HomeController extends Controller
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
         $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
-       /* $_ImagesByDoctor=collect(
+        $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
                 "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
                 "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
-        ]);*/
+        ]);
             
       
         return response()
         ->json([
         'images_sum' => $sumOfImages,
-        'images_ByDoctor'=> [],//$_ImagesByDoctor,
-        'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
-        'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
+        'images_ByDoctor'=> $_ImagesByDoctor,
+        'tracking_Doctors'=>$this->getDoctorsTrack(),
+        'topRedemedPoints'=>$this->getTopRedemedPoints(),
         'error'=>$errormsg
         ]);
     }
@@ -88,7 +88,7 @@ class HomeController extends Controller
     }
 
     //retorna los movimientos realizados por los doctores
-    private static function getDoctorsTrack()
+    private  function getDoctorsTrack()
     {
         $data= DB::table('tracker')
         ->join('users', function ($join) {
@@ -106,7 +106,7 @@ class HomeController extends Controller
         return $data;
     }
 
-    private static function getQuantityOfImages($filter)
+    private  function getQuantityOfImages($filter)
     {
         $data= DB::table('images')
         ->when($filter=='m', function ($query) {
@@ -121,7 +121,7 @@ class HomeController extends Controller
         return $data;
     }
     
-    private static function getImagesLoadedByDoctor($filter)
+    private  function getImagesLoadedByDoctor($filter)
     {
 
         $data= DB::table('images')
@@ -145,7 +145,7 @@ class HomeController extends Controller
 
 
     //retorna el top 10 de doctores y su cantidad de procedimientos realizados durante determinado periodo de tiempo
-    private static function getQuantityOfProceduresByDoctor_day($fieldtoFilter)
+    private  function getQuantityOfProceduresByDoctor_day($fieldtoFilter)
     {
         $data= DB::table('images')
         ->join('users', function ($join) {
@@ -161,7 +161,7 @@ class HomeController extends Controller
         return array($data->pluck($fieldtoFilter));
     }
 
-    private static function getQuantityOfProceduresByDoctor_Weekly()
+    private  function getQuantityOfProceduresByDoctor_Weekly()
     {
 
         //SELECT p.doctor_id,u.name, DAYOFWEEK(p.created_at) AS dia, COUNT(p.id) cantidad FROM procedures p 
