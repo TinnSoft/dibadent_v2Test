@@ -41,15 +41,15 @@ class HomeController extends Controller
             $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
         } catch (Throwable $e) {
-            report($e);
             $errormsg=$e;
+            report($e);            
             return false;
         }  
         
        
             
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
-        $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
+        //$imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
        /* $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
