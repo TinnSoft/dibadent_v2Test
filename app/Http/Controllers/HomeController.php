@@ -43,16 +43,16 @@ class HomeController extends Controller
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
         $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
-        $_ImagesByDoctor=collect(
+       /* $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
                 "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
                 "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
-        ]);
+        ]);*/
             
       
         return response()
         ->json([
-        'images_sum' => $sumOfImages,
+        'images_sum' => [],//$sumOfImages,
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
