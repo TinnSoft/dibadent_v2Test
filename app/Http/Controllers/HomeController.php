@@ -64,7 +64,7 @@ class HomeController extends Controller
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
-        'error'=>$errormsg
+        'error'=>Auth::user()
         ]);
     }
 
