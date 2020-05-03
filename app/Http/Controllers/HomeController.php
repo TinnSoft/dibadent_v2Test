@@ -49,7 +49,7 @@ class HomeController extends Controller
        
             
         //cantidad de procedimientos por doctor (año, mes, semana, dia)
-        //$imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
+        $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
        /* $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
