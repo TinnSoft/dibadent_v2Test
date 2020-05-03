@@ -60,7 +60,7 @@ class HomeController extends Controller
       
         return response()
         ->json([
-        'images_sum' => [],//$sumOfImages,
+        'images_sum' => $sumOfImages,
         'images_ByDoctor'=> [],//$_ImagesByDoctor,
         'tracking_Doctors'=>[],// $this->getDoctorsTrack(),
         'topRedemedPoints'=>[],//$this->getTopRedemedPoints()
