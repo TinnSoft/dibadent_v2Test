@@ -34,16 +34,16 @@ class HomeController extends Controller
         $sumOfImages=[];
         $_ImagesByDoctor=[];
         
-        if(Auth::check()) {
-            $mainClass=new HomeController();
+        
+            //$mainClass=new HomeController();
 
             //procedimientos por mes y año consolidado
-            $sumOfImages= collect(["images_lastMonth"=>$mainClass->getQuantityOfImages('m'),
-            "images_lastYear"=>$mainClass->getQuantityOfImages('y'),
+            $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
+            "images_lastYear"=>$this->getQuantityOfImages('y'),
             ]);
             
             //cantidad de procedimientos por doctor (año, mes, semana, dia)
-            $imagesByDoctor_values_day= $mainClass->getImagesLoadedByDoctor('d');
+            $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
 
             $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
@@ -51,13 +51,13 @@ class HomeController extends Controller
                 "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
             ]);
 
-        }
+      
         return response()
         ->json([
         'images_sum' => $sumOfImages,
         'images_ByDoctor'=> $_ImagesByDoctor,
-        'tracking_Doctors'=> $mainClass->getDoctorsTrack(),
-        'topRedemedPoints'=>$mainClass->getTopRedemedPoints()
+        'tracking_Doctors'=> $this->getDoctorsTrack(),
+        'topRedemedPoints'=>$this->getTopRedemedPoints()
         ]);
     }
 
