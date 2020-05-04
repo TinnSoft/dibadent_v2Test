@@ -35,7 +35,7 @@ class PatientsController extends Controller
     public function getDoctors()
     {
         return DB::table('users')      
-        ->select('users.id as value', DB::raw("CONCAT(IFNULL(users.name,users.email,''),' ',IFNULL(users.last_name,'')) as label"),
+        ->select('users.id as value', DB::raw("CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as label"),
         DB::raw("CONCAT('CC: ',IFNULL(users.identification_number,'')) as description"))->get()->toArray()
         ->where('profile_id','=',  3) 
         ->whereNull('deleted_at');
