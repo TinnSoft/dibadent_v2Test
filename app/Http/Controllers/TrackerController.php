@@ -16,7 +16,7 @@ class TrackerController extends Controller
     public function getNotificationList($profile)
     {   
         $activeNotifications = null;
-
+       
         if($profile)
         {
             if ($profile=='DOCTOR')
@@ -26,7 +26,7 @@ class TrackerController extends Controller
             else if ($profile='ADMIN') {
                 $profile='DOCTOR';
             }
-
+            
             $activeNotifications = Tracker::Join('users', 'tracker.user_id', '=', 'users.id')     
             ->Join('profiles', 'profiles.id', '=', 'users.profile_id') 
             ->leftJoin('read_notifications', function ($leftJoin) {
@@ -38,9 +38,9 @@ class TrackerController extends Controller
             ->where('tracker.notify',true)
             ->whereNull('read_notifications.id')
             ->select('tracker.id','tracker.detail','users.id as user_id','tracker.created_at')              
-            ->get();  
-            
-            if (collect($activeNotifications)->isEmpty() || $profile='RADIOLOGO')
+            ->get();
+
+            if (collect($activeNotifications)->isEmpty() || $profile=='RADIOLOGO')
             {
                 $activeNotifications = null;
             }
@@ -48,7 +48,7 @@ class TrackerController extends Controller
 
        return response()
        ->json([
-           'notifications' => $activeNotifications       
+           'notifications' => $activeNotifications,
        ]);
     }
 

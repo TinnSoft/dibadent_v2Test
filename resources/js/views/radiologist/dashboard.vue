@@ -32,7 +32,7 @@
                     <q-icon color="primary" name="bookmark_border" />
                   </q-item-section>
                   <q-item-section>
-                    <q-item-label class="text-h6">20</q-item-label>
+                    <q-item-label class="text-h6">{{images_created_qty}}</q-item-label>
                     <q-item-label caption>Imagenes Cargadas hasta el momento</q-item-label>
                   </q-item-section>
                 </q-item>
@@ -51,6 +51,7 @@
                   <q-timeline-entry heading>CARGA DE IMAGENES</q-timeline-entry>
                   <q-timeline-entry subtitle="Paciente" icon="perm_identity">
                     <kSelectFilter
+                      bottom-slots
                       v-model="form.patient"
                       :options="patientList"
                       :loading="loading"
@@ -69,8 +70,10 @@
                       options-dense
                       hide-bottom-space
                       @input="getListOfImages(form.patient)"
-                    />
+                      @clear="clearPatient"
+                    ></kSelectFilter>
                     <q-btn
+                      v-if="patientID"
                       round
                       dense
                       flat
@@ -81,11 +84,12 @@
                   </q-timeline-entry>
                   <q-timeline-entry
                     subtitle="Doctor"
-                    icon="perm_identity"
+                    icon="local_hospital"
                     v-if="doctor_name"
                     color="grey"
                   >
                     <q-input v-model="doctor_name" stack-label dense readonly></q-input>
+                    <q-input v-model="doctor_CC" stack-label dense readonly hint="Cedula"></q-input>
                   </q-timeline-entry>
                 </q-timeline>
               </q-item-section>
@@ -105,6 +109,7 @@
                 @uploaded="uloadedFinished"
                 multiple
                 batch
+                ref="uploader"
               />
             </q-item>
           </q-list>
@@ -166,6 +171,9 @@ export default {
     return {
       form: {},
       doctor_name: null,
+      images_created_qty: 0,
+      doctor_avatar: null,
+      doctor_CC: null,
       patientList: [],
       medicalProcedures: [],
       listOfImages: [],
@@ -208,9 +216,16 @@ export default {
     }
   },
   methods: {
-    uloadedFinished(val) {
+    clearPatient() {
+      this.doctor_name = null;
+      this.doctor_CC = null;
+      this.listOfImages = [];
+    
+    },
+    uloadedFinished(val) {    
       this.getListOfImages(this.patientID);
-      this.fetchData(this.pathDashboardData);
+      this.fetchData(this.pathPatientList);
+      this.$refs.uploader.removeUploadedFiles();
     },
     closeImageModal(val) {
       var vm = this;
@@ -237,9 +252,16 @@ export default {
     },
     getListOfImages(val) {
       let vm = this;
+
       vm.patientID = val;
       if (val) {
+        const patientvalues = vm.patientList.find(
+          _patientdata => _patientdata.value === val
+        );
+        vm.doctor_name = patientvalues.doctor_name;
+        vm.doctor_CC = patientvalues.identification_number;
         vm.fetchData("getImagesByPatient/" + val);
+        
       }
       vm.loading = false;
     },
@@ -249,9 +271,15 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
+         
           if (response.data.patients) {
             vm.$set(vm, "patientList", response.data.patients);
           }
+
+          if (response.data.images_created_qty) {
+            vm.$set(vm, "images_created_qty", response.data.images_created_qty);
+          }
+
           if (response.data.procedures) {
             vm.$set(vm, "medicalProcedures", response.data.procedures);
           }
@@ -282,8 +310,6 @@ export default {
         });
     },
     showInputFile(e) {
-      // this.$refs[`myRow${index}`]
-      console.log(this.$refs);
       this.$refs[`imageInput${e.target.dataset.index}`].click();
     },
     changeImage(e) {
@@ -292,7 +318,7 @@ export default {
       formData.append("_method", "PUT");
       axios
         .post("/api/images/" + e.target.dataset.image, formData)
-        .then(res => {
+        .then(res => {          
           this.getListOfImages(this.patientID);
         })
         .catch(error => {});

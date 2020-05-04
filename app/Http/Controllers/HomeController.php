@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use DB;
 use Illuminate\Http\Request;
 use Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class HomeController extends Controller
 {
@@ -36,25 +38,57 @@ class HomeController extends Controller
         
        
         //procedimientos por mes y año consolidado
-        $errormsg=null;
-        try {
-            $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
+ 
+        $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
-        } catch (Throwable $e) {
-            $errormsg=report($e);
-            report($e);            
-            return false;
-        }  
-        
-       
             
-        //cantidad de procedimientos por doctor (año, mes, semana, dia)
+      
         $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
+        $imagesByDoctor_values_week= $this->getImagesLoadedByDoctor('w');
 
+        $week_ImagesByDoctor_labels= [
+            "domingo",
+            "lunes",
+            "martes",
+            "miercoles",
+            "jueves",
+            "viernes",
+            "sabado"            
+        ];
+
+        
+       // $startDate->locale('es')->day
+        $testDatax = collect([]);  
+
+        foreach ($imagesByDoctor_values_day as $row) {  
+            $startDate = Carbon::now()->startOfWeek();
+            $endDate = Carbon::now()->endOfWeek(); 
+            while($startDate<= $endDate)
+            {    
+                if ($startDate->locale('es')->day==$row->created_day)
+                {
+                    $_resultval=1; //buscar el valor en la base de datos
+                }
+                else
+                {
+                    $_resultval=0;
+                }
+                //$_resultval=$imagesByDoctor_values_week->firstWhere('id', '=',  $row->id);
+                //$_resultval=(is_null($_resultval)) ? 0 : $_resultval->quantity;
+            
+                $testDatax->push($_resultval);
+                collect($row)->push('test',$_resultval);
+                $startDate->addDay();
+            }
+        }
+
+        //$week_ImagesByDoctor_values=$this->getImagesLoadedByDoctor_transformToweekly($imagesByDoctor_values_week);
+     
         $_ImagesByDoctor=collect(
                 ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
                 "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
-                "procedures_bydoctor_weekly_data"=>null,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
+                "week_ImagesByDoctor_qty"=>$imagesByDoctor_values_week,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
+                "week_ImagesByDoctor_labels"=>$week_ImagesByDoctor_labels
         ]);
             
       
@@ -64,7 +98,7 @@ class HomeController extends Controller
         'images_ByDoctor'=> $_ImagesByDoctor,
         'tracking_Doctors'=>$this->getDoctorsTrack(),
         'topRedemedPoints'=>$this->getTopRedemedPoints(),
-        'error'=>$errormsg
+        'test'=>$testDatax
         ]);
     }
 
@@ -121,22 +155,56 @@ class HomeController extends Controller
         return $data;
     }
     
+    private  function getImagesLoadedByDoctor_transformToweekly($filter){
+        $startDate = Carbon::now()->startOfWeek();
+        $endDate = Carbon::now()->endOfWeek();
+
+        $testData=[];
+        while($startDate<= $endDate)
+        {
+            $testData['dia']=$startDate;
+            $startDate->addDay();
+        }
+        
+        /*$WeekDataArray=[];
+        $WeekDataArray_out=[];
+        
+        
+        while($startDate<= $endDate)
+        {
+            $WeekDataArray2=$mainClass->FilterDataByArray($dtabyWeek,$startDate,'day');;
+            $WeekDataArray2_out=$mainClass->FilterDataByArray($dtabyWeek_outcome,$startDate,'day');
+            
+            $WeekDataArray[]=(count($WeekDataArray2))>0?$WeekDataArray2:0;
+            $WeekDataArray_out[]=(count($WeekDataArray2_out))>0?$WeekDataArray2_out:0;
+            
+            $startDate->addDay();
+        }*/
+    }
     private  function getImagesLoadedByDoctor($filter)
     {
 
-        $data= DB::table('images')
-        ->join('users', function ($join) {
-            $join->on('users.id', '=', 'images.created_by');
-        })
+        $data= DB::table('images')        
         ->join('patients', function ($join) {
-            $join->on('patients.doctor_id', '=', 'users.id');
+            $join->on('patients.id', '=', 'images.patient_id');
+        })
+        ->join('users', function ($join) {
+            $join->on('users.id', '=', 'patients.doctor_id');
         })
         ->when($filter=='d', function ($query) {
-            return $query->whereYear('images.created_at', date('Y'))->whereDay('images.created_at', '=', date('d'))
-            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"));
-        }) 
-        ->whereNull('images.deleted_at')
-        ->groupBy('users.id')              
+            return $query->whereYear('images.created_at', date('Y'))->whereDay('images.created_at', date('d'))
+            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name, users.id"))
+            ->orderBy('quantity', 'desc')
+            ->whereNull('images.deleted_at')
+            ->groupBy('name','users.id');  
+        })      
+        ->when($filter=='w', function ($query) {
+            return $query->whereYear('images.created_at', date('Y')) ->where(DB::Raw('week(images.created_at)'), Carbon::now()->weekOfYear)
+            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name, DAY(images.created_at) as created_day, users.id"))
+            ->orderBy('quantity', 'desc')
+            ->whereNull('images.deleted_at')
+            ->groupBy('name','created_day','users.id');  
+        })          
         ->take(10)
         ->get();
         

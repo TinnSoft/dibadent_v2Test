@@ -17,6 +17,7 @@ use Illuminate\Support\Arr;
 use DB;
 use Illuminate\Http\File;
 use App\Events\RecordActivity;
+use Illuminate\Support\Str;
 
 class ImagesController extends Controller
 {
@@ -61,14 +62,15 @@ class ImagesController extends Controller
             }
             
 
-            $UserName = Patients::Join('images', 'images.patient_id', '=', 'patients.id') 
-            ->where([
+            $UserName = Patients::where([
                 ['patients.id','=',$patient_id]
             ])     
-            ->select('patients.name')              
+            ->select(DB::raw("CONCAT(patients.name,' ', patients.last_name) as name"))              
             ->get();
 
-            event(new RecordActivity(Auth::user()->name.' cargó una nueva radiografía para el paciente '.$UserName->pluck('name'),
+            
+
+            event(new RecordActivity(Str::upper(Auth::user()->name).' '.Str::upper(Auth::user()->last_name).' cargó '.count($request->files).' radiografía(s) para el paciente: '.Str::upper($UserName[0]->name),
             'Images',null, true));
 
             return response()
@@ -105,13 +107,8 @@ class ImagesController extends Controller
     {
         
         $imgData = Images::find($id);
-
         Storage::delete($imgData->file_name);
-
         $imgData->delete();
-
-        event(new RecordActivity(Auth::user()->name.' eliminó la imagen '.$imgData->file_name,
-        'Images',null, false));
 
         return response()
         ->json([

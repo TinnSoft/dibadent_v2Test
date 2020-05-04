@@ -34,11 +34,6 @@ class PatientsController extends Controller
     }
     public function getDoctors()
     {
-        /*return Users::where('profile_id','=',  3)        
-        ->select('id','name','last_name','email','birthday','home_address','phone','id as value','name as label')   
-        ->whereNull('deleted_at')           
-        ->get();*/
-
         return DB::table('users')
         ->where('profile_id','=',  3) 
         ->whereNull('deleted_at')
@@ -57,14 +52,20 @@ class PatientsController extends Controller
         ->Join('users', 'patients.doctor_id', '=', 'users.id')
         ->Join('profiles', 'users.profile_id', '=', 'profiles.id')
         ->select('patients.id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),
-        DB::raw("CONCAT(users.name,' ',users.last_name) as doctor_name"),'patients.doctor_id'
-        )      
+        DB::raw("CONCAT(users.name,' ',users.last_name) as doctor_name"),'patients.doctor_id', 'users.identification_number','users.avatar')      
         ->orderBy('patients.id','desc')        
         ->get();
 
+        $imagescreatedQTY= DB::table('images')
+        ->whereYear('images.created_at', '=', date('Y'))
+        ->where('images.created_by',"=", Auth::user()->id)
+        ->whereNull('deleted_at')
+        ->count('id');
+
        return response()
        ->json([
-           'patients' => $data
+           'patients' => $data,
+           'images_created_qty'=>$imagescreatedQTY
        ]);
     }
 
