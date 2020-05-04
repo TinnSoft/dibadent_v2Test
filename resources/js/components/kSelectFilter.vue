@@ -39,10 +39,14 @@ export default {
 
       update(() => {
         console.log('needle1: ',this.$attrs.options);
-        const needle = val.toLowerCase();
+        try {
+          const needle = val.toLowerCase();
         this.options = this.$attrs.options.filter(
           v => v.label.toLowerCase().indexOf(needle) > -1
         );
+        } catch (error) {          
+        }
+        
       });
     },
     filterFunc(v, u, a) {
