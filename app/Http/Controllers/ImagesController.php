@@ -33,6 +33,7 @@ class ImagesController extends Controller
            $d->file_name = asset('storage/' . $d->file_name);
            return $d;
        });
+       
        return response()
        ->json([
           'images' => $data,          

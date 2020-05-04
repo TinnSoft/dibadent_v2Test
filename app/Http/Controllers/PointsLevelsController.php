@@ -36,11 +36,17 @@ class PointsLevelsController extends Controller
 
 
         foreach($data as $_item) {        
-            $val = $redeemedPoints->firstWhere('user_id', '=', $_item->id)['points_redeemed'];
-            if($val)
-            {
-                $_item['available_points'] = (int)$_item['available_points'] - (int)$val;
-            }            
+            try {
+                $val = $redeemedPoints->firstWhere('user_id', '=', $_item->id)['points_redeemed'];
+                if($val)
+                {
+                    $_item['available_points'] = (int)$_item['available_points'] - (int)$val;
+                }   
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+
+                     
        }
 
 
