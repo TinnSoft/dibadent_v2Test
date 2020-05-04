@@ -39,9 +39,7 @@ export default {
 
       update(() => {
         const needle = val.toLowerCase();
-        /*this.options = this.$attrs.options.filter(v =>
-          v.label.toLowerCase().includes(needle)
-        );*/
+        console.log('needle: ',needle);
         this.options = this.$attrs.options.filter(
           v => v.label.toLowerCase().indexOf(needle) > -1
         );
