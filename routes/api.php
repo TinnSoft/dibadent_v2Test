@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,6 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
-    // Route::get('/user', function (Request $request) {
-    //     return $request->user();
-    // });
     
     Route::resource('images', 'ImagesController');
     Route::post('uploadFile/{id}', 'ImagesController@uploadFile');
