@@ -12,6 +12,7 @@
         "barryvdh/laravel-dompdf": "^0.8.2",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
+        "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "jenssegers/date": "^3.3",
         "kalnoy/nestedset": "^5.0",
