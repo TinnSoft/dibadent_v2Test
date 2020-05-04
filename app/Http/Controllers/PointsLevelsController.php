@@ -20,7 +20,7 @@ class PointsLevelsController extends Controller
         
         
         $data = Users::Join('profiles', function ($join) {
-            $join->on('users.profile_id', '=', 'profiles.id')->where('PROFILES.description','=','DOCTOR');
+            $join->on('users.profile_id', '=', 'profiles.id')->where('profiles.description','=','DOCTOR');
         })
         ->leftJoin('points_history', 'points_history.USER_ID', '=', 'users.id') 
         ->select('users.id', DB::raw("CONCAT(users.name,' ',users.last_name) as user_name"),
