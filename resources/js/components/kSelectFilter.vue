@@ -38,6 +38,7 @@ export default {
       }
 
       update(() => {
+        console.log('needle1: ',val);
         const needle = val.toLowerCase();
         console.log('needle: ',needle);
         this.options = this.$attrs.options.filter(
