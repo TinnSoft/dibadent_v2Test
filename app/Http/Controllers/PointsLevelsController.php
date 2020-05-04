@@ -27,7 +27,7 @@ class PointsLevelsController extends Controller
             'users.identification_number',DB::raw("SUM(points_history.value) as available_points"),
             DB::raw("'0' as new_points"))      
         ->whereNull('users.deleted_at') 
-        ->groupBy('users.id')
+        ->groupBy('users.id','users.name','users.last_name','users.identification_number')
         ->get();
 
         $redeemedPoints= PointsRedemption::select('user_id',DB::raw("SUM(points_redeemed) as points_redeemed"))
