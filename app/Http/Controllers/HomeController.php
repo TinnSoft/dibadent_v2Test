@@ -113,7 +113,7 @@ class HomeController extends Controller
             $join->on('users.id', '=', 'points_redemption.user_id');
         })
         ->select(DB::raw("SUM(points_redemption.points_redeemed) as points_redeemed, CONCAT(users.name,' ', users.last_name) as name"))
-        ->groupBy('points_redemption.user_id')
+        ->groupBy('points_redemption.user_id','users.name','users.last_name')
         ->orderBy('points_redeemed', 'desc')        
         ->take(5)
         ->get();
