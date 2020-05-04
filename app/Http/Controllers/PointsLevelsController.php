@@ -23,7 +23,7 @@ class PointsLevelsController extends Controller
             $join->on('users.profile_id', '=', 'profiles.id')->where('profiles.description','=','DOCTOR');
         })
         ->leftJoin('points_history', 'points_history.USER_ID', '=', 'users.id') 
-        ->select('users.id', DB::raw("CONCAT(users.name,' ',users.last_name) as user_name"),
+        ->select('users.id', DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as user_name"),
             'users.identification_number',DB::raw("SUM(points_history.value) as available_points"),
             DB::raw("'0' as new_points"))      
         ->whereNull('users.deleted_at') 

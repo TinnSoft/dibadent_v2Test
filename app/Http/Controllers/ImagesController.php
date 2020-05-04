@@ -65,7 +65,7 @@ class ImagesController extends Controller
             $UserName = Patients::where([
                 ['patients.id','=',$patient_id]
             ])     
-            ->select(DB::raw("CONCAT(patients.name,' ', patients.last_name) as name"))              
+            ->select(DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name"))              
             ->get();
 
             

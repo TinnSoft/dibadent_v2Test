@@ -84,7 +84,7 @@ class UsersController extends Controller
        $patientsAsociatedToDoctor = Patients::where('doctor_id', Auth::user()->id)->select('id')->get();
        
        $dataPacientList = Patients::whereIn('id',  $patientsAsociatedToDoctor)
-       ->select('id','id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),'home_address',
+       ->select('id','id as value', DB::raw("CONCAT(IFNULL(patients.name,''),' ',IFNULL(patients.last_name,'')) as label"),'home_address',
        'name','last_name','phone','email','comments')->get();
 
        //$dataProcedures=Procedures::where('doctor_id', Auth::user()->id)->select()-get();

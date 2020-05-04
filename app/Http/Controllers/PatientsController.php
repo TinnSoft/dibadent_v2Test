@@ -37,8 +37,8 @@ class PatientsController extends Controller
         return DB::table('users')
         ->where('profile_id','=',  3) 
         ->whereNull('deleted_at')
-        ->select('users.id as value', DB::raw("CONCAT(users.name,' ',users.last_name) as label"),
-        DB::raw("CONCAT('CC: ',users.identification_number) as description"))->get()->toArray();
+        ->select('users.id as value', DB::raw("CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as label"),
+        DB::raw("CONCAT('CC: ',IFNULL(users.identification_number) as description"))->get()->toArray();
     }
     public function getGenders()
     {
@@ -51,8 +51,8 @@ class PatientsController extends Controller
         $data = patients::whereNull('patients.deleted_at')
         ->Join('users', 'patients.doctor_id', '=', 'users.id')
         ->Join('profiles', 'users.profile_id', '=', 'profiles.id')
-        ->select('patients.id as value', DB::raw("CONCAT(patients.name,' ',patients.last_name) as label"),
-        DB::raw("CONCAT(users.name,' ',users.last_name) as doctor_name"),'patients.doctor_id', 'users.identification_number','users.avatar')      
+        ->select('patients.id as value', DB::raw("CONCAT(IFNULL(patients.name,''),' ',IFNULL(patients.last_name,'')) as label"),
+        DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as doctor_name"),'patients.doctor_id', 'users.identification_number','users.avatar')      
         ->orderBy('patients.id','desc')        
         ->get();
 

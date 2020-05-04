@@ -21,7 +21,7 @@ class ChatsController extends Controller
         ->with('chatHistory')
         ->where('profiles.description','=', 'DOCTOR')    
         ->whereNull('users.deleted_at')  
-        ->select(DB::raw("users.id, users.avatar, CONCAT(users.name,' ', users.last_name) as user_name, 
+        ->select(DB::raw("users.id, users.avatar, CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as user_name, 
         null as date, null as time"))
         ->orderBy('users.id', 'desc')
         ->get();

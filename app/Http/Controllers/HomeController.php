@@ -112,7 +112,7 @@ class HomeController extends Controller
         ->join('users', function ($join) {
             $join->on('users.id', '=', 'points_redemption.user_id');
         })
-        ->select(DB::raw("SUM(points_redemption.points_redeemed) as points_redeemed, CONCAT(users.name,' ', users.last_name) as name"))
+        ->select(DB::raw("SUM(points_redemption.points_redeemed) as points_redeemed, CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name"))
         ->groupBy('points_redemption.user_id','users.name','users.last_name')
         ->orderBy('points_redeemed', 'desc')        
         ->take(5)
@@ -196,14 +196,14 @@ class HomeController extends Controller
         })
         ->when($filter=='d', function ($query) {
             return $query->whereYear('images.created_at', date('Y'))->whereDay('images.created_at', date('d'))
-            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name, users.id"))
+            ->select(DB::raw("count(images.id) as quantity,  CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name, users.id"))
             ->orderBy('quantity', 'desc')
             ->whereNull('images.deleted_at')
             ->groupBy('name','users.id');  
         })      
         ->when($filter=='w', function ($query) {
             return $query->whereYear('images.created_at', date('Y')) ->where(DB::Raw('week(images.created_at)'), Carbon::now()->weekOfYear)
-            ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name, DAY(images.created_at) as created_day, users.id"))
+            ->select(DB::raw("count(images.id) as quantity,  CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name, DAY(images.created_at) as created_day, users.id"))
             ->orderBy('quantity', 'desc')
             ->whereNull('images.deleted_at')
             ->groupBy('name','created_day','users.id');  
@@ -222,7 +222,7 @@ class HomeController extends Controller
         ->join('users', function ($join) {
             $join->on('users.id', '=', 'images.doctor_id');
         })
-        ->select(DB::raw("count(images.id) as quantity,  CONCAT(users.name,' ', users.last_name) as name"))
+        ->select(DB::raw("count(images.id) as quantity,  CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name"))
         ->whereYear('images.created_at', '=', date('Y'))->whereDay('images.created_at', '=', date('d'))
         ->groupBy('images.patient_id')
         ->orderBy('quantity', 'desc')
@@ -243,7 +243,7 @@ class HomeController extends Controller
             $join->on('users.id', '=', 'procedures.doctor_id');
         })
         ->select(DB::raw("procedures.doctor_id, DAYOFWEEK(procedures.created_at) as day, count(procedures.id) as quantity, 
-        CONCAT(users.name,' ', users.last_name) as name"))
+        CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as name"))
         //->whereYear('procedures.created_at', '=', date('Y'))->whereDay('procedures.created_at', '=', date('d'))
         ->groupBy('procedures.doctor_id','day','users.name','users.last_name')
         ->orderBy('procedures.doctor_id', 'desc')
