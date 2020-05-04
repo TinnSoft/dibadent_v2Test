@@ -60,24 +60,26 @@ class HomeController extends Controller
        // $startDate->locale('es')->day
         $testDatax = collect([]);  
 
+        $fakevalues= collect([]);  
+
         foreach ($imagesByDoctor_values_day as $row) {  
             $startDate = Carbon::now()->startOfWeek();
             $endDate = Carbon::now()->endOfWeek(); 
             while($startDate<= $endDate)
             {    
-                if ($startDate->locale('es')->day==$row->created_day)
+               
+               /* if ($startDate->locale('es')->day==$row->created_day)
                 {
                     $_resultval=1; //buscar el valor en la base de datos
                 }
                 else
                 {
                     $_resultval=0;
-                }
-                //$_resultval=$imagesByDoctor_values_week->firstWhere('id', '=',  $row->id);
-                //$_resultval=(is_null($_resultval)) ? 0 : $_resultval->quantity;
+                }*/
+                $_resultval=$imagesByDoctor_values_week->firstWhere('id', '=',  $row->id);
+                $_resultval=(is_null($_resultval)) ? 0 : $_resultval->quantity;
             
-                $testDatax->push($_resultval);
-                collect($row)->push('test',$_resultval);
+                $fakevalues->push($_resultval);
                 $startDate->addDay();
             }
         }
@@ -98,7 +100,8 @@ class HomeController extends Controller
         'images_ByDoctor'=> $_ImagesByDoctor,
         'tracking_Doctors'=>$this->getDoctorsTrack(),
         'topRedemedPoints'=>$this->getTopRedemedPoints(),
-        'test'=>$testDatax
+        'test'=>$fakevalues,
+        'test2'=>Carbon::now()->weekOfYear
         ]);
     }
 

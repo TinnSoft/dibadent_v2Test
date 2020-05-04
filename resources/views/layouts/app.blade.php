@@ -1,4 +1,5 @@
 @php
+
 $config = [
     'appName' => config('app.name'),
     'locale' => $locale = app()->getLocale(),
