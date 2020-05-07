@@ -68,9 +68,9 @@ export default {
   },
   methods: {
     addComment() {
-      let vm = this;
-      vm.loading = true;
+      let vm = this;     
       if (vm.varComments.comment) {
+         vm.loading = true;
         vm.$set(vm.varComments, "image_id", vm.imageAttributes.id);
 
         axios
