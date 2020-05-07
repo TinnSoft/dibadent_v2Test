@@ -302,7 +302,6 @@ export default {
         .onOk(() => {
           axios.post("/api/redemptPoint/" + value.id).then(function(response) {
             if (response.data.created) {
-              console.log(response.data);
               if (response.data.redemptionCode) {
                 vm.$set(vm, "redemptionCode", response.data.redemptionCode);
                 vm.$set(vm, "showRedemedPointConfirmationSuccess", true);

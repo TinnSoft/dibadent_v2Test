@@ -35,13 +35,9 @@ class HomeController extends Controller
     {
         $sumOfImages=[];
         $_ImagesByDoctor=[];
-        
-       
-        //procedimientos por mes y año consolidado
  
         $sumOfImages= collect(["images_lastMonth"=>$this->getQuantityOfImages('m'),
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
-            
       
         $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
         $imagesByDoctor_values_week= $this->getImagesLoadedByDoctor('w');
@@ -55,7 +51,6 @@ class HomeController extends Controller
             "viernes",
             "sabado"            
         ];
-
         
        // $startDate->locale('es')->day
         $testDatax = collect([]);  
@@ -92,7 +87,6 @@ class HomeController extends Controller
                 "week_ImagesByDoctor_qty"=>$imagesByDoctor_values_week,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
                 "week_ImagesByDoctor_labels"=>$week_ImagesByDoctor_labels
         ]);
-            
       
         return response()
         ->json([
@@ -202,7 +196,7 @@ class HomeController extends Controller
             ->groupBy('name','users.id');  
         })      
         ->when($filter=='w', function ($query) {
-            return $query->whereYear('images.created_at', date('Y')) ->where(DB::Raw('week(images.created_at)'), Carbon::now()->weekOfYear)
+            return $query->whereYear('images.created_at', date('Y'))->where(DB::Raw('week(images.created_at)'), Carbon::now()->weekOfYear)
             ->select(DB::raw("count(images.id) as quantity,  CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name, DAY(images.created_at) as created_day, users.id"))
             ->orderBy('quantity', 'desc')
             ->whereNull('images.deleted_at')

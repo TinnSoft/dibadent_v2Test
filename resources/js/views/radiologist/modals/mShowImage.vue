@@ -23,7 +23,7 @@
               </template>
             </q-img>
           </q-card-section>
-          <q-card-section>
+          <!--<q-card-section>
             <q-input
               clearable
               v-model="imageAttributes.other_details"
@@ -34,7 +34,7 @@
               :rules="[ val => val.length <= 255 || 'Porfavor use máximo 255 carácteres']"
               lazy-rules
             />
-          </q-card-section>
+          </q-card-section>-->
         </q-card>
       </q-dialog>
     </div>

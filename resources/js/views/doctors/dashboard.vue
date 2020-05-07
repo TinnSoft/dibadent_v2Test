@@ -146,7 +146,7 @@
                     v-for="(image, i) in listOfImages"
                     :key="i"
                     :src="image.file_name"
-                    style="width: 150px"
+                    style="width: 180px"
                     ratio="1"
                     spinner-color="white"
                     class="rounded-borders"
@@ -158,6 +158,13 @@
                         color="white"
                         @click="showImageModal($refs, image)"
                         icon="zoom_in"
+                      ></q-btn>
+                      <q-btn
+                        flat
+                        round
+                        color="white"
+                        icon="insert_comment"
+                        @click="showCommentsModal($refs, image)"
                       ></q-btn>
                       <q-btn flat round color="white" icon="delete" @click="deleteImage(image,i)"></q-btn>
                     </div>
@@ -179,6 +186,7 @@
           </q-layout>
           <patientModal ref="_patient"></patientModal>
           <showImageModal ref="_showImage"></showImageModal>
+          <showCommentsModal ref="_showComments"></showCommentsModal>
         </div>
       </div>
     </div>
@@ -190,10 +198,11 @@ import store from "../../store";
 import patientModal from "../settings/modals/mPatient.vue";
 import showImageModal from "./modals/mShowImage.vue";
 import kNotify from "../../components/messages/Notify.js";
+import showCommentsModal from "../images/mComments.vue";
 
 export default {
   middleware: "auth",
-  components: { patientModal, showImageModal },
+  components: { patientModal, showImageModal, showCommentsModal },
   data() {
     return {
       form: {},
@@ -244,6 +253,9 @@ export default {
     }
   },
   methods: {
+    showCommentsModal(refs, attributes) {
+      refs._showComments.open(attributes);
+    },
     uloadedFinished(val) {
       this.getListOfImages(this.patientID);
       this.fetchData(this.pathDashboardData);

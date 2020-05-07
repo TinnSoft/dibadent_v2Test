@@ -123,7 +123,7 @@
                     v-for="(image, i) in listOfImages"
                     :key="i"
                     :src="image.file_name"
-                    style="width: 150px"
+                    style="width: 180px"
                     ratio="1"
                     spinner-color="white"
                     class="rounded-borders"
@@ -136,6 +136,13 @@
                         color="white"
                         icon="zoom_in"
                         @click="showImageModal($refs, image)"
+                      ></q-btn>
+                      <q-btn
+                        flat
+                        round
+                        color="white"
+                        icon="insert_comment"
+                        @click="showCommentsModal($refs, image)"
                       ></q-btn>
                       <q-btn flat round color="white" icon="delete" @click="deleteImage(image)"></q-btn>
                     </div>
@@ -152,6 +159,7 @@
           </q-layout>
           <patientModal ref="_patient"></patientModal>
           <showImageModal ref="_showImage" @hide="closeImageModal"></showImageModal>
+          <showCommentsModal ref="_showComments"></showCommentsModal>
         </div>
       </div>
     </div>
@@ -162,11 +170,12 @@
 import store from "../../store";
 import patientModal from "../settings/modals/mPatient.vue";
 import showImageModal from "./modals/mShowImage.vue";
+import showCommentsModal from "../images/mComments.vue";
 import kNotify from "../../components/messages/Notify.js";
 
 export default {
   middleware: "auth",
-  components: { patientModal, showImageModal },
+  components: { patientModal, showImageModal, showCommentsModal },
   data() {
     return {
       form: {},
@@ -220,9 +229,8 @@ export default {
       this.doctor_name = null;
       this.doctor_CC = null;
       this.listOfImages = [];
-    
     },
-    uloadedFinished(val) {    
+    uloadedFinished(val) {
       this.getListOfImages(this.patientID);
       this.fetchData(this.pathPatientList);
       this.$refs.uploader.removeUploadedFiles();
@@ -247,6 +255,10 @@ export default {
     showImageModal(refs, attributes) {
       refs._showImage.open(attributes);
     },
+    showCommentsModal(refs, attributes) {
+      refs._showComments.open(attributes);
+    },
+
     openModal(modal, processType, itemId) {
       modal.open(processType, itemId);
     },
@@ -261,7 +273,6 @@ export default {
         vm.doctor_name = patientvalues.doctor_name;
         vm.doctor_CC = patientvalues.identification_number;
         vm.fetchData("getImagesByPatient/" + val);
-        
       }
       vm.loading = false;
     },
@@ -271,7 +282,6 @@ export default {
       axios
         .get(`/api/${path}`)
         .then(function(response) {
-         
           if (response.data.patients) {
             vm.$set(vm, "patientList", response.data.patients);
           }
@@ -318,7 +328,7 @@ export default {
       formData.append("_method", "PUT");
       axios
         .post("/api/images/" + e.target.dataset.image, formData)
-        .then(res => {          
+        .then(res => {
           this.getListOfImages(this.patientID);
         })
         .catch(error => {});

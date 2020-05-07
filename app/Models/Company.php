@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    public $timestamps = false;
-      
+    protected $dates = ['deleted_at','created_at','updated_at'];    
+    
     protected $table = 'company';
     
     protected $fillable=['name','address','phone','corporate_email'];

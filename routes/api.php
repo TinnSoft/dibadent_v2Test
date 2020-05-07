@@ -25,6 +25,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/user','UsersController@getUserInfo');   
     
+    Route::get('get_CommentsByImageId/{id}','CommentsController@get_CommentsByImageId'); 
+    Route::resource('comments', 'CommentsController');
+
     Route::resource('chats', 'ChatsController');
     Route::get('getAllDoctorsChats','ChatsController@getAllDoctorsChats');   
     Route::get('getAdminAndDoctorChats','ChatsController@getAdminAndDoctorChats');   
