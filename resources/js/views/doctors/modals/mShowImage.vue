@@ -23,15 +23,6 @@
               </template>
             </q-img>
           </q-card-section>
-          <q-card-section>
-            <q-input
-              v-model="comments"
-              filled
-              type="textarea"
-              label="Comentarios"
-              :readonly="isReadOnly"
-            />
-          </q-card-section>
         </q-card>
       </q-dialog>
     </div>
@@ -55,7 +46,6 @@ export default {
       let vm = this;
       vm.imageSource = imageAttributes.file_name;
       vm.comments = imageAttributes.other_details;
-      console.log(imageAttributes)
       vm.showImageByDoctor = true;
     }
   }
