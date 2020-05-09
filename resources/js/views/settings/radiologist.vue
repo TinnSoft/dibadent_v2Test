@@ -113,7 +113,6 @@ export default {
       this.fetchData();
     },
     show(refs, cell) {
-      //this.$router.push(`/${this.model}/${cell.row.public_id}`);
       this.openRadiologistModal(refs, "view", cell.id);
     },
     editRadiologistModal(refs, cell) {

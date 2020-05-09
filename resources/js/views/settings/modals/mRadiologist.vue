@@ -58,7 +58,11 @@
                             transition-show="scale"
                             transition-hide="scale"
                           >
-                            <q-date :readonly="isReadOnly" v-model="form.birthday" @input="() => $refs.qDateProxy.hide()" />
+                            <q-date
+                              :readonly="isReadOnly"
+                              v-model="form.birthday"
+                              @input="() => $refs.qDateProxy.hide()"
+                            />
                           </q-popup-proxy>
                         </q-icon>
                       </template>
@@ -108,17 +112,7 @@
               customClass="doc-note doc-note--tip"
             ></kBlockQuote>
           </q-card-section>
-          <q-card-section v-if="kindOfProcess=='edit'">
-            <q-banner inline-actions class="bg-grey-3">
-              <template v-slot:avatar>
-                <q-icon name="email" color="primary" />
-              </template>
-              Resetear contraseña.
-              <template v-slot:action>
-                <q-btn flat color="primary" label="Enviar" />
-              </template>
-            </q-banner>
-          </q-card-section>
+
           <q-card-actions v-if="kindOfProcess!='view'" align="right" class="text-primary">
             <q-btn
               rpunded
@@ -159,7 +153,7 @@ export default {
       model: "users",
       form: {},
       base: {},
-      pathFetchData: "/api/users/create",
+      pathFetchData: "/api/users/create"
     };
   },
   components: {},
@@ -219,7 +213,7 @@ export default {
     },
 
     submit() {
-       this.$set(this.$data.form, "_process", 'RADIOLOGIST');
+      this.$set(this.$data.form, "_process", "RADIOLOGIST");
       if (this.kindOfProcess === "edit") {
         this.spinnerText = "Actualizando...";
         this.update();

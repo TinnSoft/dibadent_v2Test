@@ -292,6 +292,19 @@ class UsersController extends Controller
             ]);
     }
 
+    public function updatePassword($newPassword){
+
+        $item = Users::findOrFail(Auth::user()->id);
+        $newPW['password']=bcrypt($newPassword);
+        
+        $item->update($newPW);
+
+        return response()
+        ->json([
+            'updated' => true,
+            'key'=>$item           
+        ]);
+    }
 
     public function update(Request $request, $id)
     {   

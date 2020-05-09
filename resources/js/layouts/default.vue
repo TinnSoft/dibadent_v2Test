@@ -91,6 +91,14 @@ export default {
         profileId: 2,
         id: 8
       },
+      {
+        icon: "build",
+        title: "ADMINISTRACIÓN",
+        path: "/settings",
+        type: "alone",
+        profileId: 2,
+        id: 9
+      },   
     ]
   }),
   created() {},

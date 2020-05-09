@@ -27,7 +27,7 @@
                       <q-item-label caption>{{_notification.detail}}</q-item-label>
                     </q-item-section>
                     <q-item-section top side>
-                      <div class="text-grey-8 q-gutter-xs">                        
+                      <div class="text-grey-8 q-gutter-xs">
                         <q-btn
                           size="sm"
                           color="blue"
@@ -61,6 +61,16 @@
           flat
           dense
           v-if="!$q.platform.within.iframe"
+          icon="settings"
+          class="q-mr-sm"
+          @click.native="changePassword($refs)"
+        >
+          <q-tooltip>Cambiar mi contraseña</q-tooltip>
+        </q-btn>
+        <q-btn
+          flat
+          dense
+          v-if="!$q.platform.within.iframe"
           icon="exit_to_app"
           class="q-mr-sm"
           label="Salir"
@@ -84,6 +94,23 @@
     >
       <q-scroll-area class="fit">
         <q-list padding style="max-width: 350px">
+          <q-item class="text-primary text-bold">
+            <q-item-section avatar>
+              <q-avatar>
+                <img :src="userData.avatar" />
+              </q-avatar>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label caption>
+                <span class="text-weight-bold">{{username}}</span>
+              </q-item-label>
+              <q-item-label caption>{{userData.email}}</q-item-label>
+              <q-item-label caption>
+                <span class="text-weight-bold">{{userData.profile.description}}</span>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator />
           <div v-for="item in items" v-bind:key="item.id">
             <q-item
               v-if="profile==item.profileId"
@@ -104,7 +131,7 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-
+    <showPasswordChangeModal ref="_changePassword"></showPasswordChangeModal>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -113,9 +140,11 @@
 
 <script type="text/javascript">
 import store from "../store";
+import showPasswordChangeModal from "../views/auth/mChangePassword.vue";
 
 export default {
   props: ["title", "backgroundColor", "subtitle", "items"],
+   components: { showPasswordChangeModal },
   data() {
     return {
       miniState: true,
@@ -132,17 +161,32 @@ export default {
     };
   },
   computed: {
+    username() {
+      if (this.userData.name) {
+        var xLastName = this.userData.last_name;
+        if (!xLastName) {
+          xLastName = "";
+        }
+        return this.userData.name + ' '+ xLastName;
+      }
+    },
     email() {
-      return this.$store.getters["auth/user"].email;
+      return this.userData.email;
     },
     profile() {
-      return this.$store.getters["auth/user"].profile_id;
+      return this.userData.profile_id;
+    },
+    userData() {
+      return this.$store.getters["auth/user"];
     }
   },
   created() {
     this.getNotification();
   },
   methods: {
+    changePassword(refs) {
+      refs._changePassword.open();
+    },
     async logout() {
       await this.$store.dispatch("auth/logout");
       this.$router.push({ name: "login" });
@@ -155,10 +199,8 @@ export default {
     markNotificationAsRead(notificationID) {
       axios
         .post(this.urlToUpdateNotification + notificationID)
-        .then(res => {
-        })
-        .catch(error => {
-        });
+        .then(res => {})
+        .catch(error => {});
     },
     async getNotification() {
       let profileName = this.$store.getters["auth/user"].profile.description;

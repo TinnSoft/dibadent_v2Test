@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getImagesByPatient/{patient_id}','ImagesController@getImagesByPatient');  
 
     Route::post('uploadAvatar/{id}', 'UsersController@uploadAvatar');
+    Route::post('updatePassword/{password}', 'UsersController@updatePassword');
 
     Route::get('/user','UsersController@getUserInfo');   
     

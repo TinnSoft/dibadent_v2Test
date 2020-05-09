@@ -122,17 +122,6 @@
               customClass="doc-note doc-note--tip"
             ></kBlockQuote>
           </q-card-section>
-          <q-card-section v-if="kindOfProcess=='edit'">
-            <q-banner inline-actions class="bg-grey-3">
-              <template v-slot:avatar>
-                <q-icon name="email" color="primary" />
-              </template>
-              Resetear contraseña.
-              <template v-slot:action>
-                <q-btn flat color="primary" label="Enviar" />
-              </template>
-            </q-banner>
-          </q-card-section>
           <q-card-actions v-if="kindOfProcess!='view'" align="right" class="text-primary">
             <q-btn
               rpunded
