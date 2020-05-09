@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PasswordGenerated;
+use App\Models\Users;
 use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
@@ -43,14 +44,26 @@ class ResetPasswordController extends Controller
 
     public function reset_password(Request $request){
         
+        $newPassword=Str::random(6);
+
         $emailData['email'] = $request->email;
-        $emailData['password'] =Str::random(6);
+        $emailData['password'] = bcrypt($newPassword);
+
+       
+        $item = Users::where('email',  $request->email)->first();
+        if($item)
+        {
+            $item->update($emailData);
+        }
+
+        $emailData['password'] =$newPassword;
+
         $this->sendEmail($emailData);
 
           return response()
             ->json([
                 'sent' => true,
-                'em'=> $request->email
+                'em'=> $item
             ]);
     }
 
