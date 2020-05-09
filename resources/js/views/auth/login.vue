@@ -76,27 +76,7 @@ export default {
         actions: [{ label: "Cancelar", color: "white" }]
       });
     },
-    /*   login() {
-      let vm = this;
-      vm.progress = true;
-
-console.log('inicio', Form);
-
-      axios({
-        method: "post",
-        url: "/api/login",
-        data: vm.form
-      })
-        .then(function(response) {
-          vm.progress = false;
-          console.log('paso');
-        })
-        .catch(function(error) {
-          console.log('NO paso');
-          vm.progress = false;
-        });
-        
-    }*/
+  
     async login() {
       let vm = this;
       vm.progress = true;
@@ -114,15 +94,10 @@ console.log('inicio', Form);
         // Fetch the user.
         await vm.$store.dispatch("auth/fetchUser");
         vm.$router.push({ name: "home" });
-        // if (vm.$store.getters["auth/user"].profile.description == "ADMIN") {
-        //   vm.$router.push({ name: "home" });
-        // } else {
-        //   vm.$router.push({ name: "home_Doctor" });
-        // }
-        // Redirect home.
+    
       } catch (err) {
         vm.progress = false;
-        console.log("error c: ", err.response);
+        //console.log("error c: ", err.response);
         this.showNotification();
       }
     }

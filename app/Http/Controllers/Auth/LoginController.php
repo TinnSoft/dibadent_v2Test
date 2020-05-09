@@ -53,17 +53,6 @@ class LoginController extends Controller
             return true;
         }
         return false;
-
-        /*$token = $this->guard()->attempt($this->credentials($request));
-        if (! $token) {
-            return false;
-        }
-        $user = $this->guard()->user();
-        if ($user instanceof MustVerifyEmail && ! $user->hasVerifiedEmail()) {
-            return false;
-        }
-        $this->guard()->setToken($token);
-        return true;*/
     }
 
     protected function sendLoginResponse(Request $request)
@@ -73,13 +62,8 @@ class LoginController extends Controller
        
         $token = (string) $this->guard()->getToken();
         $expiration = $this->guard()->getPayload()->get('exp');
-       // abort(403, $expiration );
+
         event(new UserLoggedIn());
-  
-        
-       /* event(new RecordActivity('LogIn',$this->guard()->user()->name.' ha iniciado sesion',
-        'User','/profile/'.$this->guard()->user()->id.'/edit'));
-        */
 
         return [
             'token' => $token,

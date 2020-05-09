@@ -19,8 +19,6 @@ import '~/components'
 Vue.config.productionTip = false
 Quasar.lang.set(i18nLang)
 
-console.log('quasar: ',Quasar.lang.getLocale());
-
 Vue.use(Quasar) 
 Vue.use(iePolyfill) 
 

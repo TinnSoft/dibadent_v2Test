@@ -162,8 +162,7 @@ class UsersController extends Controller
         ->where([
             ['profiles.id',$this->doctor_code]
         ])    
-        ->where('isActive',1)    
-        ->whereNull('deleted_at')
+        ->where('isActive',1)   
         ->select('users.id',
         'users.name',
         'users.last_name',
@@ -245,6 +244,8 @@ class UsersController extends Controller
         Mail::to($data['email'])
             ->send(new PasswordGenerated($body));
     }
+
+  
 
     public function store(Request $request)
     {                
