@@ -85,6 +85,9 @@
             :data="data_doctorMovements"
             :columns="columns_doctorMovements"
             row-key="name"
+             virtual-scroll
+          :pagination.sync="pagination"
+          :rows-per-page-options="[0]"
           >
             <template v-slot:top-right="props">
               <q-input dense debounce="300" v-model="filter_doctorMovements" placeholder="Buscar">
@@ -122,6 +125,9 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        rowsPerPage: 10
+      },
       PieChartdata: {
         labels: null,
         datasets: [
