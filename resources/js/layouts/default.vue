@@ -92,13 +92,30 @@ export default {
         id: 8
       },
       {
+        icon: "shopping_cart",
+        title: "CUPONES",
+        type: "alone",
+        path: "/products-redemption",
+        profileId: 2,
+        id: 9
+      },
+      {
         icon: "build",
         title: "ADMINISTRACIÓN",
         path: "/settings",
         type: "alone",
         profileId: 2,
-        id: 9
+        id: 10
       },   
+      {
+        icon: "build",
+        title: "ADMINISTRACIÓN",
+        path: "/settings",
+        type: "alone",
+        profileId: 3,
+        id: 11
+      },  
+       
     ]
   }),
   created() {},

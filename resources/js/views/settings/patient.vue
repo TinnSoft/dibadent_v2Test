@@ -10,6 +10,8 @@
         :filter="filter"
         :pagination.sync="pagination"
         dense
+        flat
+        bordered
         :visible-columns="visibleColumns"
       >
         <template v-slot:top="props">

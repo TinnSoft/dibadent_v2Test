@@ -10,6 +10,8 @@
         :filter="filter"
         :pagination.sync="pagination"
         dense
+        flat
+        bordered
         :grid="$q.screen.xs"
         :visible-columns="visibleColumns"
       >

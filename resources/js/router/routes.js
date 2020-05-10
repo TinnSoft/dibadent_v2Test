@@ -23,14 +23,19 @@ export default [
     },
     {
         path: "/password/reset",
-        name: "password.request",
-        component: page("auth/password/email.vue")
+        name: "password.reset",
+        component: page("auth/password/reset.vue")
+    },
+    {
+        path: "/products-redemption",
+        name: "products-redemption",
+        component: page("radiologist/product_redemption.vue")
     },
     {
         path: "/settings",
         component: page("settings/index.vue"),
         children: [
-            { path: "", redirect: { name: "settings.company" } },
+            { path: "", redirect: { name: "settings.profile" } },
             {
                 path: "profile",
                 name: "settings.profile",
@@ -60,6 +65,11 @@ export default [
                 path: "product",
                 name: "settings.product",
                 component: page("settings/product.vue")
+            },
+            {
+                path: "password",
+                name: "settings.password",
+                component: page("settings/password.vue")
             }
         ]
     },

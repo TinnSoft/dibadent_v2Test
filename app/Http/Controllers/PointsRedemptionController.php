@@ -57,4 +57,24 @@ class PointsRedemptionController extends Controller
 
         
     }
+
+    public function getProductRedemptionHistory(){
+        
+        $data = DB::table('products')
+            ->Join('points_redemption', 'products.id', '=', 'points_redemption.product_id')    
+            ->Join('users', 'users.id', '=', 'points_redemption.user_id')        
+            ->whereNull('points_redemption.deleted_at')
+            ->select('products.description','points_redemption.points_redeemed','points_redemption.id',
+            'points_redemption.code','points_redemption.is_code_confirmed as state','points_redemption.created_at',
+            'points_redemption.updated_at', DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as doctor_name")
+            )      
+            ->orderByRaw('points_redemption.is_code_confirmed  ASC')      
+            ->get();
+        
+        return response()
+        ->json([
+            'redemptionHistory' => $data
+        ]);
+    }
+
 }

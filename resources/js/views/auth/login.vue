@@ -37,7 +37,7 @@
               <q-separator spaced></q-separator>
               <br />
               <small>
-                <router-link :to="{ name: 'password.request' }">Olvidaste la contraseña?</router-link>
+                <router-link :to="{ name: 'password.reset' }">Olvidaste la contraseña?</router-link>
               </small>
             </q-form>
           </q-item-section>

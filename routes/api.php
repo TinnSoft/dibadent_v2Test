@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('markNotificationAsRead/{id}', 'TrackerController@markNotificationAsRead');
 
     Route::post('redemptPoint/{product_id}', 'PointsRedemptionController@redemptPoint');
+    Route::get('getProductRedemptionHistory', 'PointsRedemptionController@getProductRedemptionHistory');
+    
     
     Route::resource('products', 'ProductsController');
     Route::get('getProductValues','ProductsController@edit');   
@@ -75,10 +77,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getPointsLevelslist','PointsLevelsController@getPointsLevels');
     Route::get('getPointsSummaryByDoctor','PointsLevelsController@getPointsSummaryByDoctor');
     Route::put('store_NewPoints','PointsLevelsController@store_NewPoints');
-    
-    
-    
-    //Route::get('getInventoryReports/{process_type}/{product_id}', 'InventoryController@getInventoryReports');
+    Route::post('confirmCoupon/{id}', 'PointsLevelsController@confirmCoupon');
+    Route::post('rejectCoupon/{id}', 'PointsLevelsController@rejectCoupon');
+
 
 });
 

@@ -189,6 +189,37 @@ class PointsLevelsController extends Controller
             }
         }
     }
+
+    
+    public function confirmCoupon($redemptionID){
+
+        $valuestoupdate['modified_by'] = Auth::user()->id;
+        $valuestoupdate['is_code_confirmed'] = true;
+        $item = PointsRedemption::findOrFail($redemptionID);
+        $item->update($valuestoupdate);
+
+        return response()
+        ->json([
+            'updated' => true
+        ]);
+    }
+
+    public function rejectCoupon($redemptionID){
+
+        $valuestoupdate['modified_by'] = Auth::user()->id;
+        $item = PointsRedemption::findOrFail($redemptionID);
+        $item->update($valuestoupdate);
+
+        //Puntos para restaurar
+        $this->updatePointLevels($item->user_id,$item->points_redeemed); 
+        $item->delete();
+
+        return response()
+        ->json([
+            'updated' => true,
+            'test'=>$item
+        ]);
+    }
     
 
     public function destroy($id)

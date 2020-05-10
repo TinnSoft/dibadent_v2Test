@@ -17,26 +17,6 @@
           <q-list padding class="text-primary no-border">
             <q-item
               clickable
-              :active="link === 'company'"
-              @click="link = 'company'"
-              active-class="my-menu-link"
-              v-ripple
-              to="/settings/company"
-            >
-              <q-item-section avatar top>
-                <q-avatar icon="domain" color="primary" text-color="white" />
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label class="text-black" lines="1">Mi Empresa</q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-icon name="chevron_right" color="primary" />
-              </q-item-section>
-            </q-item>
-            <q-item
-              clickable
               :active="link === 'profile'"
               @click="link = 'profile'"
               active-class="my-menu-link"
@@ -56,6 +36,28 @@
               </q-item-section>
             </q-item>
             <q-item
+              v-if="profileID==1"
+              clickable
+              :active="link === 'company'"
+              @click="link = 'company'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/company"
+            >
+              <q-item-section avatar top>
+                <q-avatar icon="domain" color="primary" text-color="white" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label class="text-black" lines="1">Mi Empresa</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <q-icon name="chevron_right" color="primary" />
+              </q-item-section>
+            </q-item>
+            <q-item
+              v-if="profileID==1 || profileID==2"
               clickable
               :active="link === 'doctor'"
               @click="link = 'doctor'"
@@ -76,6 +78,7 @@
               </q-item-section>
             </q-item>
             <q-item
+              v-if="profileID==1 || profileID==2"
               clickable
               :active="link === 'radiologist'"
               @click="link = 'radiologist'"
@@ -96,6 +99,7 @@
               </q-item-section>
             </q-item>
             <q-item
+              v-if="profileID==1 || profileID==2"
               clickable
               :active="link === 'patient'"
               @click="link = 'patient'"
@@ -116,6 +120,7 @@
               </q-item-section>
             </q-item>
             <q-item
+              v-if="profileID==1"
               clickable
               :active="link === 'product'"
               @click="link = 'product'"
@@ -129,6 +134,26 @@
 
               <q-item-section>
                 <q-item-label class="text-black" lines="1">Productos</q-item-label>
+              </q-item-section>
+
+              <q-item-section side>
+                <q-icon name="chevron_right" color="primary" />
+              </q-item-section>
+            </q-item>
+            <q-item
+              clickable
+              :active="link === 'password'"
+              @click="link = 'password'"
+              active-class="my-menu-link"
+              v-ripple
+              to="/settings/password"
+            >
+              <q-item-section avatar top>
+                <q-avatar icon="security" color="primary" text-color="white" />
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label class="text-black" lines="1">Mi Contraseña</q-item-label>
               </q-item-section>
 
               <q-item-section side>
@@ -163,6 +188,15 @@ export default {
         rightBreakpoint: 1200
       }
     };
+  },
+  computed: {
+    profileID() {
+      try {
+        return this.$store.getters["auth/user"].profile_id;
+      } catch (error) {
+        return 0;
+      }
+    }
   }
 };
 </script>

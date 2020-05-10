@@ -61,16 +61,6 @@
           flat
           dense
           v-if="!$q.platform.within.iframe"
-          icon="settings"
-          class="q-mr-sm"
-          @click.native="changePassword($refs)"
-        >
-          <q-tooltip>Cambiar mi contraseña</q-tooltip>
-        </q-btn>
-        <q-btn
-          flat
-          dense
-          v-if="!$q.platform.within.iframe"
           icon="exit_to_app"
           class="q-mr-sm"
           label="Salir"
@@ -131,7 +121,6 @@
         </q-list>
       </q-scroll-area>
     </q-drawer>
-    <showPasswordChangeModal ref="_changePassword"></showPasswordChangeModal>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -140,11 +129,9 @@
 
 <script type="text/javascript">
 import store from "../store";
-import showPasswordChangeModal from "../views/auth/mChangePassword.vue";
 
 export default {
   props: ["title", "backgroundColor", "subtitle", "items"],
-   components: { showPasswordChangeModal },
   data() {
     return {
       miniState: true,
@@ -184,9 +171,6 @@ export default {
     this.getNotification();
   },
   methods: {
-    changePassword(refs) {
-      refs._changePassword.open();
-    },
     async logout() {
       await this.$store.dispatch("auth/logout");
       this.$router.push({ name: "login" });

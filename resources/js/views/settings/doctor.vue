@@ -10,8 +10,12 @@
         :filter="filter"
         :pagination.sync="pagination"
         dense
+        flat
+        bordered
         :grid="$q.screen.xs"
         :visible-columns="visibleColumns"
+        virtual-scroll
+        :rows-per-page-options="[0]"
       >
         <template v-slot:top="props">
           <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar">
