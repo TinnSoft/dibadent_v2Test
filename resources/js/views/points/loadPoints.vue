@@ -10,6 +10,9 @@
     separator="horizontal"
     bordered
     flat
+    virtual-scroll
+    :pagination.sync="pagination"
+    :rows-per-page-options="[0]"
   >
     <template v-slot:top-right>
       <q-btn
@@ -52,6 +55,9 @@ export default {
   },
   data() {
     return {
+      pagination: {
+        rowsPerPage: 10
+      },
       ClipboardData: [],
       PointsToSave: [],
       columns: [
@@ -137,7 +143,7 @@ export default {
           if (_value > 0) {
             this.PointsToSave.push({
               user_id: this.pointsControl[loadedPointsIndex].id,
-              value: _value,
+              value: _value
               //created_at: new Date(),
               //updated_at: new Date()
             });
@@ -157,7 +163,7 @@ export default {
           vm.loading = false;
         })
         .catch(function(error) {
-          console.log(error.response)
+          console.log(error.response);
           vm.loading = false;
         });
     },
@@ -169,7 +175,7 @@ export default {
           .put(`/api/store_NewPoints`, vm.PointsToSave)
           .then(function(response) {
             if (response.data.created) {
-               console.log(response.data);
+              console.log(response.data);
               kNotify(
                 vm,
                 "La tabla de puntos se actualizó correctamente",
