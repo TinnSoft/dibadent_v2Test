@@ -21,7 +21,7 @@ export default {
   name: "MainLayout",
   data: () => ({
     title: window.config.appName,
-    subtitle: "Sistema de gestion de radiografías en la nube",
+    subtitle: "Sistema de gestion de Dibadent",
     backgroundcolor: "bg-primary glossy",
     items: [
       {
@@ -56,7 +56,7 @@ export default {
         type: "alone",
         profileId: 1,
         id: 4
-      },      
+      },
       {
         icon: "home",
         title: "INICIO",
@@ -74,7 +74,7 @@ export default {
         profileId: 3,
         id: 6
       },
-       {
+      {
         icon: "chat",
         title: "CHAT",
         type: "alone",
@@ -106,7 +106,7 @@ export default {
         type: "alone",
         profileId: 2,
         id: 10
-      },   
+      },
       {
         icon: "build",
         title: "ADMINISTRACIÓN",
@@ -114,8 +114,7 @@ export default {
         type: "alone",
         profileId: 3,
         id: 11
-      },  
-       
+      }
     ]
   }),
   created() {},

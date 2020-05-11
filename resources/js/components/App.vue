@@ -1,34 +1,33 @@
 <template>
   <div id="q-app">
     <transition name="page" mode="out-in">
-      <component v-if="layout" :is="layout"/>
+      <component v-if="layout" :is="layout" />
     </transition>
   </div>
 </template>
 
 <script>
 // Load layout components dynamically.
-const requireContext = require.context('~/layouts', false, /.*\.vue$/)
-const layouts = requireContext.keys()
-  .map(file =>
-    [file.replace(/(^.\/)|(\.vue$)/g, ''), requireContext(file)]
-  )
+const requireContext = require.context("~/layouts", false, /.*\.vue$/);
+const layouts = requireContext
+  .keys()
+  .map(file => [file.replace(/(^.\/)|(\.vue$)/g, ""), requireContext(file)])
   .reduce((components, [name, component]) => {
-    components[name] = component.default || component
-    return components
-  }, {})
+    components[name] = component.default || component;
+    return components;
+  }, {});
 export default {
-  el: '#q-app',
+  el: "#q-app",
   data: () => ({
     layout: null,
-    defaultLayout: 'default'
+    defaultLayout: "default"
   }),
-  metaInfo () {
-    const { appName } = window.config
+  metaInfo() {
+    const { appName } = window.config;
     return {
       title: appName,
       titleTemplate: `%s · ${appName}`
-    }
+    };
   },
   methods: {
     /**
@@ -36,12 +35,12 @@ export default {
      *
      * @param {String} layout
      */
-    setLayout (layout) {
+    setLayout(layout) {
       if (!layout || !layouts[layout]) {
-        layout = this.defaultLayout
+        layout = this.defaultLayout;
       }
-      this.layout = layouts[layout]
+      this.layout = layouts[layout];
     }
   }
-}
+};
 </script>

@@ -1,7 +1,7 @@
-export default function kNotify(parent,message, msgtype) {
-  parent.$q.notify({
-      message,
-      timeout: 3000,
-      color: msgtype
+export default function kNotify(parent, message, msgtype) {
+    parent.$q.notify({
+        message,
+        timeout: 3000,
+        color: msgtype
     });
-  }
+}

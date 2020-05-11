@@ -33,7 +33,7 @@
           :label="label2"
         >
           <span slot="loading">
-            <q-spinner-hourglass class="on-left"/>Guardando...
+            <q-spinner-hourglass class="on-left" />Guardando...
           </span>
         </q-btn>
         <!--
@@ -100,13 +100,13 @@
             color="primary"
           >
             <span slot="loading">
-              <q-spinner-hourglass class="on-left"/>Guardando...
+              <q-spinner-hourglass class="on-left" />Guardando...
             </span>
           </q-btn>
         </q-toolbar>
       </q-footer>
     </div>
-    <br>
+    <br />
   </div>
 </template>
 <script type="text/javascript">

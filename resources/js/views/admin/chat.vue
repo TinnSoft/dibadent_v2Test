@@ -18,6 +18,10 @@
           </q-btn>
 
           <span class="q-subtitle-1 q-pl-md">{{ currentConversation.user_name }}</span>
+          <q-space />
+          <div v-if="$q.platform.is.mobile">
+            <q-btn round flat icon="home" to="/" />
+          </div>
         </q-toolbar>
       </q-header>
 
@@ -153,7 +157,6 @@ export default {
       axios
         .get(`/api/${vm.chatDoctorspath}`)
         .then(function(response) {
-        
           if (response.data.AllDoctorsChats) {
             vm.$set(vm, "conversations", response.data.AllDoctorsChats);
           }

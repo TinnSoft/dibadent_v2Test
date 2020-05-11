@@ -40,12 +40,10 @@ export default {
       update(() => {
         try {
           const needle = val.toLowerCase();
-        this.options = this.$attrs.options.filter(
-          v => v.label.toLowerCase().indexOf(needle) > -1
-        );
-        } catch (error) {          
-        }
-        
+          this.options = this.$attrs.options.filter(
+            v => v.label.toLowerCase().indexOf(needle) > -1
+          );
+        } catch (error) {}
       });
     },
     filterFunc(v, u, a) {

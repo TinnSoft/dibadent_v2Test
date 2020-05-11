@@ -5,8 +5,7 @@ export default {
     extends: Pie,
     mixins: [reactiveProp],
     props: ["chartData"],
-    watch: {
-    },
+    watch: {},
     data: () => ({
         options: {
             responsive: true,
@@ -15,7 +14,7 @@ export default {
     }),
 
     mounted() {
-        console.log(this.chartData)
+        console.log(this.chartData);
         this.renderChart(this.chartData, this.options);
     }
 };

@@ -1,62 +1,54 @@
 <template>
+  <div>
+    <q-markup-table flat bordered dense>
+      <thead>
+        <tr class="bg-light-blue-1">
+          <th>PRODUCTO</th>
+          <th>DESCRIPCIÓN</th>
+          <th>PRECIO</th>
+          <th>CANTIDAD</th>
+          <th>DESCUENTO (%)</th>
+          <th>IMPUESTO (%)</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(_detail, index) in form.detail" :key="index">
+          <td>
+            <q-field borderless bottom-slots dense hide-bottom-space>
+              <template v-slot:before>
+                <q-btn @click="remove(_detail)" round dense flat icon="delete"></q-btn>
+              </template>
 
-      <div >
-          <q-markup-table flat bordered dense>
-              <thead >
-                  <tr class="bg-light-blue-1">
-                      <th>PRODUCTO</th>
-                      <th>DESCRIPCIÓN</th>
-                      <th>PRECIO</th>
-                      <th>CANTIDAD</th>
-                      <th>DESCUENTO (%)</th>
-                      <th>IMPUESTO (%)</th>
-                      <th>TOTAL</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr  v-for="(_detail, index) in form.detail" :key="index">                      
-                      <td>   
-                          <q-field borderless bottom-slots dense hide-bottom-space>
-                            <template v-slot:before>
-                              <q-btn @click="remove(_detail)" round dense flat icon="delete" ></q-btn>
-                            </template>
-                    
-                            <template v-slot:control>
-                              <kSelectFilter
-                                      :error="checkIfFieldHasError(errors,['detail.' + index + '.product_id'])"
-                                              v-model="_detail.product" 
-                                              :options="base.products"
-                                              @input="onChangeProduct(_detail)" 
-                                              filled
-                                              dense
-                                              outlined
-                                              self-filter
-                                              clearable
-                                              use-input
-                                              fill-input
-                                              hide-selected
-                                              emit-value
-                                              map-options
-                                              input-debounce="0"
-                                              options-dense
-                                              hide-bottom-space
-                                            >                          
-                                </kSelectFilter>
-                            </template>
-                          </q-field>
+              <template v-slot:control>
+                <kSelectFilter
+                  :error="checkIfFieldHasError(errors,['detail.' + index + '.product_id'])"
+                  v-model="_detail.product"
+                  :options="base.products"
+                  @input="onChangeProduct(_detail)"
+                  filled
+                  dense
+                  outlined
+                  self-filter
+                  clearable
+                  use-input
+                  fill-input
+                  hide-selected
+                  emit-value
+                  map-options
+                  input-debounce="0"
+                  options-dense
+                  hide-bottom-space
+                ></kSelectFilter>
+              </template>
+            </q-field>
+          </td>
 
-                         
-                      </td>
-                      
-                      <td>
-                          <q-input autogrow
-                                dense
-                                hide-bottom-space
-                                v-model="_detail.description">
-                          </q-input>
-                      </td>
-                      <td>
-                         <!-- <kCurrencyInput
+          <td>
+            <q-input autogrow dense hide-bottom-space v-model="_detail.description"></q-input>
+          </td>
+          <td>
+            <!-- <kCurrencyInput
                           :val="_detail.unit_price"
                           v-model="_detail.unit_price"
                           clearable
@@ -64,44 +56,71 @@
                           @input="_detail.unit_price"
                           @blur="_detail.unit_price"
                         >
-                        </kCurrencyInput>-->
-                      
-                          <q-input hide-bottom-space
-                                   dense
-                                 :error="checkIfFieldHasError(errors,['detail.' + index + '.unit_price'])" 
-                                  type="number" prefix="$" v-model="_detail.unit_price">
-                          </q-input>
-                      </td>
-                      <td>
-                          <q-input dense type="number" v-model="_detail.quantity"  hide-bottom-space
-                              :error="checkIfFieldHasError(errors,['detail.' + index + '.quantity'])"
-                          ></q-input>
-                      </td>
-                      <td>
-                          <q-input hide-bottom-space dense type="number" prefix="%" v-model="_detail.discount"></q-input>
-                      </td>
-                      <td>
-                        <q-select hide-bottom-space dense filter filter-placeholder="Buscar impuesto" 
-                         v-model="_detail.tax_id" :value="_detail.tax_id" @input="onChangeTax(_detail)" :options="base.taxes"></q-select>                        
-                      </td>
-                      <td>
-                          <q-input hide-bottom-space dense disable :value="totalByLine(_detail)"></q-input>
-                      </td>                    
-                  </tr>
-                  <tr>
-                    <td class colspan="100%">
-                        <q-btn @click="addLine" flat rounded no-wrap color="purple" label="AGREGAR ITEM" icon="add"></q-btn>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class colspan="100%" align="right">                   
-                      <cTotals :subtotal="subTotal" :discounts="DiscountsTotal" :taxes="TaxesTotal" :total="grandTotal"></cTotals>
-                    </td>
-                  </tr>
-              </tbody>
-          </q-markup-table>
-      </div>         
+            </kCurrencyInput>-->
 
+            <q-input
+              hide-bottom-space
+              dense
+              :error="checkIfFieldHasError(errors,['detail.' + index + '.unit_price'])"
+              type="number"
+              prefix="$"
+              v-model="_detail.unit_price"
+            ></q-input>
+          </td>
+          <td>
+            <q-input
+              dense
+              type="number"
+              v-model="_detail.quantity"
+              hide-bottom-space
+              :error="checkIfFieldHasError(errors,['detail.' + index + '.quantity'])"
+            ></q-input>
+          </td>
+          <td>
+            <q-input hide-bottom-space dense type="number" prefix="%" v-model="_detail.discount"></q-input>
+          </td>
+          <td>
+            <q-select
+              hide-bottom-space
+              dense
+              filter
+              filter-placeholder="Buscar impuesto"
+              v-model="_detail.tax_id"
+              :value="_detail.tax_id"
+              @input="onChangeTax(_detail)"
+              :options="base.taxes"
+            ></q-select>
+          </td>
+          <td>
+            <q-input hide-bottom-space dense disable :value="totalByLine(_detail)"></q-input>
+          </td>
+        </tr>
+        <tr>
+          <td class colspan="100%">
+            <q-btn
+              @click="addLine"
+              flat
+              rounded
+              no-wrap
+              color="purple"
+              label="AGREGAR ITEM"
+              icon="add"
+            ></q-btn>
+          </td>
+        </tr>
+        <tr>
+          <td class colspan="100%" align="right">
+            <cTotals
+              :subtotal="subTotal"
+              :discounts="DiscountsTotal"
+              :taxes="TaxesTotal"
+              :total="grandTotal"
+            ></cTotals>
+          </td>
+        </tr>
+      </tbody>
+    </q-markup-table>
+  </div>
 </template>
 <script type="text/javascript">
 import cTotals from "../../components/tables/cTotal.vue";
@@ -125,7 +144,7 @@ export default {
         }
       ]
     },
-    tabLabel:""
+    tabLabel: ""
   },
   data() {
     return {
@@ -135,8 +154,7 @@ export default {
   components: {
     cTotals
   },
-  created() {
-  },
+  created() {},
   computed: {
     subTotal() {
       var vm = this;
@@ -159,9 +177,9 @@ export default {
         discountsTot = this.form.detail.reduce(function(carry, detail) {
           return (
             carry +
-            parseFloat(detail.quantity) *
+            (parseFloat(detail.quantity) *
               parseFloat(detail.unit_price) *
-              parseFloat(detail.discount) /
+              parseFloat(detail.discount)) /
               100
           );
         }, 0);
@@ -179,18 +197,18 @@ export default {
         TaxTot = this.form.detail.reduce(function(carry, detail) {
           return (
             carry +
-            (parseFloat(detail.quantity) * parseFloat(detail.unit_price) -
-              parseFloat(detail.quantity) *
+            ((parseFloat(detail.quantity) * parseFloat(detail.unit_price) -
+              (parseFloat(detail.quantity) *
                 parseFloat(detail.unit_price) *
-                parseFloat(detail.discount) /
+                parseFloat(detail.discount)) /
                 100) *
               parseFloat(
                 isNaN(detail.tax_amount) ||
-                detail.tax_amount == "" ||
-                detail.tax_amount == null
+                  detail.tax_amount == "" ||
+                  detail.tax_amount == null
                   ? 0
                   : detail.tax_amount
-              ) /
+              )) /
               100
           );
         }, 0);
@@ -226,7 +244,7 @@ export default {
     totalByLine(val) {
       var total =
         val.quantity * val.unit_price -
-        val.quantity * val.unit_price * val.discount / 100;
+        (val.quantity * val.unit_price * val.discount) / 100;
       return accounting.formatMoney(total);
     },
     onChangeTax(val) {

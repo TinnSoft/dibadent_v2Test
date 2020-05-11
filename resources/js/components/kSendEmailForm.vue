@@ -32,9 +32,9 @@
               </q-btn>
             </template>
           </q-select>
-          <br>
+          <br />
           <q-input dense clearable filled v-model="email.subject" label="*ASUNTO"></q-input>
-          <br>
+          <br />
         </q-card-section>
 
         <q-card-section>
@@ -69,7 +69,7 @@
             label="Enviar"
           >
             <span slot="loading">
-              <q-spinner-hourglass class="on-left"/>Enviando..
+              <q-spinner-hourglass class="on-left" />Enviando..
             </span>
           </q-btn>
         </q-card-actions>

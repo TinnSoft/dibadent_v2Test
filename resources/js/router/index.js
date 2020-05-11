@@ -48,18 +48,18 @@ function createRouter() {
  * @param {Function} next
  */
 async function beforeEach(to, from, next) {
-    let components = []
+    let components = [];
     try {
         // Get the matched components and resolve them.
         components = await resolveComponents(
-          router.getMatchedComponents({ ...to })
-        )
-      } catch (error) {
+            router.getMatchedComponents({ ...to })
+        );
+    } catch (error) {
         if (/^Loading( CSS)? chunk (\d)+ failed\./.test(error.message)) {
-          window.location.reload(true)
-          return
+            window.location.reload(true);
+            return;
         }
-      }
+    }
 
     if (components.length === 0) {
         return next();
@@ -156,24 +156,23 @@ function getMiddleware(components) {
     return middleware;
 }
 
-
-function scrollBehavior (to, from, savedPosition) {
+function scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
-      return savedPosition
+        return savedPosition;
     }
-  
+
     if (to.hash) {
-      return { selector: to.hash }
+        return { selector: to.hash };
     }
-  
-    const [component] = router.getMatchedComponents({ ...to }).slice(-1)
-  
+
+    const [component] = router.getMatchedComponents({ ...to }).slice(-1);
+
     if (component && component.scrollToTop === false) {
-      return {}
+        return {};
     }
-  
-    return { x: 0, y: 0 }
-  }
+
+    return { x: 0, y: 0 };
+}
 
 /**
  * @param  {Object} requireContext

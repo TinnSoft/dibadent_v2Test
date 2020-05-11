@@ -1,10 +1,10 @@
 <template>
-     <q-item dense clickable v-close-popup @click.native="handleClick" :disabled="isChecked">
-           <q-item-section avatar>
-            <q-icon color="primary" :name="iconname" size="24px" ></q-icon>
-          </q-item-section>
-          <q-item-section>{{tooltiplabel}}</q-item-section>
-      </q-item>
+  <q-item dense clickable v-close-popup @click.native="handleClick" :disabled="isChecked">
+    <q-item-section avatar>
+      <q-icon color="primary" :name="iconname" size="24px"></q-icon>
+    </q-item-section>
+    <q-item-section>{{tooltiplabel}}</q-item-section>
+  </q-item>
 </template>
 
 <script>
@@ -20,8 +20,8 @@ export default {
   },
   methods: {
     handleClick(newVal) {
-      if (this.isChecked===false){
-      this.$emit("click", newVal);
+      if (this.isChecked === false) {
+        this.$emit("click", newVal);
       }
     }
   },

@@ -144,8 +144,6 @@ export default {
             this.PointsToSave.push({
               user_id: this.pointsControl[loadedPointsIndex].id,
               value: _value
-              //created_at: new Date(),
-              //updated_at: new Date()
             });
           }
         }
@@ -163,7 +161,6 @@ export default {
           vm.loading = false;
         })
         .catch(function(error) {
-          console.log(error.response);
           vm.loading = false;
         });
     },
@@ -175,7 +172,6 @@ export default {
           .put(`/api/store_NewPoints`, vm.PointsToSave)
           .then(function(response) {
             if (response.data.created) {
-              console.log(response.data);
               kNotify(
                 vm,
                 "La tabla de puntos se actualizó correctamente",
