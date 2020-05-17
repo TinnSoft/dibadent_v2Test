@@ -40,52 +40,61 @@ class HomeController extends Controller
             "images_lastYear"=>$this->getQuantityOfImages('y')]);
       
         $imagesByDoctor_values_day= $this->getImagesLoadedByDoctor('d');
-        $imagesByDoctor_values_week= $this->getImagesLoadedByDoctor('w');
-
-        $week_ImagesByDoctor_labels= [
-            "domingo",
-            "lunes",
-            "martes",
-            "miercoles",
-            "jueves",
-            "viernes",
-            "sabado"            
+   
+        $backgroundColor= [
+            "#126A8C",
+            "#369DC4",
+            "#2BBAF0",
+            "#136DF0",
+            "#9FC5FC",
+            "#88B3F0",
+            "#99A1DF",
+            "#132AED",
+            "#13C5ED",
+            "#42C8D8"
         ];
+
+        //Chart semanal
+         //Labels De los ultimos 7 días de la semana
+         $week_ImagesByDoctor_labels= collect([]);
+       
+         $startDate = today()->subDays(7);
+         $endDate = today(); 
+         while($startDate<= $endDate)
+         {                    
+            $week_ImagesByDoctor_labels->push($startDate->locale('es')->getTranslatedDayName());
+            $startDate->addDay();
+         }
         
-       // $startDate->locale('es')->day
-        $testDatax = collect([]);  
+         
+        //Obtener lista de doctores (top 10) con mas carga de imágenes
+        $weekly_topDoctors= DB::table('images')
+        ->join('patients', function ($join) {
+            $join->on('patients.id', 'images.patient_id');
+        })
+        ->join('users', function ($join) {
+            $join->on('users.id', 'patients.doctor_id');
+        })
+        ->select('images.patient_id',DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as label, COUNT(images.id) as quantityOfImages"))
+        ->whereNull('images.deleted_at')
+        ->groupBy('images.patient_id','patients.doctor_id','users.name','users.last_name')
+        ->where('images.created_at', '>=', today()->subDays(7))
+        ->orderBy('quantityOfImages', 'desc')        
+        ->take(10)
+        ->get();
 
-        $fakevalues= collect([]);  
+        $weekly_topDoctors = collect($weekly_topDoctors);     
 
-        foreach ($imagesByDoctor_values_day as $row) {  
-            $startDate = Carbon::now()->startOfWeek();
-            $endDate = Carbon::now()->endOfWeek(); 
-            while($startDate<= $endDate)
-            {    
-               
-               /* if ($startDate->locale('es')->day==$row->created_day)
-                {
-                    $_resultval=1; //buscar el valor en la base de datos
-                }
-                else
-                {
-                    $_resultval=0;
-                }*/
-                $_resultval=$imagesByDoctor_values_week->firstWhere('id', '=',  $row->id);
-                $_resultval=(is_null($_resultval)) ? 0 : $_resultval->quantity;
-            
-                $fakevalues->push($_resultval);
-                $startDate->addDay();
-            }
+        foreach ($weekly_topDoctors as $key => $row) {  
+            $row->backgroundColor=$backgroundColor[$key];
+            $row->data=$this->getLastSevenDaysData($row->patient_id);
         }
 
-        //$week_ImagesByDoctor_values=$this->getImagesLoadedByDoctor_transformToweekly($imagesByDoctor_values_week);
-     
+        
         $_ImagesByDoctor=collect(
-                ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
-                "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
-                "week_ImagesByDoctor_qty"=>$imagesByDoctor_values_week,//$mainClass->getQuantityOfProceduresByDoctor_weekly()
-                "week_ImagesByDoctor_labels"=>$week_ImagesByDoctor_labels
+            ["today_ImagesByDoctor_qty"=>collect($imagesByDoctor_values_day->pluck('quantity')),
+            "today_ImagesByDoctor_labels"=>collect($imagesByDoctor_values_day->pluck('name')),
+            "week_ImagesByDoctor_labels"=>$week_ImagesByDoctor_labels
         ]);
       
         return response()
@@ -94,9 +103,37 @@ class HomeController extends Controller
         'images_ByDoctor'=> $_ImagesByDoctor,
         'tracking_Doctors'=>$this->getDoctorsTrack(),
         'topRedemedPoints'=>$this->getTopRedemedPoints(),
-        'test'=>$fakevalues,
-        'test2'=>Carbon::now()->weekOfYear
+        'weekly_doctorsData'=>$weekly_topDoctors,
+        'backgroundColors'=>$backgroundColor
         ]);
+    }
+
+    private function getLastSevenDaysData($patiendID)
+    {
+        $startDate = today()->subDays(7);
+        $endDate = today(); 
+
+        $basedata = DB::table('images')        
+        ->select(DB::raw("COUNT(images.id) as quantityOfImages, date(images.created_at) as dateCreation"))
+        ->whereNull('images.deleted_at')
+        ->where('images.patient_id', $patiendID)
+        ->where('images.created_at', '>=', today()->subDays(7))
+        ->groupBy('images.patient_id','dateCreation')        
+        ->orderBy('quantityOfImages', 'desc')        
+        ->take(10)
+        ->get();
+
+        $data = collect([]);
+        while($startDate<= $endDate)
+        {                   
+                $_resultval = $basedata->firstWhere('dateCreation', '==',  $startDate->format('Y-m-d'));            
+                $_resultval = (is_null($_resultval)) ? 0 : $_resultval->quantityOfImages;
+            
+                $data->push($_resultval);
+                $startDate->addDay();
+        }
+
+         return $data;
     }
 
     private static function getTopRedemedPoints()

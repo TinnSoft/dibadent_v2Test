@@ -4,17 +4,22 @@ const { reactiveProp } = mixins;
 export default {
     extends: Pie,
     mixins: [reactiveProp],
-    props: ["chartData"],
-    watch: {},
-    data: () => ({
+    props: {
+        chartdata: {
+            type: Object,
+            default: null
+        },
         options: {
-            responsive: true,
-            maintainAspectRatio: false
+            type: Object,
+            default: null
         }
-    }),
-
+    },
     mounted() {
-        console.log(this.chartData);
         this.renderChart(this.chartData, this.options);
+    },
+    beforeDestroy() {
+        if (this._chart) {
+            this._chart.destroy();
+        }
     }
 };

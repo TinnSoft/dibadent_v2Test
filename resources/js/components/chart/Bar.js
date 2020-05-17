@@ -4,12 +4,7 @@ const { reactiveProp } = mixins;
 export default {
     extends: Bar,
     mixins: [reactiveProp],
-    props: ["chartData", "options", "dataOriginal"],
-    watch: {
-        dataOriginal() {
-            this.renderChart(this.chartData, this.options);
-        }
-    },
+    props: ["chartData", "options"],
     mounted() {
         this.renderChart(this.chartData, this.options);
     },

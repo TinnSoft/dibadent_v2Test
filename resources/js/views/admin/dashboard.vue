@@ -29,32 +29,34 @@
                     <q-menu fit transition-show="scale" transition-hide="scale">
                       <q-list style="min-width: 100px">
                         <q-item clickable v-close-popup @click="filterPeriod('d')">
-                          <q-item-section>Hoy</q-item-section>
+                          <q-item-section>HOY</q-item-section>
                         </q-item>
                         <q-separator />
                         <q-item clickable v-close-popup @click="filterPeriod('w')">
-                          <q-item-section>Última Semana</q-item-section>
+                          <q-item-section>ULTIMA SEMANA</q-item-section>
                         </q-item>
                         <q-separator />
                         <q-item clickable v-close-popup @click="filterPeriod('m')">
-                          <q-item-section>Último Mes</q-item-section>
+                          <q-item-section>ULTIMO MES</q-item-section>
                         </q-item>
                         <q-separator />
                         <q-item clickable v-close-popup @click="filterPeriod('y')">
-                          <q-item-section>Último Año</q-item-section>
+                          <q-item-section>ULTIMO AÑO</q-item-section>
                         </q-item>
                       </q-list>
                     </q-menu>
                   </q-btn>
-                  <q-toolbar-title
-                    class="text-caption text-grey"
-                  >TOP DE RADIOGRAFIAS ASIGNADAS A DOCTORES {{filterBylabel}}</q-toolbar-title>
+                  <q-toolbar-title class="text-caption text-grey">
+                    TOP DE RADIOGRAFIAS ASIGNADAS A DOCTORES
+                    <span
+                      class="text-weight-bold text-primary"
+                    >{{filterBylabel}}</span>
+                  </q-toolbar-title>
                 </q-toolbar>
 
                 <dashboardChart
                   :chart-data="datacollection"
                   :options="barOptions"
-                  :data-original="procedures_bydoctor_today_qty"
                 />
               </q-card-section>
             </q-card>
@@ -68,7 +70,7 @@
                 <div class="text-caption text-grey">Top 5 de doctores que han redimido puntos</div>
               </q-card-section>
               <q-card-section>
-                <dashboardPie :chart-data="PieChartdata" />
+                <dashboardPie :chart-data="PieChartdata" :options="optionsPie" />
               </q-card-section>
             </q-card>
           </div>
@@ -132,28 +134,26 @@ export default {
         labels: null,
         datasets: [
           {
-            backgroundColor: [
-              "#126A8C",
-              "#369DC4",
-              "#2BBAF0",
-              "#136DF0",
-              "#9FC5FC"
-            ],
+            backgroundColor: [],
             data: null
           }
         ]
       },
+      optionsPie: {
+        responsive: true,
+        maintainAspectRatio: false
+      },
       columns_doctorMovements: [],
       data_doctorMovements: [],
       filter_doctorMovements: [],
-      filterBylabel: "Hoy",
+      filterBylabel: "",
       model: 30,
       min: 0,
       max: 50,
       visible: false,
       withouthMovementsMsg: "Aún no tienes movimientos creados.",
       isProcessing: false,
-      filter: "d",
+      filter: "w",
       path: "getDashboardInfo",
       form: {},
       datacollection: null,
@@ -173,15 +173,7 @@ export default {
         "Noviembre",
         "Diciembre"
       ],
-      WeekLabels: [
-        "Lunes",
-        "Martes",
-        "Miercoles",
-        "Jueves",
-        "Viernes",
-        "Sabado",
-        "Domingo"
-      ],
+      WeekLabels: [],
       barOptions: {
         responsive: true,
         maintainAspectRatio: false,
@@ -201,17 +193,19 @@ export default {
           ]
         }
       },
+      backgroundColors: [],
       images_generated_lastMonth: 0,
       images_generated_lastYear: 0,
       images_ByDoctor_today_qty: [],
-      images_ByDoctor_today_labels: []
+      images_ByDoctor_today_labels: [],
+      lastSevenDaysData: []
     };
   },
   metaInfo() {
     return { title: this.$t("home") };
   },
   created() {
-    this.filter = "d";
+    this.filter = "w";
     this.columns_redeemedPoints = columns_redeemedPoints();
     this.columns_doctorMovements = columns_doctorMovements();
     this.fetchData();
@@ -232,72 +226,23 @@ export default {
       }
 
       if (this.filter == "d") {
-        this.filterBylabel = "Hoy";
+        this.filterBylabel = "HOY";
         this.datacollection_labels = this.images_ByDoctor_today_labels;
         this.datacollection_data = [
           {
             label: "",
-            backgroundColor: [
-              "#126A8C",
-              "#369DC4",
-              "#2BBAF0",
-              "#136DF0",
-              "#9FC5FC"
-            ],
+            backgroundColor: this.backgroundColors,
             data: this.images_ByDoctor_today_qty
           }
         ];
       } else if (this.filter == "w") {
-        this.filterBylabel = "Ultima Semana";
+        this.filterBylabel = `ULTIMA SEMANA`;
         this.datacollection_labels = this.WeekLabels;
-
-        this.datacollection_data = [
-          {
-            label: "Doctor 1",
-            backgroundColor: "#f87979",
-            data: [40, 39, 10, 40, 39, 80, 40]
-          },
-          {
-            label: "Doctor Two",
-            backgroundColor: "#3D5B96",
-            data: [40, 39, 10, 40, 39, 80, 40]
-          },
-          {
-            label: "Doctor Three",
-            backgroundColor: "#1EFFFF",
-            data: [0, 10, 12, 33, 22, 4, 0]
-          },
-          {
-            label: "Doctor 4",
-            backgroundColor: "#1EFFFF",
-            data: [20, 10, 12, 33, 22, 4, 0]
-          },
-          {
-            label: "Doctor 5",
-            backgroundColor: "#1EFFFF",
-            data: [20, 10, 12, 33, 22, 4, 0]
-          },
-          {
-            label: "Doctor 6",
-            backgroundColor: "#1EFFFF",
-            data: [20, 10, 12, 33, 22, 4, 0]
-          },
-          {
-            label: "Doctor 7",
-            backgroundColor: "#1EFFFF",
-            data: [20, 10, 12, 33, 22, 4, 0]
-          },
-          {
-            label: "Otros",
-            backgroundColor: "gray",
-            data: [20, 10, 12, 33, 22, 4, 0]
-          }
-        ];
+        this.datacollection_data = this.lastSevenDaysData;
       } else if (this.filter == "m") {
-        this.filterBylabel = "Ultimo Mes";
-        //this.datacollection_labels = baseData.labels_current_month;
+        this.filterBylabel = "ULTIMO MES";
       } else if (this.filter == "y") {
-        this.filterBylabel = "Ultimo Año";
+        this.filterBylabel = "ULTIMO AÑO";
         this.datacollection_labels = this.YearLabels;
       }
       this.fillOptions();
@@ -335,6 +280,26 @@ export default {
             vm.$data,
             "data_doctorMovements",
             response.data.tracking_Doctors
+          );
+
+          vm.$set(
+            vm.$data,
+            "lastSevenDaysData",
+            response.data.weekly_doctorsData
+          );
+
+          vm.$set(
+            vm.$data,
+            "WeekLabels",
+            response.data.images_ByDoctor.week_ImagesByDoctor_labels
+          );
+
+          vm.$set(vm.$data, "backgroundColors", response.data.backgroundColors);
+
+          vm.$set(
+            vm.$data.PieChartdata.datasets[0],
+            "backgroundColor",
+            response.data.backgroundColors
           );
 
           vm.PieChartdata.labels = response.data.topRedemedPoints.labels;
