@@ -31,7 +31,7 @@ class ChatsController extends Controller
         ->where('profiles.description','=', 'DOCTOR')    
         ->whereNull('users.deleted_at')  
         ->select(DB::raw("users.id, users.avatar, CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as user_name, 
-        null as date, null as time, DATEDIFF(now(),data_to_order.last_post_created_at) as daysDifference, 
+        null as date, null as time, IFNULL(DATEDIFF(now(),data_to_order.last_post_created_at),500) as daysDifference, 
         IFNULL(date(data_to_order.last_post_created_at),'') as date, IFNULL(time(data_to_order.last_post_created_at),'') as time"))
         ->orderBy('data_to_order.last_post_created_at', 'desc')
         ->get();
