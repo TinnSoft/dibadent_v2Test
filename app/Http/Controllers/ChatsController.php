@@ -17,13 +17,23 @@ class ChatsController extends Controller
     public function getAllDoctorsChats()
     {        
         
+        $dataToOrder= DB::table('chats')
+                   ->select('doctor_id_parent as user_id', DB::raw('MAX(created_at) as last_post_created_at'))
+                   ->whereNull('deleted_at')       
+                   ->groupBy('doctor_id_parent');
+
+      
         $_allDoctorsChats= Users::Join('profiles', 'users.profile_id', '=', 'profiles.id')        
         ->with('chatHistory')
+        ->leftJoinSub($dataToOrder, 'data_to_order', function ($join) {
+            $join->on('users.id', '=', 'data_to_order.user_id');
+        })
         ->where('profiles.description','=', 'DOCTOR')    
         ->whereNull('users.deleted_at')  
         ->select(DB::raw("users.id, users.avatar, CONCAT(IFNULL(users.name,users.email),' ',IFNULL(users.last_name,'')) as user_name, 
-        null as date, null as time"))
-        ->orderBy('users.id', 'desc')
+        null as date, null as time, DATEDIFF(now(),data_to_order.last_post_created_at) as daysDifference, 
+        IFNULL(date(data_to_order.last_post_created_at),'') as date, IFNULL(time(data_to_order.last_post_created_at),'') as time"))
+        ->orderBy('data_to_order.last_post_created_at', 'desc')
         ->get();
         
         $_avatarAdmin = Users::Join('profiles', 'users.profile_id', '=', 'profiles.id')     

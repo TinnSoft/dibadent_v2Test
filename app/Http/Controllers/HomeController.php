@@ -54,6 +54,21 @@ class HomeController extends Controller
             "#42C8D8"
         ];
 
+        $yearLabels=[
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        ];
+
         //Chart semanal
          //Labels De los ultimos 7 días de la semana
          $week_ImagesByDoctor_labels= collect([]);
@@ -104,8 +119,39 @@ class HomeController extends Controller
         'tracking_Doctors'=>$this->getDoctorsTrack(),
         'topRedemedPoints'=>$this->getTopRedemedPoints(),
         'weekly_doctorsData'=>$weekly_topDoctors,
-        'backgroundColors'=>$backgroundColor
+        'backgroundColors'=>$backgroundColor,
+        //'test'=>$this->getYearlyData()
         ]);
+    }
+
+    private function getYearlyData()
+    {
+        //lista de meses y paciente
+        $data= DB::table('images')
+        ->join('patients', function ($join) {
+            $join->on('patients.id', 'images.patient_id');
+        })
+        ->join('users', function ($join) {
+            $join->on('users.id', 'patients.doctor_id');
+        })
+        ->select('images.patient_id',DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as name, MONTH(images.created_at) as mes ,
+        COUNT(images.id) as quantityOfImages"))
+        ->whereNull('images.deleted_at')
+        ->groupBy('images.patient_id','patients.doctor_id','mes','users.name','users.last_name')
+        ->whereYear('images.created_at', date('Y'))
+        ->orderBy('quantityOfImages', 'desc')   
+        ->get();
+
+        $startMonth=1;
+        $endMonth=12;
+
+        while($startMonth<= $endMonth)
+        {        
+            
+            $startMonth++;
+        }
+
+        return $data;
     }
 
     private function getLastSevenDaysData($patiendID)

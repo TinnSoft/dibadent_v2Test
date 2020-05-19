@@ -48,7 +48,12 @@
               </q-item-section>
 
               <q-item-section>
-                <q-item-label lines="1">{{ conversation.user_name }}</q-item-label>
+                <q-item-label lines="1">
+                  {{ conversation.user_name }}
+                  <q-badge v-if="conversation.daysDifference<=3" color="blue" transparent>
+                    <q-icon name="chat" color="white"></q-icon>
+                  </q-badge>
+                </q-item-label>
                 <q-item-label class="conversation__summary" caption>{{ conversation.date }}</q-item-label>
               </q-item-section>
 
@@ -157,6 +162,7 @@ export default {
       axios
         .get(`/api/${vm.chatDoctorspath}`)
         .then(function(response) {
+          console.log(response.data);
           if (response.data.AllDoctorsChats) {
             vm.$set(vm, "conversations", response.data.AllDoctorsChats);
           }
