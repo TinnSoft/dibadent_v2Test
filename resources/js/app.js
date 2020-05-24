@@ -13,6 +13,9 @@ import router from "~/router";
 import i18n from "~/plugins/i18n";
 import App from "~/components/App";
 
+import VueZoomer from "vue-zoomer";
+Vue.use(VueZoomer);
+
 import "~/plugins";
 import "~/components";
 

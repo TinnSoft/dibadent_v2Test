@@ -136,6 +136,7 @@ export default {
         axios
           .post("/api/chats/", vm.messageToSave)
           .then(function(response) {
+            
             if (response.data.created) {
               vm.$set(vm.messageToSave, "comment", null);
             }
@@ -158,7 +159,7 @@ export default {
       axios
         .get(`/api/${vm.chatDoctorspath}`)
         .then(function(response) {
-          console.log(response.data);
+          
           if (response.data.AllDoctorsChats) {
             vm.$set(vm, "conversations", response.data.AllDoctorsChats);
           }

@@ -15,13 +15,16 @@
           </q-bar>
 
           <q-card-section>
-            <q-img :src="imageSource" spinner-color="white">
-              <template v-slot:error>
-                <div
-                  class="absolute-full flex flex-center bg-negative text-white"
-                >No se pudo cargar la imagen</div>
-              </template>
-            </q-img>
+            <v-zoomer>
+              <!-- <q-img :src="imageSource" spinner-color="white" >
+                <template v-slot:error>
+                  <div
+                    class="absolute-full flex flex-center bg-negative text-white"
+                  >No se pudo cargar la imagen</div>
+                </template>
+              </q-img>-->
+              <img :src="imageSource" style="object-fit: contain; width: 100%; height: 100%;" />
+            </v-zoomer>
           </q-card-section>
         </q-card>
       </q-dialog>

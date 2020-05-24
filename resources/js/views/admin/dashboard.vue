@@ -36,10 +36,6 @@
                           <q-item-section>ULTIMA SEMANA</q-item-section>
                         </q-item>
                         <q-separator />
-                        <q-item clickable v-close-popup @click="filterPeriod('m')">
-                          <q-item-section>ULTIMO MES</q-item-section>
-                        </q-item>
-                        <q-separator />
                         <q-item clickable v-close-popup @click="filterPeriod('y')">
                           <q-item-section>ULTIMO AÑO</q-item-section>
                         </q-item>
@@ -54,10 +50,7 @@
                   </q-toolbar-title>
                 </q-toolbar>
 
-                <dashboardChart
-                  :chart-data="datacollection"
-                  :options="barOptions"
-                />
+                <dashboardChart :chart-data="datacollection" :options="barOptions" />
               </q-card-section>
             </q-card>
           </div>
@@ -118,6 +111,7 @@
 <script>
 import dashboardChart from "../../components/chart/Bar.js";
 import dashboardPie from "../../components/chart/Pie.js";
+import store from "../../store";
 
 export default {
   middleware: "auth",
@@ -153,26 +147,12 @@ export default {
       visible: false,
       withouthMovementsMsg: "Aún no tienes movimientos creados.",
       isProcessing: false,
-      filter: "w",
       path: "getDashboardInfo",
       form: {},
       datacollection: null,
       datacollection_data: [],
       datacollection_labels: [],
-      YearLabels: [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre"
-      ],
+      YearLabels: [],
       WeekLabels: [],
       barOptions: {
         responsive: true,
@@ -205,12 +185,16 @@ export default {
     return { title: this.$t("home") };
   },
   created() {
-    this.filter = "w";
     this.columns_redeemedPoints = columns_redeemedPoints();
     this.columns_doctorMovements = columns_doctorMovements();
     this.fetchData();
+    //console.log('store', this.$store)
   },
-  computed: {},
+  computed: {
+    filter() {
+      return this.$store.getters["admin/filter"];
+    }
+  },
   methods: {
     fillOptions() {
       let vm = this;
@@ -222,7 +206,7 @@ export default {
     },
     filterPeriod(val) {
       if (val) {
-        this.filter = val;
+        this.$store.dispatch("admin/setGraphFilter", val)
       }
 
       if (this.filter == "d") {
@@ -239,8 +223,6 @@ export default {
         this.filterBylabel = `ULTIMA SEMANA`;
         this.datacollection_labels = this.WeekLabels;
         this.datacollection_data = this.lastSevenDaysData;
-      } else if (this.filter == "m") {
-        this.filterBylabel = "ULTIMO MES";
       } else if (this.filter == "y") {
         this.filterBylabel = "ULTIMO AÑO";
         this.datacollection_labels = this.YearLabels;
@@ -305,8 +287,6 @@ export default {
           vm.PieChartdata.labels = response.data.topRedemedPoints.labels;
           vm.PieChartdata.datasets[0].data =
             response.data.topRedemedPoints.data;
-
-          console.log(response.data, vm);
 
           vm.filterPeriod();
           vm.isProcessing = false;

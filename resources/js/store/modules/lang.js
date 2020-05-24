@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-//import { Cookies } from 'quasar'
 import * as types from "../mutation-types";
 
 const { locale, locales } = window.config;

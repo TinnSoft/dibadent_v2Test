@@ -55,6 +55,7 @@
     "moment-timezone": "^0.5.31",
     "sweetalert2": "^9.13.1",
     "vform": "^1.0.1",
+    "vue-zoomer": "^0.3.6",
     "vuelidate": "^0.7.5",
     "webpack-bundle-analyzer": "^3.8.0"
   }

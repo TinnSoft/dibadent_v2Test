@@ -15,26 +15,20 @@
           </q-bar>
 
           <q-card-section>
-            <q-img :src="imageSource" spinner-color="white">
-              <template v-slot:error>
-                <div
-                  class="absolute-full flex flex-center bg-negative text-white"
-                >No se pudo cargar la imagen</div>
-              </template>
-            </q-img>
+            <v-zoomer>
+              <!-- <q-img :src="imageSource" spinner-color="white" >
+                <template v-slot:error>
+                  <div
+                    class="absolute-full flex flex-center bg-negative text-white"
+                  >No se pudo cargar la imagen</div>
+                </template>
+              </q-img>-->
+              <img
+               :src="imageSource"
+                style="object-fit: contain; width: 100%; height: 100%;"
+              />
+            </v-zoomer>
           </q-card-section>
-          <!--<q-card-section>
-            <q-input
-              clearable
-              v-model="imageAttributes.other_details"
-              filled
-              autogrow
-              label="Comentarios"
-              counter
-              :rules="[ val => val.length <= 255 || 'Porfavor use máximo 255 carácteres']"
-              lazy-rules
-            />
-          </q-card-section>-->
         </q-card>
       </q-dialog>
     </div>
@@ -51,17 +45,15 @@ export default {
       imageSource: null
     };
   },
-  components: {
-   
-  },
+  components: {},
   methods: {
     open(imageAttributes) {
       let vm = this;
       vm.imageSource = imageAttributes.file_name;
-      vm.imageAttributes=imageAttributes;
+      vm.imageAttributes = imageAttributes;
       vm.showImageByDoctor = true;
     },
-     handleHide(newVal) {
+    handleHide(newVal) {
       this.$emit("hide", this.imageAttributes);
     }
   }

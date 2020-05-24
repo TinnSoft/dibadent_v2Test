@@ -72,8 +72,7 @@ export default {
         message: "Porfavor revise las credenciales que ingresó",
         color: "red",
         icon: "sentiment_very_dissatisfied",
-        position: "left",
-        actions: [{ label: "Cancelar", color: "white" }]
+        position: "left"
       });
     },
   
@@ -97,7 +96,6 @@ export default {
     
       } catch (err) {
         vm.progress = false;
-        //console.log("error c: ", err.response);
         this.showNotification();
       }
     }
