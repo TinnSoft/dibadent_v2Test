@@ -306,7 +306,7 @@ export default {
           vm.PieChartdata.datasets[0].data =
             response.data.topRedemedPoints.data;
 
-          console.log(response.data);
+          console.log(response.data, vm);
 
           vm.filterPeriod();
           vm.isProcessing = false;
