@@ -70,9 +70,20 @@ class ImagesController extends Controller
             ->get();
 
             
-
-            event(new RecordActivity(Str::upper(Auth::user()->name).' '.Str::upper(Auth::user()->last_name).' cargó '.count($request->files).' radiografía(s) para el paciente: '.Str::upper($UserName[0]->name),
-            'Images',null, true));
+            
+            $adminID = DB::table('users')
+                ->Join('profiles', 'users.profile_id', '=', 'profiles.id')        
+                ->where([
+                    ['profiles.id', 1]
+                ])    
+                ->where('isActive',1)   
+                ->select('users.id')       
+                ->first();
+            
+            
+            $nameTrans=Str::upper(Auth::user()->name).' '.Str::upper(Auth::user()->last_name);
+            event(new RecordActivity($nameTrans.' cargó '.count($request->files).' radiografía(s) para el paciente: '.Str::upper($UserName[0]->name),
+            'Images',null, true, $adminID->id));
 
             return response()
              ->json([

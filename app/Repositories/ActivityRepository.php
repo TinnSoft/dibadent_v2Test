@@ -17,7 +17,8 @@ class ActivityRepository
             'detail'=>$model->detail,
             'model'=>$model->model,
             'route'=>$model->route,
-            'notify'=>$model->notify
+            'notify'=>$model->notify,
+            'value'=>$model->value
         ];
 
         $item = Tracker::create($data);

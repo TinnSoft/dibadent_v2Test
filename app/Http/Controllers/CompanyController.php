@@ -61,6 +61,7 @@ class CompanyController extends Controller
             $item->update($newCompanyValues);
         }
         
+        //$detail=detalle, $model, $route=null, $notify=yes/no, $value= Null=>notificar a todos, id user=>a quien debe notificarse
         event(new RecordActivity(Auth::user()->name.' actualizó la información de la empresa ',
         'Company',null, false));
 

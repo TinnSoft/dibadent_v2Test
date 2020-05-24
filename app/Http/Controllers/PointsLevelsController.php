@@ -226,11 +226,7 @@ class PointsLevelsController extends Controller
     {   
         $post = PointsLevels::find($id);
         $post->delete();
-
-        event(new RecordActivity(Auth::user()->name.' eliminó el registro de puntos '.$post->level_name,
-        'PointsLevels',null, true));
-
-
+        
         return response()
         ->json([
             'deleted' => true

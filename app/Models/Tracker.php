@@ -11,7 +11,7 @@ class Tracker extends Model
     
     protected $table = 'tracker';
     
-    protected $fillable=['detail','user_id','route','model','notify',
+    protected $fillable=['detail','user_id','route','model','notify','value',
     'created_at','updated_at'];
 
 

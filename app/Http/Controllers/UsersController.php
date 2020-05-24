@@ -285,6 +285,9 @@ class UsersController extends Controller
         event(new RecordActivity(Auth::user()->name.' creó el usuario '.$item->name,
         'Users',null, false));
 
+        event(new RecordActivity('Bienvenido, ya puedes usar nuestro sistema.'.$item->name,
+        'Users',null, true, $item->id));
+
         return response()
             ->json([
                 'created' => true,
@@ -298,6 +301,10 @@ class UsersController extends Controller
         $newPW['password']=bcrypt($newPassword);
         
         $item->update($newPW);
+
+
+        event(new RecordActivity(Auth::user()->name.' actualizó la contraseña',
+            'Users',null, true,Auth::user()->id));
 
         return response()
         ->json([
@@ -365,7 +372,7 @@ class UsersController extends Controller
 
             
             event(new RecordActivity(Auth::user()->name.' actualizó su imagen de perfil',
-            'Users',null, false));
+            'Users',null, true,Auth::user()->id));
 
             return response()
              ->json([

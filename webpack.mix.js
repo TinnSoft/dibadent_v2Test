@@ -14,7 +14,25 @@ if (mix.inProduction()) {
     mix.sourceMaps();
 }
 
+/*mix.options({
+    hmrOptions: {
+        host: 'radiology.test',  // site's host name
+        port: 8080,
+    }
+});*/
+
 mix.webpackConfig({
+    /*devServer: { 
+        proxy: {
+            host: '127.0.0.1',  // host machine ip 
+            port: 8080,
+        },
+        watchOptions:{
+            aggregateTimeout:200,
+            poll:5000
+        },
+
+    },*/
     plugins: [],
     resolve: {
         extensions: [".js", ".json", ".vue"],

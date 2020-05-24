@@ -9,6 +9,7 @@ use App\Models\Chats;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use App\Events\RecordActivity;
 
 
 class ChatsController extends Controller
@@ -66,9 +67,10 @@ class ChatsController extends Controller
         ->where('chats.doctor_id_parent',Auth::user()->id)    
         ->whereNull('users.deleted_at')  
         ->select(DB::raw("chats.id, chats.doctor_id_parent, 
-        date(chats.created_at) as date, (CASE WHEN profiles.description = 'DOCTOR' THEN 'amber-7' ELSE 'primary' END) AS bgcolor,
-        (CASE WHEN profiles.description = 'DOCTOR' THEN 'Yo' ELSE users.name END) AS who,
-        chats.comment")) ->orderBy('chats.id', 'desc')->get();
+        date(chats.created_at) as date,  time(chats.created_at) as time, (CASE WHEN profiles.description = 'DOCTOR' THEN 'amber-7' ELSE 'primary' END) AS bgcolor,
+        (CASE WHEN profiles.description = 'DOCTOR' THEN 'Yo' ELSE users.name END) AS who, 
+        chats.comment"))
+        ->orderBy('chats.id', 'desc')->get();
 
         $_AdminAndDoctorChats[0]['chat_history_being_doctor']=$chats;
 
@@ -100,13 +102,18 @@ class ChatsController extends Controller
         ->where('users.id', Auth::user()->id)    
         ->select('profiles.description')
         ->get();
-
+        
+        event(new RecordActivity(Auth::user()->name.' Te dedó un nuevo mensaje ',
+        'chats', null, true, $data['doctor_id_parent']));
+        
         if ($_profile[0]['description']=='DOCTOR')
         {
             $data['doctor_id_parent']=Auth::user()->id;
         }
         
         $item = Chats::create($data);    
+
+        
         
         return response()
             ->json([

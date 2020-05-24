@@ -129,10 +129,9 @@ class PatientsController extends Controller
         $item = Patients::create($data);
 
         $emailData['email'] = $data['email'];
-        
-        
+
         event(new RecordActivity(Auth::user()->name.' creó el paciente '.$item->name,
-        'Patients',null, true));
+        'Patients',null, true, $data['doctor_id']));
 
         return response()
             ->json([
@@ -170,7 +169,7 @@ class PatientsController extends Controller
         $item->update($newPatientValues);
         
         event(new RecordActivity(Auth::user()->name.' actualizó el paciente '.$item->name,
-        'Patients',null, true));
+        'Patients',null, true, $newPatientValues['doctor_id']));
 
         return response()
         ->json([
@@ -185,7 +184,7 @@ class PatientsController extends Controller
         $post->delete();
 
         event(new RecordActivity(Auth::user()->name.' eliminó el paciente '.$post->name,
-        'Patients',null, true));
+        'Patients',null, true, $post->doctor_id));
 
         return response()
         ->json([
