@@ -140,7 +140,7 @@ class PointsLevelsController extends Controller
     {
 
         $levelName=null;
-
+        
         //buscar si existe el usuario en AcumulatedPointsLevels    
         $acumulatedPoints = DB::table('acumulated_points_levels')->where('user_id', $userId)->select('acumulated_points')->get()->toArray();      
         $acumulatedPoints =isset($acumulatedPoints[0]->acumulated_points) ? $acumulatedPoints[0]->acumulated_points : 0;

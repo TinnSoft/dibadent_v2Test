@@ -31,8 +31,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::resource('chats', 'ChatsController');
     Route::get('getAllDoctorsChats','ChatsController@getAllDoctorsChats');   
-    Route::get('getAdminAndDoctorChats','ChatsController@getAdminAndDoctorChats');   
-    
+    Route::get('getAdminAndDoctorChats','ChatsController@getAdminAndDoctorChats');       
 
     Route::resource('company', 'CompanyController');
     Route::get('getCompanyValues','CompanyController@show');
@@ -43,15 +42,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('getRadiologistlist','UsersController@getRadiologist');
     Route::get('getDoctorDashboardData','UsersController@getDoctorDashboardData');
     
-    Route::get('getPatientDashboardData','UsersController@getPatientDashboardData');
-    
+    Route::get('getPatientDashboardData','UsersController@getPatientDashboardData');    
 
     Route::get('getNotificationList/{profileName}','TrackerController@getNotificationList');    
     Route::post('markNotificationAsRead/{id}', 'TrackerController@markNotificationAsRead');
 
     Route::post('redemptPoint/{product_id}', 'PointsRedemptionController@redemptPoint');
-    Route::get('getProductRedemptionHistory', 'PointsRedemptionController@getProductRedemptionHistory');
-    
+    Route::get('getProductRedemptionHistory', 'PointsRedemptionController@getProductRedemptionHistory');    
     
     Route::resource('products', 'ProductsController');
     Route::get('getProductValues','ProductsController@edit');   
@@ -59,14 +56,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     
      //dashboard
     Route::get('getDashboardInfo','HomeController@getDashboardInfo');
-
-     
-    
+         
     Route::resource('patients', 'PatientsController');
     Route::get('getPatientsValues','PatientsController@edit');    
     Route::get('getPatientlist','PatientsController@getPatients');
-    Route::get('getPatientsAndDoctors','PatientsController@getPatientsAndDoctors');
-    
+    Route::get('getPatientsAndDoctors','PatientsController@getPatientsAndDoctors');    
 
     Route::resource('procedures', 'ProceduresController');
     Route::get('getProceduresValues','ProceduresController@edit');    
@@ -85,7 +79,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 Route::group(['middleware' => 'guest:api'], function () {    
     Route::post('login', 'Auth\LoginController@login');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+    //Route::post('password/reset', 'Auth\ResetPasswordController@reset');
     Route::post('password/reset_password','Auth\ResetPasswordController@reset_password'); 
 });
