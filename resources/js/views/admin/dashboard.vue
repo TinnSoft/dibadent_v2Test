@@ -13,7 +13,7 @@
         <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="IMAGENES CARGADAS EL ULTIMO AÑO"
+            title="IMAGENES CARGADAS AÑO ULTIMO"
             icon-name
             :total="images_generated_lastYear"
           />
