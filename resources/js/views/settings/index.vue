@@ -78,7 +78,7 @@
               </q-item-section>
             </q-item>
             <q-item
-              v-if="profileID==1 || profileID==2"
+              v-if="profileID==1"
               clickable
               :active="link === 'radiologist'"
               @click="link = 'radiologist'"
