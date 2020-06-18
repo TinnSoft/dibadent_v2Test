@@ -49,13 +49,13 @@ class PatientsController extends Controller
 
     public function getPatientsAndDoctors()
     {   
-        $data = patients::whereNull('patients.deleted_at')
+        $data = patients::whereNull('patients.deleted_at')->where('radiologist_id','=',Auth::user()->id)
         ->Join('users', 'patients.doctor_id', '=', 'users.id')
         ->Join('profiles', 'users.profile_id', '=', 'profiles.id')
         ->select('patients.id as value', DB::raw("CONCAT(IFNULL(patients.name,''),' ',IFNULL(patients.last_name,'')) as label"),
         DB::raw("CONCAT(IFNULL(users.name,''),' ',IFNULL(users.last_name,'')) as doctor_name"),'patients.doctor_id', 'users.identification_number','users.avatar')      
         ->orderBy('patients.id','desc')        
-        ->get();
+        ->get();      
 
         $imagescreatedQTY= DB::table('images')
         ->whereYear('images.created_at', '=', date('Y'))
@@ -66,16 +66,18 @@ class PatientsController extends Controller
        return response()
        ->json([
            'patients' => $data,
-           'images_created_qty'=>$imagescreatedQTY
+           'images_created_qty'=>$imagescreatedQTY,
+           'prueba'=>"prueba"
        ]);
     }
 
     public function getPatients()
     {   
 
-        $data = DB::table('patients')
+        $data = DB::table('patients')->where('radiologist_id','=',Auth::user()->id)
+        ->Join('users', 'patients.doctor_id', '=', 'users.id')
         ->LeftJoin('genders', 'patients.gender_id', '=', 'genders.id')     
-        ->whereNull('deleted_at')
+        //->whereNull('deleted_at')
         ->select('patients.id',
         'patients.name',
         'patients.last_name',

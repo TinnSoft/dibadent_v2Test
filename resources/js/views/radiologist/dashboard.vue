@@ -181,6 +181,7 @@ export default {
       form: {},
       doctor_name: null,
       images_created_qty: 0,
+      ImageSize:0,
       doctor_avatar: null,
       doctor_CC: null,
       patientList: [],
@@ -250,6 +251,7 @@ export default {
     showPatientModal(refs) {
       if (this.form.patient) {
         this.openModal(refs._patient, "view", this.form.patient);
+        
       }
     },
     showImageModal(refs, attributes) {
@@ -258,7 +260,10 @@ export default {
     showCommentsModal(refs, attributes) {
       refs._showComments.open(attributes);
     },
-
+    getSizeOfImages(){
+      let vm = this;
+      vm.fetchData("getImagesSizeById/4");
+    },
     openModal(modal, processType, itemId) {
       modal.open(processType, itemId);
     },
@@ -266,6 +271,7 @@ export default {
       let vm = this;
 
       vm.patientID = val;
+      this.getSizeOfImages();
       if (val) {
         const patientvalues = vm.patientList.find(
           _patientdata => _patientdata.value === val

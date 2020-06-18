@@ -127,6 +127,21 @@ class ImagesController extends Controller
             'deleted' => true
         ]);
     }
+
+    public function getUsedStorage($id)
+    {
+        $namesImages=Images::where('created_by','=',$id);
+        $size=0;
+        foreach ($namesImages as $image)
+        {
+            $name=$image['file_name'];
+            $size=$size +  Storage::size($name);
+           
+        }
+        return [
+            "size" =>$size
+        ];
+    }    
     
 
 }

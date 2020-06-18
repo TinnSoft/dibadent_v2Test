@@ -162,7 +162,8 @@ class UsersController extends Controller
         ->where([
             ['profiles.id',$this->doctor_code]
         ])    
-        ->where('isActive',1)   
+        ->where('isActive',1)
+        ->where('radiologist_id','=',Auth::user()->id)   
         ->select('users.id',
         'users.name',
         'users.last_name',
@@ -262,6 +263,7 @@ class UsersController extends Controller
         $data['profile_id']=  $_process=='DOCTOR' ? $this->doctor_code : $this->radiologist_code;
        
         $data['created_by'] = Auth::user()->id;
+        $data['radiologist_id'] = Auth::user()->id;
         $data['password'] = bcrypt($randomPassword);
         
         //email validation
