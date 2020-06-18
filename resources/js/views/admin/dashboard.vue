@@ -5,7 +5,7 @@
         <div class="col-md-grow col-xs-grow col-sm-grow row_class">
           <kCard
             class="my-card"
-            title="IMAGENES CARGADAS MES ULTIMO"
+            title="IMAGENES CARGADAS ULTIMO Me"
             icon-name
             :total="images_generated_lastMonth"
           />
